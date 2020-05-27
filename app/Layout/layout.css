@@ -1,0 +1,18 @@
+.layout {
+	--direction: row;
+	--flex:      1 0 1em;
+
+	display:        flex;
+	min-height:     100%;
+	flex-direction: var(--direction);
+}
+
+.row {
+	justify-content:  space-between;
+}
+
+.row > *:not(:first-child):not(:last-child) {
+	background: transparent;
+	overflow:   auto;
+	flex:       var(--flex);
+}

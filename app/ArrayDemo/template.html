@@ -1,0 +1,39 @@
+<fieldset>
+	<label>set</label>
+	<input cv-bind = "setIndex" />
+	<input cv-bind = "setIndexValue" />
+	<button cv-on = "click:setIndex(setIndex,setIndexValue)">set</button>
+</fieldset>
+
+<fieldset>
+	<label>delete</label>
+	<input cv-bind = "delIndex" />
+	<button cv-on = "click:delIndex(delIndex)">set</button>
+</fieldset>
+
+<fieldset>
+	<label>splice</label>
+	<input cv-bind = "splicePosition" />
+	<input cv-bind = "spliceDelete" />
+	<input cv-bind = "spliceItem" />
+	<button cv-on = "click:splice(splicePosition,spliceDelete,spliceItem)">Splice</button>
+</fieldset>
+
+<button cv-on = "click:arrayUnshift">Unshift</button>
+<button cv-on = "click:arrayShift">Shift</button>
+
+<br />
+<br />
+
+<button cv-on = "click:arrayPush">Push</button>
+<button cv-on = "click:arrayPop">Pop</button>
+
+<br />
+<br />
+
+<button cv-on = "click:arraySort">Sort</button>
+<button cv-on = "click:arrayReverse">Reverse</button>
+
+<div cv-each = "list:item:i">
+	<p>[[item]]</p>
+</div>

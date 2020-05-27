@@ -1,0 +1,29 @@
+.layout {
+	/*background-color: blue;*/
+}
+
+.navigation h1 {
+	margin: 1em;
+}
+
+.content {
+	padding: 1em;
+}
+
+* {
+	/*color: white;*/
+}
+
+.block {
+	background: #333;
+	width:      300px;
+	height:     300px;
+}
+
+.layout > *:first-child {
+	/*background-color: red;*/
+}
+
+html {
+	font-family: "Lucida Console";
+}
