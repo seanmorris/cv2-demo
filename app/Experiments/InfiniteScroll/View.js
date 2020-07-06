@@ -159,7 +159,15 @@ export class View extends BaseView
 
 			const value = this.args.content[i];
 
-			this.args.visible[i] = new Row(value + '!!!', i, this);
+			this.args.visible[i] = new Row(value, i, this);
+
+			this.args.visible[i].args.bindTo('content', v => {
+
+				console.log(i);
+
+				this.args.content[i] = v;
+
+			});
 
 		};
 
