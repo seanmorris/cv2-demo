@@ -1,3 +1,19 @@
-<p>a: <input cv-bind = "a"> : [[a]]</p>
-<p>b: <input cv-bind = "b"> : [[b]]</p>
-<p>c: <input cv-bind = "c"> : [[c]]</p>
+<h2>Scalar Binding Demo</h2>
+
+<p>
+	a:
+	<input cv-bind = "a">
+	<button cv-on = "click:clear('a')">x</button> : "[[a]]"
+</p>
+
+<p>
+	b:
+	<input cv-bind = "b">
+	<button cv-on = "click:clear('b')">x</button> : "[[b]]"
+</p>
+
+<p>
+	c:
+	<input cv-bind = "c">
+	<button cv-on = "click:clear('c')">x</button> : "[[c]]"
+</p>

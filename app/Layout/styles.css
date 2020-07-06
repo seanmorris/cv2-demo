@@ -1,27 +1,17 @@
-.layout {
-	/*background-color: blue;*/
+.navigation {
+	min-width: 10rem;
 }
 
-.navigation h1 {
-	margin: 1em;
+h1 {
+	padding: 1rem;
+	margin: 0px;
+	background-color: black;
+	color: white;
 }
 
 .content {
-	padding: 1em;
-}
-
-* {
-	/*color: white;*/
-}
-
-.block {
-	background: #333;
-	width:      300px;
-	height:     300px;
-}
-
-.layout > *:first-child {
-	/*background-color: red;*/
+	padding: 1rem;
+	flex-grow: 1;
 }
 
 html {

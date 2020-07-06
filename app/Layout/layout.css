@@ -1,14 +1,16 @@
-.layout {
-	--direction: row;
-	--flex:      1 0 1em;
-
+body {
+	flex-direction: column;
 	display:        flex;
-	min-height:     100%;
-	flex-direction: var(--direction);
+}
+
+.layout {
+	flex-direction: row;
+	flex-grow:      1;
+	display:        flex;
 }
 
 .row {
-	justify-content:  space-between;
+	justify-content: space-between;
 }
 
 .row > *:not(:first-child):not(:last-child) {

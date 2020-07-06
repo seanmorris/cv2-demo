@@ -8,7 +8,7 @@ exports.hooks  = {};
 exports.plugins = {
   babel: {presets: ['@babel/preset-env']},
   raw: {
-	pattern: /\.(html)$/,
+	pattern: /\.(html|tmp\.+?)$/,
 	wrapper: content => `module.exports = ${JSON.stringify(content)}`
   }
 };

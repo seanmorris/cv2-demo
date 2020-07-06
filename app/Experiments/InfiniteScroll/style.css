@@ -1,0 +1,38 @@
+.infinite-scroll.margins {
+	margin: auto;
+	display: flex;
+	flex-direction: column;
+	margin-left: auto;
+	margin-right: auto;
+	width: 30em;
+}
+
+.infinite-scroll.demo {
+	overflow-y: scroll;
+	scroll-snap-type: both mandatory;
+	height: 50em;
+	align-self: center;
+	background: #FCC;
+	position: relative;
+	/*scroll-snap-type: y proximity;*/
+}
+
+.infinite-scroll.demo [data-tag="shim"] {
+	height: var(--shimHeight);
+	position: absolute;
+	top: 0em;
+	left: 0em;
+	width: 1em;
+	pointer-events: none;
+	opacity: 0;
+}
+
+.infinite-scroll.demo [data-tag="row"] {
+	height: var(--rowHeight);
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	transform: translateY(calc(var(--rowHeight) * var(--index)));
+	/*top: calc(var(--rowHeight) * var(--index));*/
+	/*scroll-snap-align: start;*/
+}

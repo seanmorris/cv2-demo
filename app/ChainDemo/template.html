@@ -1,7 +1,20 @@
-<p>o1.a: <input cv-bind = "o1.a"> : [[o1.a]]</p>
-<p>o1.b: <input cv-bind = "o1.b"> : [[o1.b]]</p>
-<p>o1.c: <input cv-bind = "o1.c"> : [[o1.c]]</p>
+<h2>Chain Binding Demo</h2>
 
-<p>o2.a: <input cv-bind = "o2.a"> : [[o2.a]]</p>
-<p>o2.b: <input cv-bind = "o2.b"> : [[o2.b]]</p>
-<p>o2.c: <input cv-bind = "o2.c"> : [[o2.c]]</p>
+<pre>objects[[[selectedId]]] === [[selectedJson]];</pre>
+
+<p>input.a: <input cv-bind = "input.a"> : [[input.a]]</p>
+<p>input.b: <input cv-bind = "input.b"> : [[input.b]]</p>
+<p>input.c: <input cv-bind = "input.c"> : [[input.c]]</p>
+
+<button>add</button>
+<button>remove</button>
+
+<br />
+
+<select
+	size = "10"
+	cv-bind = "selectedId"
+	cv-each = "objects:object:o"
+>
+	<option value = "[[o]]">object [[o]]</option>
+</select>

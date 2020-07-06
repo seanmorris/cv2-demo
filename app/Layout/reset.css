@@ -1,9 +1,9 @@
 html, body {
 	height: 100%;
-	margin: 0px;
+	margin: 0rem;
 }
 
 ul {
-	padding: 1em;
-	padding-inline-start: 2em;
+	padding: 1rem;
+	padding-inline-start: 2rem;
 }
