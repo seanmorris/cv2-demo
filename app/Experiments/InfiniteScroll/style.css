@@ -1,23 +1,10 @@
-.infinite-scroll.margins {
-
+.infinite-scroll.main {
+	display: flex;
+	flex-direction: row;
+	margin: auto;
 }
 
 .infinite-scroll.demo {
-	overflow-y: scroll;
-	min-height: 50em;
-	position:   relative;
-}
-
-.infinite-scroll.demo [data-tag="shim"] {
-	position: absolute;
-	width: 1px;
-	height: var(--shimHeight);
-	pointer-events: none;
-	opacity: 0;
-}
-
-.infinite-scroll.demo [data-tag="row"] {
-	top: calc(var(--rowHeight) * var(--index));
-	height: var(--rowHeight);
-	position: absolute;
+	flex: 1;
+	width: 100%;
 }

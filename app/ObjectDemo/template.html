@@ -1,19 +1,20 @@
 <h2>Object Binding Demo</h2>
 
-<fieldset>
-	<label>set</label>
-	<input cv-bind = "setKey" />
-	<input cv-bind = "seyValue" />
-	<button cv-on = "click:setKey(setKey,seyValue)">set</button>
-</fieldset>
+<div class = "row">
+	<fieldset>
+		<label>set</label>
+		<input cv-bind = "setKey" />
+		<input cv-bind = "seyValue" />
+		<button cv-on = "click:setKey(setKey,seyValue)">set</button>
+	</fieldset>
 
-<fieldset>
-	<label>delete</label>
-	<input cv-bind  = "delKey" />
-	<button cv-on = "click:delKey(delKey)">set</button>
-</fieldset>
+	<fieldset>
+		<label>delete</label>
+		<input cv-bind  = "delKey" />
+		<button cv-on = "click:delKey(delKey)">set</button>
+	</fieldset>
+</div>
 
 <div cv-each = "obj:item:i">
 	<p>[[i]] [[item]]</p>
 </div>
-

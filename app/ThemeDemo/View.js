@@ -14,28 +14,35 @@ import { ViewZAlpha } from './views/ViewZAlpha';
 
 export class View extends BaseView
 {
-	constructor()
+	constructor(args)
 	{
-		super();
+		super(args);
 
 		this.template = require('./template');
 
-		Theme.get()
+		const theme = Theme.get();
+		const alpha = Theme.get('alpha');
+
+		theme
+			.setTemplate(ViewX, require('./views/templateX'))
+			.setTemplate(ViewY, require('./views/templateY'))
+			.setTemplate(ViewZ, require('./views/templateZ'))
 			.setView(TypeX, ViewX)
 			.setView(TypeY, ViewY)
-			.setView(TypeZ, ViewZ);
+			.setView(TypeZ, ViewZ)
+		;
 
-		Theme.get('alpha')
-			.setView(TypeZ, ViewZAlpha)
-			.setFallback(Theme.get());
+		alpha
+			.setTemplate(ViewZAlpha, require('./views/templateZAlpha'))
+			.setFallback(Theme.get())
+			.setView(TypeZAlpha, ViewZAlpha)
+		;
 
-		const resolved = [
-			Theme.get('alpha').getView(new TypeX)
-			, Theme.get('alpha').getView(new TypeY)
-			, Theme.get('alpha').getView(new TypeZ)
-			, Theme.get('alpha').getView(new TypeZAlpha)
-		];
+		const x = new TypeX(this);
+		const y = new TypeY(this);
+		const z = new TypeZ(this);
+		const z𝛼 = new TypeZAlpha(this);
 
-		console.log(resolved);
+		this.args.views = [x,x,y,z,z𝛼].map(v => alpha.getView(v));
 	}
 }

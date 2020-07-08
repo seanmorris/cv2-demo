@@ -39,12 +39,21 @@ export class Theme
 
 	getView(object)
 	{
-		return this.resolve(object, 'viewMap');
+		const type = this.resolve(object, 'viewMap');
+
+		if(!type)
+		{
+			return null;
+		}
+
+		const view = new type(object);
+
+		return view;
 	}
 
-	setTemplate(type, viewType)
+	setTemplate(type, template)
 	{
-		this.viewMap.set(type, viewType);
+		this.templateMap.set(type, template);
 
 		return this;
 	}
@@ -56,6 +65,11 @@ export class Theme
 
 	resolve(object, whichMap)
 	{
+		if(object.___object___ && object.isBound)
+		{
+			object = object.___object___;
+		}
+
 		const type = object.constructor;
 		const map  = this[whichMap];
 
@@ -64,7 +78,7 @@ export class Theme
 			return map.get(type);
 		}
 
-		let result = false;
+		let result = null;
 
 		for(const [key, value] of map)
 		{
