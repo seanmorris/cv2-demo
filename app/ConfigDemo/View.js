@@ -15,6 +15,6 @@ export class View extends BaseView
 
 		vendorJs.attach();
 
-		Config.get('theme');
+		this.args.theme = Config.get('theme');
 	}
 }

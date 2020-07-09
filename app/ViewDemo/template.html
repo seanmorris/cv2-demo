@@ -10,12 +10,44 @@
 <p>[[time]]</p>
 
 <p>Two way binding is also supported:</p>
-<pre>&lt;button cv-on = "click:clear('twoWay')"&gt;X&lt;/button&gt;
-&lt;input cv-bind = "twoWay"&gt;: [&#8203;[twoWay]]</pre>
+
+<pre>[[twoWayHtml]]</pre>
 
 <div class = "row">
 	<button cv-on = "click:clear('twoWay')">X</button>
 	<input cv-bind = "twoWay">:[[twoWay]]
+</div>
+
+<div class = "row full tabs [[showClasses|joinClass]]">
+	<div class = "tab" cv-on = "click:showTabBody('showHtml')">html</div>
+	<div class = "tab" cv-on = "click:showTabBody('showJs')">js</div>
+	<div class = "tab" cv-on = "click:showTabBody('showHtml', 'showJs', 'showResult')">split</div>
+	<div class = "tab" cv-on = "click:showTabBody('showResult')">result</div>
+</div>
+<div class = "row full editors [[showClasses|joinClass]]">
+
+	<div class = "half showHtml">
+		<p>template.html</p>
+		<div id = "twoWayHtml" cv-ref = "twoWayHtml">[[twoWayHtml]]</div>
+	</div>
+	<div class = "half showJs">
+		<p>DemoView.js</p>
+		<div id = "twoWayJs" cv-ref = "twoWayJs">[[twoWayJs]]</div>
+	</div>
+
+	<div class = "half showResult">
+		<p>Result</p>
+		<iframe src = "[[frameSource]]"></iframe>
+	</div>
+
+</div>
+<div class = "row full status">
+
+	<div class = "[[editorRefresh]]">
+		<span>[[editorStatus]]</span>
+		<button cv-on = "click:refreshCode(event)">⟳</button>
+	</div>
+
 </div>
 
 <p>HTML is automatically escaped unless "$" is used:</p>

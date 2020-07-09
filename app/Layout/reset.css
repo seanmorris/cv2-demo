@@ -31,3 +31,11 @@ fieldset {
 	display: flex;
 	margin: 0px;
 }
+
+iframe {
+	flex: 1;
+	border: 0px;
+	background-color: #DFF;
+	filter: invert(100%);
+}
+

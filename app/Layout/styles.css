@@ -17,3 +17,94 @@ h1 {
 html {
 	font-family: "Lucida Console";
 }
+
+
+.tabs, .status {
+	justify-content: flex-start;
+	margin-bottom: 0em;
+}
+
+.tabs > .tab {
+	user-select: none;
+	cursor: pointer;
+	min-width: 3em;
+	text-align: center;
+	border: 1px solid #888;
+	margin-right: -1px;
+	padding-left: 1em;
+	padding-right: 1em;
+	padding-top: 0.75em;
+	padding-bottom: 0.75em;
+	color: #222;
+	background-color: #999;
+	border-top-left-radius: 0.5em;
+	border-top-right-radius: 0.5em;
+	font-size: 0.8em;
+}
+
+.tabs > .tab:first-child {
+	color: #FFF;
+	background-color: #383838;
+}
+
+.status, .editors {
+	margin-top: -1px;
+	margin-bottom: 0em;
+	border: 1px solid #555;
+	box-sizing: border-box;
+}
+
+.status {
+	padding: 0.25em;
+	background-color: #333;
+	color: white;
+	user-select: none;
+	justify-content: flex-end;
+	font-size: 0.8em;
+}
+
+.status button {
+	color: #333;
+	font-weight: bold;
+	background-color: #FFF;
+	border: none;
+	padding: 0.5em;
+	margin-left: 0.5em;
+	width: 2.5em;
+	height: 2.5em;
+	box-sizing: border-box;
+}
+
+.status button:active {
+	background-color: #888;
+	color: #FFF;
+}
+
+.editors > * {
+	flex: 1;
+	width: 33%;
+}
+
+.editors > *:not(:last-child) {
+	border-right: #000 1px solid;
+}
+
+.editors p {
+	font-size: 0.8em;
+	user-select: none;
+	margin-top: 0em;
+	margin-bottom: 0em;
+	padding: 0.5em;
+	background-color: #333;
+	color: white;
+}
+
+.status .refresh-disabled > * {
+	opacity: 0.25;
+	pointer-events: none;
+}
+
+.status .refresh-enabled > * {
+	opacity: 1;
+	pointer-events: initial;
+}

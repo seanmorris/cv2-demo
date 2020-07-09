@@ -12,16 +12,17 @@
     "curvature": "^0.0.48"
   },
   "devDependencies": {
-    "auto-reload-brunch": "^2",
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.8.7",
     "@babel/preset-env": "^7.0.0",
+    "auto-reload-brunch": "^2",
     "babel-brunch": "^7.0.1",
     "babel-minify": "^0.5.1",
-    "brunch-preval": "^0.0.0",
+    "brace": "^0.11.1",
     "brunch": "^3.0.0",
-    "codemirror": "^5.54",
+    "brunch-preval": "^0.0.0",
     "clean-css-brunch": "^3.0.0",
+    "codemirror": "^5.54",
     "raw-brunch": "^1.0.2",
     "uglify-js-brunch": "^2.10.0"
   }

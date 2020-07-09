@@ -24,9 +24,59 @@ body {
 .wrap {
 	flex-wrap: wrap;
 }
-
+/*
 .row > *:not(:first-child):not(:last-child) {
 	background: transparent;
 	overflow:   auto;
 	flex:       var(--flex);
 }
+*/
+.full {
+	width: 100%;
+}
+
+.row .half {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	justify-content: flex-end;
+}
+
+.row.editors {
+	flex: 1;
+	min-height: 12em;
+}
+
+.row .half {
+	flex: 1;
+}
+
+.row .half:empty {
+	flex: 0;
+}
+
+.editors iframe,
+#twoWayJs,
+#twoWayHtml {
+	position: relative;
+	flex: 1;
+}
+
+.half.showHtml,
+.half.showJs,
+.half.showResult {
+	display: none;
+}
+
+.row.showHtml .half.showHtml {
+	display: flex;
+}
+
+.row.showJs .half.showJs {
+	display: flex;
+}
+
+.row.showResult .half.showResult {
+	display: flex;
+}
+

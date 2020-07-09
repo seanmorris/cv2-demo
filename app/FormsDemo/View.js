@@ -9,11 +9,37 @@ export class View extends BaseView
 
 		this.template = require('./template');
 
+		const commentField = {
+			type: 'fieldset'
+			, array: true
+			, children: {
+				id: {type: 'number'}
+				, content: {
+					type: 'textarea',
+					name: 'comments[0][content]'
+
+				}
+			}
+		};
+
 		const formSkeleton = {
 
 			_method: 'POST'
 
+			, hidden: {type:'hidden', value: 'LMAO YOU CANT SEE MEE'}
+
 			, id: {type:'number', value: 1000}
+			, name: {}
+
+			, access: {
+				type:    'radios'
+				, options: {
+					'private':  0
+					, 'public': 1
+				}
+			}
+
+			, image: {type: 'file'}
 
 			, type: {
 				type:    'select'
@@ -29,24 +55,15 @@ export class View extends BaseView
 			, comments: {
 				name: 'comments'
 				, type: 'fieldset'
+				, array: true
 				, children: {
-
-					0: {
-						type: 'fieldset'
-						, children: {
-							id: {type: 'number'}
-							, content: {type: 'textarea'}
-						}
-					}
-
-					, 1: {
-						type: 'fieldset'
-						, children: {
-							id: {type: 'number'}
-							, content: {type: 'textarea'}
-						}
-					}
+					0: Object.assign({}, commentField)
+					, 1: Object.assign({}, commentField)
 				}
+			}
+
+			, submit: {
+				type: 'submit'
 			}
 		};
 
