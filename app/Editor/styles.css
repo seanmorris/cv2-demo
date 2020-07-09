@@ -90,3 +90,18 @@
 	align-items: center;
 	background-color: #222;
 }
+
+.tabs .hint {
+	display: inline-flex;
+	align-items: center;
+	padding-left: 1em;
+	padding-right: 1em;
+	font-size: 0.75em;
+	opacity: 0;
+	transition: opacity 0.2s ease-in;
+}
+
+.tabs:hover .hint {
+	opacity: 0.75;
+	transition: opacity 0.2s ease-out;
+}
