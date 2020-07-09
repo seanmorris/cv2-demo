@@ -1,0 +1,37 @@
+<div class = "row full tabs [[showClasses|joinClass]]">
+
+	<span cv-each = "tabs:tab:t" class = "row dcontent">
+		<div class = "tab [[tab.active]]" cv-on = "click:showTab(t)">
+			[[t]]
+		</div>
+	</span>
+
+	<div class = "tab [[showResult]]" cv-on = "click:showResult()">result</div>
+
+	<div class = "tab [[showSplit]]" cv-on = "click:showTab()">all</div>
+</div>
+
+<div class = "row full editors [[showClasses|joinClass]]">
+
+	<p>Select a tab.</p>
+
+	<span cv-each = "tabs:tab:t" class = "dcontent">
+		<div cv-carry = "t" class = "half">
+			<p>[[tab.file]]</p>
+			<div class = "editor" cv-ref = "edit::t"><textarea cv-bind = "tab.body"></textarea></div>
+		</div>
+	</span>
+
+	<div class = "half [[showResult]]">
+		<p>Result</p>
+		<iframe src = "[[frameSource]]"></iframe>
+	</div>
+
+</div>
+
+<div class = "row full status">
+	<div class = "[[editorRefresh]]">
+		<span>[[editorStatus]]</span>
+		<button cv-on = "click:refreshCode(event)">⟳</button>
+	</div>
+</div>

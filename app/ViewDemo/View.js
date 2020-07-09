@@ -111,16 +111,64 @@ export class View extends BaseView
 
 		editorEscape.refreshCode();
 
+		const editorArray = this.args.editorArray = new EditorView;
+
+		editorArray.args.tabs.js   = {
+			title:  'js'
+			, file: 'DemoView.js'
+			, body: require('./Samples/Array.jss')
+			, mode: 'ace/mode/javascript'
+		};
+
+		editorArray.args.tabs.html = {
+			title:  'html'
+			, file: 'template.html'
+			, body: require('./Samples/Array.html')
+			, mode: 'ace/mode/html'
+		};
+
+		editorArray.refreshCode();
+
+		const editorJson = this.args.editorJson = new EditorView;
+
+		editorJson.args.tabs.js   = {
+			title:  'js'
+			, file: 'DemoView.js'
+			, body: require('./Samples/Array.jss')
+			, mode: 'ace/mode/javascript'
+		};
+
+		editorJson.args.tabs.html = {
+			title:  'html'
+			, file: 'template.html'
+			, body: require('./Samples/ArrayJson.html')
+			, mode: 'ace/mode/html'
+		};
+
+		editorJson.refreshCode();
+
+		const editorReuse = this.args.editorReuse = new EditorView;
+
+		editorReuse.args.tabs.js   = {
+			title:  'js'
+			, file: 'DemoView.js'
+			, body: require('./Samples/Array.jss')
+			, mode: 'ace/mode/javascript'
+		};
+
+		editorReuse.args.tabs.html = {
+			title:  'html'
+			, file: 'template.html'
+			, body: require('./Samples/Reuse.html')
+			, mode: 'ace/mode/html'
+		};
+
+		editorReuse.refreshCode();
 	}
 
 	addItalicTags(input)
 	{
 		return `<i>${input}</i>`;
-	}
-
-	toJson(input)
-	{
-		return JSON.stringify(input);
 	}
 
 	reverseString(input = '')

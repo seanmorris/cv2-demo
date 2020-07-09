@@ -1,0 +1,68 @@
+.status {
+	padding: 0.25em;
+	user-select: none;
+	justify-content: flex-end;
+	font-size: 0.8em;
+}
+
+.row.tabs, .status {
+	justify-content: flex-start;
+	margin-bottom: 0em;
+}
+
+.row.status, .editors {
+	margin-top: -1px !important;
+	margin-bottom: 0em !important;
+	border: 1px solid #555;
+	box-sizing: border-box;
+}
+
+.status button {
+	font-weight: bold;
+	border: none;
+	padding: 0.5em;
+	margin-left: 0.5em;
+	width: 2.5em;
+	height: 2.5em;
+	box-sizing: border-box;
+}
+
+.editors > * {
+	flex: 1;
+}
+
+.editors p {
+	font-size: 0.8em;
+	user-select: none;
+	margin-top: 0em;
+	margin-bottom: 0em;
+	padding: 0.5em;
+}
+
+.status .refresh-disabled > * {
+	opacity: 0.25;
+	pointer-events: none;
+}
+
+.status .refresh-enabled > * {
+	opacity: 1;
+	pointer-events: initial;
+}
+
+.editors textarea {
+	position: relative;
+	resize: none;
+	width: 100%;
+	height: 100%;
+	background-color: #112;
+	color: white;
+	font-size: 0.9em;
+}
+
+.editors iframe,
+.editors .editor {
+	display: flex;
+	position: relative;
+	flex-grow: 1;
+	width: 100%;
+}

@@ -30,58 +30,21 @@
 
 <p>Arrays and objects may be looped over with the cv-each attribute:</p>
 
-
-<pre>
-&lt;ul cv-each = "list:item:i"/&gt;&lt;li&gt[&#8203;[item]]&lt;/li&gt&lt;/ul&gt;
-</pre>
-
-<ul cv-each = "list:item:i" /><li>[[item]]</li></ul>
+[[editorArray]]
 
 <h3>Methods</h3>
 
-
-
-<!-- <p>Methods can be bound to events:</p>
-<pre>&lt;button cv-on = "click:clear('twoWay')"&gt;X&lt;/button&gt;</pre>
-
-<div class = "row">
-	<button cv-on = "click:clear('twoWay')">X</button>
-	<input cv-bind = "twoWay">:[[twoWay]]
-</div>
- -->
-
-
 <p>Values of any type may be transformed by methods:</p>
 
-<pre>[&#8203;[list|toJson]]</pre>
-<p>[[list|toJson]]</p>
+[[editorJson]]
 
 <h3>Templates</h3>
 
-<p>Reusable templates can be created with the cv-template attribute:</p>
+<p>Reusable templates can be created with the cv-template attribute.</p>
 
-<pre>
-&lt;template cv-template = "item"&gt;
-	&lt;li&gt;&lt;input type = "checkbox"&gt;[&#8203;[item]]&lt;/li&gt;
-&lt;/template&gt;
-</pre>
+<p>Templates may be reused within the same view with the cv-slot attribute.</p>
 
-<p>Templates may be reused within the same view with the cv-slot attribute:</p>
-
-<pre>
-&lt;ul cv-each = "list:item:i" cv-slot = "item"/&gt;&lt;/ul&gt;
-&lt;ol cv-each = "list:item:i" cv-slot = "item"/&gt;&lt;/ol&gt;
-</pre>
-
-<template cv-template = "item">
-	<li><input type = "checkbox">[[item]]</li>
-</template>
-
-<ul cv-each = "list:item:i" cv-slot = "item"/></ul>
-<ol cv-each = "list:item:i" cv-slot = "item"/></ol>
-
-<p cv-slot = "title"></p>
-
+[[editorReuse]]
 
 <h3>Lifecycle</h3>
 
