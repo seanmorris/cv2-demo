@@ -1,0 +1,21 @@
+.editor-window ::-webkit-scrollbar {
+	width: 6px;
+	height: 6px;
+}
+
+.editor-window ::-webkit-scrollbar-track {
+	background-color: rgba(64, 64, 64, 1);
+	position: absolute;
+	z-index: 0;
+}
+
+.editor-window ::-webkit-scrollbar-thumb {
+	background-clip: padding-box;
+	border: 1px solid rgba(0, 0, 0, 0);
+    background-clip: padding-box;
+	background-color: rgba(128,128,128,1);
+	border-radius: 10px;
+	position: absolute;
+	z-index: 100;
+}
+

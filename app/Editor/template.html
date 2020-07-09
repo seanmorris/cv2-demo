@@ -1,40 +1,46 @@
-<div class = "row full tabs [[showClasses|joinClass]]">
+<div class = "editor-window" cv-on = "mouseup:resizeEditor(event)" data-orientation = "[[orientation]]" data-multiselect="[[multiselect]]">
 
-	<span cv-each = "tabs:tab:t" class = "row dcontent">
-		<div class = "tab [[tab.active]]" cv-on = "click:showTab(t)">
-			[[t]]
-		</div>
-	</span>
+	<div class = "row full tabs [[showClasses|joinClass]]">
 
-	<div class = "tab [[showResult]]" cv-on = "click:showResult()">result</div>
+		<span cv-each = "tabs:tab:t" class = "row dcontent">
+			<div class = "tab [[tab.active]]" cv-on = "click:showTab(t)">[[t]]</div>
+		</span>
 
-	<div class = "tab [[showSplit]]" cv-on = "click:showTab()">all</div>
+		<div class = "tab [[showResult]]" cv-on = "click:showResult()">result</div>
 
-	<span class = "hint">hold ctrl/⌘ to select multiple tabs.</span>
+		<div class = "tab [[showSplit]]" cv-on = "click:showTab()">all</div>
 
-</div>
+		<span class = "hint">hold ctrl / ⌘ to select multiple tabs.</span>
 
-<div class = "row full editors [[showClasses|joinClass]]">
-
-	<p>Select a tab.</p>
-
-	<span cv-each = "tabs:tab:t" class = "dcontent">
-		<div cv-carry = "t" class = "half">
-			<p>[[tab.file]]</p>
-			<div class = "editor" cv-ref = "edit::t"><textarea cv-bind = "tab.body"></textarea></div>
-		</div>
-	</span>
-
-	<div class = "half [[showResult]]">
-		<p>Result</p>
-		<iframe src = "[[frameSource]]"></iframe>
 	</div>
 
-</div>
+	<div class = "row full editors [[showClasses|joinClass]]">
 
-<div class = "row full status">
-	<div class = "[[editorRefresh]]">
-		<span>[[editorStatus]]</span>
-		<button cv-on = "click:refreshCode(event)">⟳</button>
+		<p>Select a tab.</p>
+
+		<span cv-each = "tabs:tab:t" class = "dcontent">
+			<div cv-carry = "t" class = "half">
+				<p>[[tab.file]]</p>
+				<div class = "box"><div class = "editor" cv-ref = "edit::t"><textarea cv-bind = "tab.body"></textarea></div></div>
+			</div>
+		</span>
+
+		<div class = "half [[showResult]]">
+			<p>Result</p>
+			<div class = "result">
+				<iframe src = "[[frameSource]]"></iframe>
+			</div>
+		</div>
+
+		<div cv-on = "click:changeOrientation(event)" class = "orientation"><div data-icon = "orientation"></div></div>
+
 	</div>
+
+	<div class = "row full status">
+		<div class = "[[editorRefresh]]">
+			<span>[[editorStatus]]</span>
+			<button cv-on = "click:refreshCode(event)">⟳</button>
+		</div>
+	</div>
+
 </div>

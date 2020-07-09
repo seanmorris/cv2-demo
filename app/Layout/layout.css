@@ -38,13 +38,13 @@ body {
 .row .half {
 	display: flex;
 	flex-direction: column;
-	flex: 1;
-	justify-content: flex-end;
+	flex-grow: 1;
+	justify-content: flex-start;
+	position: relative;
 }
 
 .row.editors {
 	flex: 1;
-	min-height: 16em;
 }
 
 .row .half {

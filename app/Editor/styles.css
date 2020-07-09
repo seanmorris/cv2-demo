@@ -1,7 +1,7 @@
 .tabs .tab {
 	user-select: none;
 	cursor: pointer;
-	min-width: 3em;
+	min-width: 3.6em;
 	text-align: center;
 	border: 1px solid #555;
 	margin-right: -1px;
@@ -9,16 +9,22 @@
 	padding-right: 1em;
 	padding-top: 0.75em;
 	padding-bottom: 0.75em;
-	color: #222;
-	background-color: #999;
+	color: #BBB;
+	background-color: #777;
 	border-top-left-radius: 0.5em;
 	border-top-right-radius: 0.5em;
 	font-size: 0.8em;
+	text-shadow: 1px 1px 2px black;
 }
 
 .tab.active {
+	font-weight: bold;
 	color: #FFF;
 	background-color: #383838;
+}
+
+.tab:not(.active):hover {
+	background-color: #444;
 }
 
 .status, .editors {
@@ -51,6 +57,7 @@
 }
 
 .editors p {
+	text-shadow: 1px 1px 2px black;
 	background-color: #333;
 	color: white;
 	border-bottom: 1px solid #000;
@@ -61,8 +68,9 @@
 	box-sizing: border-box;
 }
 
-.showSplit .half:not(:first-child) {
+.editors .half {
 	border-left: 1px solid #000;
+	margin-left: -1px;
 }
 
 .status .refresh-disabled > * {
@@ -73,6 +81,10 @@
 .status .refresh-enabled > * {
 	opacity: 1;
 	pointer-events: initial;
+}
+
+.status {
+	margin-bottom: 1em;
 }
 
 :not(.tab).hide {
@@ -101,7 +113,15 @@
 	transition: opacity 0.2s ease-in;
 }
 
-.tabs:hover .hint {
+.editor-window[data-multiselect="multiselect"] .tabs .tab {
+	border: #777 1px solid;
+}
+
+.editor-window:not([data-multiselect="multiselect"]) .tabs:hover .hint {
 	opacity: 0.75;
 	transition: opacity 0.2s ease-out;
+}
+
+.editor-window[data-multiselect="multiselect"] .tabs:hover .hint {
+	opacity: 0.333;
 }

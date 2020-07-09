@@ -22,6 +22,10 @@ export class View extends BaseView
 
 			this.multi = v > 0;
 
+			this.args.multiselect = this.multi
+				? 'multiselect'
+				: 'select';
+
 		});
 
 		this.template = require('./template');
@@ -29,6 +33,8 @@ export class View extends BaseView
 		this.args.showJs     = true;
 		this.args.showHtml   = true;
 		this.args.showResult = true;
+
+		this.args.orientation = 'vertical';
 
 		this.args.tabs = {};
 
@@ -142,7 +148,7 @@ export class View extends BaseView
 			for(const tabName in this.args.tabs)
 			{
 				const tab = this.args.tabs[tabName];
-				const tag = this.tags.edit[tabName].element.parentNode;
+				const tag = this.tags.edit[tabName].element.parentNode.parentNode;
 
 				tab.active = '';
 
@@ -177,7 +183,7 @@ export class View extends BaseView
 		{
 			for(const tabName in this.args.tabs)
 			{
-				const tag = this.tags.edit[tabName].element.parentNode;
+				const tag = this.tags.edit[tabName].element.parentNode.parentNode;
 				const tab = this.args.tabs[tabName];
 
 				tab.active = '';
@@ -202,16 +208,37 @@ export class View extends BaseView
 
 			for(const tabName of tabs)
 			{
-				const tag = this.tags.edit[tabName].element.parentNode;
+				const tag = this.tags.edit[tabName].element.parentNode.parentNode;
 
 				tag.classList.remove('hide');
 			}
 
 			this.args.showClasses = ['showSplit'];
 		}
-		else if(!this.multi)
+		else
 		{
-			this.hideResult()
+			console.log(this.args.showSplit);
+
+			if(this.args.showSplit)
+			{
+				for(const tabName in this.args.tabs)
+				{
+					const tab = this.args.tabs[tabName];
+					const tag = this.tags.edit[tabName].element.parentNode.parentNode;
+
+					tab.active = '';
+
+					tag.classList.add('hide');
+				}
+			}
+
+			if(!this.multi)
+			{
+				this.hideResult();
+			}
+
+			this.args.showClasses = [];
+			this.args.showSplit = '';
 		}
 
 		console.log(tabs);
@@ -219,7 +246,7 @@ export class View extends BaseView
 		for(const tabName of tabs)
 		{
 			const tab = this.args.tabs[tabName];
-			const tag = this.tags.edit[tabName].element.parentNode;
+			const tag = this.tags.edit[tabName].element.parentNode.parentNode;
 
 			if(tab.active)
 			{
@@ -238,6 +265,23 @@ export class View extends BaseView
 		{
 			this.editors[tab].resize();
 			this.args[tab] = true;
+		}
+	}
+
+	changeOrientation()
+	{
+		this.args.orientation = this.args.orientation == 'horizontal'
+			? 'vertical'
+			: 'horizontal';
+
+		this.resizeEditor();
+	}
+
+	resizeEditor(event)
+	{
+		for(const tab in this.args.tabs)
+		{
+			this.editors[tab].resize();
 		}
 	}
 
