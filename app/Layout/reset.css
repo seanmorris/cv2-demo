@@ -19,7 +19,7 @@ html, body {
 .content > pre,
 .content > p {
 	/*margin-top: 0px;*/
-/*	margin-bottom: 0px;*/
+	/*margin-bottom: 0px;*/
 }
 
 ul,ol {
@@ -39,3 +39,6 @@ iframe {
 	filter: invert(100%);
 }
 
+.dcontent {
+	display: contents;
+}

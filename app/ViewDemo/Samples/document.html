@@ -12,9 +12,13 @@
 
 		[SCRIPT]
 
-		const view = new DemoView;
+		if(typeof DemoView !== 'undefined')
+		{
+			const view = new DemoView;
 
-		view.render(document.body);
+			view.render(document.body);
+		}
+
 	});</script>
 </head>
 <body>

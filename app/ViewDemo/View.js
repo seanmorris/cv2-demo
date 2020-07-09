@@ -1,7 +1,8 @@
-import { View as BaseView } from 'curvature/base/View';
-
-import { View as ArrayView } from '../ArrayDemo/View';
+import { View as BaseView   } from 'curvature/base/View';
+import { View as ArrayView  } from '../ArrayDemo/View';
 import { View as ObjectView } from '../ObjectDemo/View';
+
+import { View as EditorView } from '../Editor/View';
 
 import * as ace from 'brace';
 
@@ -17,9 +18,7 @@ export class View extends BaseView
 
 		this.template = require('./template');
 
-		this.args.showJs     = true;
-		this.args.showHtml   = true;
-		this.args.showResult = true;
+		this.editors  = {};
 
 		this.args.twoWay = 'Two way binding!';
 
@@ -32,8 +31,6 @@ export class View extends BaseView
 
 		this.args.time = 'k.';
 
-		this.refreshCode();
-
 		this.args.time = (new Date).toISOString();
 
 		this.onFrame(() => {
@@ -42,103 +39,78 @@ export class View extends BaseView
 
 		});
 
-		this.args.showClasses = ['showHtml', 'showResult'];
-	}
+		const editor = this.args.editor = new EditorView;
 
-	stringToDataUrl(input, type = 'text/plain')
-	{
-		return `data:${type};base64,${btoa(input)}`;
-	}
+		editor.args.tabs.js   = {
+			title:  'js'
+			, file: 'DemoView.js'
+			, body: require('./Samples/Scalar.jss')
+			, mode: 'ace/mode/javascript'
+		};
 
-	showTabBody(...tabs)
-	{
-		this.args.showClasses = tabs;
+		editor.args.tabs.html = {
+			title:  'html'
+			, file: 'template.html'
+			, body: require('./Samples/Scalar.html')
+			, mode: 'ace/mode/html'
+		};
 
-		this.args.showJs     = false;
-		this.args.showHtml   = false;
-		this.args.showResult = false;
+		editor.refreshCode();
 
-		for(const tab of tabs)
-		{
-			this.args[tab] = true;
-		}
+		const editorTwoWay = this.args.editorTwoWay = new EditorView;
 
-		this.editor.resize();
-		this.editorJs.resize();
-	}
+		editorTwoWay.args.tabs.js   = {
+			title:  'js'
+			, file: 'DemoView.js'
+			, body: require('./Samples/TwoWay.jss')
+			, mode: 'ace/mode/javascript'
+		};
 
-	postRender()
-	{
-		const html = this.tags.twoWayHtml.element;
-		const js   = this.tags.twoWayJs.element;
+		editorTwoWay.args.tabs.html = {
+			title:  'html'
+			, file: 'template.html'
+			, body: require('./Samples/TwoWay.html')
+			, mode: 'ace/mode/html'
+		};
 
-		const editorJs = ace.edit(js);
+		editorTwoWay.refreshCode();
 
-		editorJs.session.setMode('ace/mode/javascript');
-		editorJs.setTheme('ace/theme/monokai');
-		editorJs.setOptions({
-			autoScrollEditorIntoView: true
-			, printMargin: false
-		});
+		const editorReverse = this.args.editorReverse = new EditorView;
 
-		this.editorJs = editorJs;
+		editorReverse.args.tabs.js   = {
+			title:  'js'
+			, file: 'DemoView.js'
+			, body: require('./Samples/Scalar.jss')
+			, mode: 'ace/mode/javascript'
+		};
 
-		const editor = ace.edit(html);
+		editorReverse.args.tabs.html = {
+			title:  'html'
+			, file: 'template.html'
+			, body: require('./Samples/Reverse.html')
+			, mode: 'ace/mode/html'
+		};
 
-		editor.session.setMode('ace/mode/html');
-		editor.setTheme('ace/theme/monokai');
-		editor.setOptions({
-			autoScrollEditorIntoView: true
-			, printMargin: false
-		});
+		editorReverse.refreshCode();
 
-		this.editor = editor;
+		const editorEscape = this.args.editorEscape = new EditorView;
 
-		this.editor.resize();
-		this.editorJs.resize();
+		editorEscape.args.tabs.js   = {
+			title:  'js'
+			, file: 'DemoView.js'
+			, body: require('./Samples/Scalar.jss')
+			, mode: 'ace/mode/javascript'
+		};
 
-		this.editor.session.on('change', () => {
-			this.args.editorStatus = `The code has been updated at ${(new Date).toISOString()}`
-			this.args.editorRefresh = 'refresh-enabled';
-		});
-		this.editorJs.session.on('change', () => {
-			this.args.editorStatus = `The code has been updated at ${(new Date).toISOString()}`
-			this.args.editorRefresh = 'refresh-enabled';
-		});
+		editorEscape.args.tabs.html = {
+			title:  'html'
+			, file: 'template.html'
+			, body: require('./Samples/Escape.html')
+			, mode: 'ace/mode/html'
+		};
 
-		console.log(html);
-	}
+		editorEscape.refreshCode();
 
-	refreshCode(event)
-	{
-		if(this.editor)
-		{
-			this.args.twoWayHtml = this.editor.getValue();
-		}
-
-		if(this.editorJs)
-		{
-			this.args.twoWayJs = this.editorJs.getValue();
-		}
-
-		let resultTemplate = require('./Samples/document.html');
-
-		resultTemplate =resultTemplate.replace(
-			/\[ORIGIN\]/g, location.origin
-		);
-
-		resultTemplate =resultTemplate.replace(
-			/\[SCRIPT\]/g, this.args.twoWayJs
-		);
-
-		resultTemplate =resultTemplate.replace(
-			/\[TEMPLATE\]/g, this.args.twoWayHtml
-		);
-
-		this.args.frameSource = this.stringToDataUrl(resultTemplate, 'text/html');
-
-		this.args.editorStatus  = `Refreshed at ${(new Date).toISOString()}`
-		this.args.editorRefresh = 'refresh-disabled';
 	}
 
 	addItalicTags(input)
@@ -159,10 +131,5 @@ export class View extends BaseView
 	clear(clearVar)
 	{
 		this.args[clearVar] = '';
-	}
-
-	joinClass(input)
-	{
-		return (input || []).join(' ');
 	}
 }

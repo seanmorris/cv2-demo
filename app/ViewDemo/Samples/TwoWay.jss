@@ -3,18 +3,17 @@ class DemoView extends View
 	constructor()
 	{
 		super();
-
 		this.template = require('template');
+		this.args.val = '';
+	}
 
-		this.args.twoWay = 0;
-
-		this.onInterval(1000, () => {
-			this.args.twoWay = (new Date).toISOString();
-		});
+	random()
+	{
+		this.args.val = 1/Math.random();
 	}
 
 	clear()
 	{
-		this.args.twoWay = '';
+		this.args.val = '';
 	}
 }

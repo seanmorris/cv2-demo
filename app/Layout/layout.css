@@ -44,7 +44,7 @@ body {
 
 .row.editors {
 	flex: 1;
-	min-height: 12em;
+	min-height: 16em;
 }
 
 .row .half {
@@ -54,29 +54,3 @@ body {
 .row .half:empty {
 	flex: 0;
 }
-
-.editors iframe,
-#twoWayJs,
-#twoWayHtml {
-	position: relative;
-	flex: 1;
-}
-
-.half.showHtml,
-.half.showJs,
-.half.showResult {
-	display: none;
-}
-
-.row.showHtml .half.showHtml {
-	display: flex;
-}
-
-.row.showJs .half.showJs {
-	display: flex;
-}
-
-.row.showResult .half.showResult {
-	display: flex;
-}
-
