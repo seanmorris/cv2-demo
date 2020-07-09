@@ -113,6 +113,8 @@ export class View extends BaseView
 
 		const editorArray = this.args.editorArray = new EditorView;
 
+		editorArray.args.orientation = 'vertical';
+
 		editorArray.args.tabs.js   = {
 			title:  'js'
 			, file: 'DemoView.js'
