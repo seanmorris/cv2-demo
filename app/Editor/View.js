@@ -77,7 +77,6 @@ export class View extends BaseView
 
 			editor.setValue(tab.body || '', -1);
 
-
 			editor.session.setMode(tab.mode || 'ace/mode/javascript');
 			editor.setTheme('ace/theme/monokai');
 			editor.setOptions({
@@ -93,6 +92,8 @@ export class View extends BaseView
 					return;
 				}
 
+				tab.body = editor.getValue();
+
 				this.args.editorStatus  = `Code updated at ${(new Date).toISOString()}`
 				this.args.editorRefresh = 'refresh-enabled';
 
@@ -100,17 +101,14 @@ export class View extends BaseView
 
 			tab.bindTo('body', v => {
 
-				if(!v || !v.length)
-				{
-					return;
-				}
-
-				if(tab.body == v)
+				if(!tab.readonly)
 				{
 					return;
 				}
 
 				editor.setValue(v, -1);
+
+				this.refreshCode();
 			});
 
 			editor.resize();
