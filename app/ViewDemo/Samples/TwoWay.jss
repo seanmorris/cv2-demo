@@ -9,7 +9,7 @@ class DemoView extends View
 
 	random()
 	{
-		this.args.val = 1/Math.random();
+		this.args.val = 1 / Math.random();
 	}
 
 	clear()

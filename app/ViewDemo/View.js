@@ -20,23 +20,10 @@ export class View extends BaseView
 
 		this.editors  = {};
 
-		this.args.twoWay = 'Two way binding!';
+		window.addEventListener('message', onMessage);
 
-		this.args.twoWayHtml = `<button cv-on = "click:clear('twoWay')">X</button>
-<input cv-bind = "twoWay"><br />[[twoWay]]`;
-
-		this.args.twoWayJs = require('./Samples/TwoWay');
-
-		this.args.list = ['Milk','Eggs','Bread'];
-
-		this.args.time = 'k.';
-
-		this.args.time = (new Date).toISOString();
-
-		this.onFrame(() => {
-
-			this.args.time = (new Date).toISOString();
-
+		this.onRemove(()=>{
+			window.removeEventListener('message', onMessage);
 		});
 
 		const editor = this.args.editor = new EditorView;
@@ -74,6 +61,10 @@ export class View extends BaseView
 		};
 
 		editorTwoWay.refreshCode();
+
+		const onMessage = event => {
+			console.log( event );
+		};
 
 		const editorReverse = this.args.editorReverse = new EditorView;
 

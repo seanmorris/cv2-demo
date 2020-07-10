@@ -1,5 +1,16 @@
+import { View as BaseView   } from 'curvature/base/View';
+import { View as ArrayView  } from '../ArrayDemo/View';
+import { View as ObjectView } from '../ObjectDemo/View';
+
+import { View as EditorView } from '../Editor/View';
+
+import * as ace from 'brace';
+
+import 'brace/mode/html';
+import 'brace/mode/javascript';
+import 'brace/theme/monokai';
+
 import { Form } from 'curvature/form/Form';
-import { View as BaseView } from 'curvature/base/View';
 
 export class View extends BaseView
 {
@@ -8,6 +19,45 @@ export class View extends BaseView
 		super();
 
 		this.template = require('./template');
+
+		const editor = this.args.editor = new EditorView;
+
+		editor.args.tabs.js   = {
+			title:  'js'
+			, file: 'DemoView.js'
+			, body: require('./Samples/Form.jss')
+			, mode: 'ace/mode/javascript'
+		};
+
+		editor.args.tabs.html = {
+			title:  'html'
+			, file: 'template.html'
+			, body: require('./Samples/Form.html')
+			, mode: 'ace/mode/html'
+		};
+
+		editor.args.tabs.output = {
+			title:  'output'
+			, file: 'Return JSON'
+			, body: '{}'
+			, mode: 'ace/mode/javascript'
+			, readonly: true
+		};
+
+		editor.refreshCode();
+
+		const onMessage = event => {
+
+			editor.args.tabs.output.body = event.data || '';
+
+		};
+
+		window.addEventListener('message', onMessage);
+
+		this.onRemove(()=>{
+			window.removeEventListener('message', onMessage);
+		});
+
 
 		const commentField = {
 			type: 'fieldset'

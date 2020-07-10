@@ -77,18 +77,40 @@ export class View extends BaseView
 
 			editor.setValue(tab.body || '', -1);
 
+
 			editor.session.setMode(tab.mode || 'ace/mode/javascript');
 			editor.setTheme('ace/theme/monokai');
 			editor.setOptions({
 				autoScrollEditorIntoView: true
 				, printMargin: false
+				, readOnly: tab.readonly || false
 			});
 
-			editor.session.on('change', () => {
-				tab.body = editor.getValue();
+			editor.session.on('change', (newValue) => {
+
+				if(tab.readonly)
+				{
+					return;
+				}
 
 				this.args.editorStatus  = `Code updated at ${(new Date).toISOString()}`
 				this.args.editorRefresh = 'refresh-enabled';
+
+			});
+
+			tab.bindTo('body', v => {
+
+				if(!v || !v.length)
+				{
+					return;
+				}
+
+				if(tab.body == v)
+				{
+					return;
+				}
+
+				editor.setValue(v, -1);
 			});
 
 			editor.resize();
