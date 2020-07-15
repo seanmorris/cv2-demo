@@ -8,11 +8,11 @@ class DemoView extends View
 
 		this.args.time = 'k.';
 
-		this.args.time = (new Date).toISOString();
+		this.args.time = (new Date()).toISOString();
 
 		this.onFrame(() => {
 
-			this.args.time = (new Date).toISOString();
+			this.args.time = (new Date()).toISOString();
 
 		});
 	}

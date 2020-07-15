@@ -36,7 +36,11 @@ export class View extends BaseView
 
 		this.args.orientation = this.args.orientation || 'vertical'; //'horizontal';
 
-		this.args.tabs = {};
+		this.args.tabs       = {};
+		this.args.resultTabs = {};
+
+		this.args.tabs.bindTo((v,k) => v.name = k);
+		this.args.resultTabs.bindTo((v,k) => v.name = k);
 
 		this.args.twoWay = 'Two way binding!';
 
@@ -69,7 +73,7 @@ export class View extends BaseView
 				return;
 			}
 
-			const tab = this.args.tabs[prop];
+			const tab = this.args.tabs[prop] || this.args.resultTabs[prop];
 
 			const editor = ace.edit(tag.element);
 
@@ -83,6 +87,7 @@ export class View extends BaseView
 				autoScrollEditorIntoView: true
 				, printMargin: false
 				, readOnly: tab.readonly || false
+				, scrollbarWidth: 6
 			});
 
 			editor.session.on('change', (newValue) => {
@@ -107,6 +112,11 @@ export class View extends BaseView
 				}
 
 				editor.setValue(v, -1);
+
+				if(tab.readonly)
+				{
+					return;
+				}
 
 				this.refreshCode();
 			});
@@ -174,6 +184,17 @@ export class View extends BaseView
 
 				tag.classList.add('hide');
 			}
+
+			for(const tabName in this.args.resultTabs)
+			{
+				const tab = this.args.resultTabs[tabName];
+				const tag = this.tags.edit[tabName].element.parentNode.parentNode;
+
+				tab.active = '';
+
+				tag.classList.add('hide');
+			}
+
 			this.hideResult();
 		}
 
@@ -188,6 +209,17 @@ export class View extends BaseView
 
 				tag.classList.add('hide');
 			}
+
+			for(const tabName in this.args.resultTabs)
+			{
+				const tab = this.args.resultTabs[tabName];
+				const tag = this.tags.edit[tabName].element.parentNode.parentNode;
+
+				tab.active = '';
+
+				tag.classList.add('hide');
+			}
+
 
 		}
 
@@ -224,7 +256,19 @@ export class View extends BaseView
 			for(const tabName in this.args.tabs)
 			{
 				const tag = this.tags.edit[tabName].element.parentNode.parentNode;
+
 				const tab = this.args.tabs[tabName];
+
+				tab.active = '';
+
+				tag.classList.add('hide');
+			}
+
+			for(const tabName in this.args.resultTabs)
+			{
+				const tag = this.tags.edit[tabName].element.parentNode.parentNode;
+
+				const tab = this.args.resultTabs[tabName];
 
 				tab.active = '';
 
@@ -236,19 +280,21 @@ export class View extends BaseView
 
 		if(!tabs.length)
 		{
-			const tabs = Object.keys(this.args.tabs);
-
-			for(const tabName of tabs)
-			{
-				const tab = this.args.tabs[tabName];
-			}
-
 			this.args.showResult = '';
 			this.args.showSplit  = 'active';
 
-			for(const tabName of tabs)
+			for(const tabName in this.args.tabs)
 			{
 				const tag = this.tags.edit[tabName].element.parentNode.parentNode;
+				const tab = this.args.tabs[tabName];
+
+				tag.classList.remove('hide');
+			}
+
+			for(const tabName in this.args.resultTabs)
+			{
+				const tag = this.tags.edit[tabName].element.parentNode.parentNode;
+				const tab = this.args.resultTabs[tabName];
 
 				tag.classList.remove('hide');
 			}
@@ -261,13 +307,26 @@ export class View extends BaseView
 			{
 				for(const tabName in this.args.tabs)
 				{
-					const tab = this.args.tabs[tabName];
 					const tag = this.tags.edit[tabName].element.parentNode.parentNode;
+
+					const tab = this.args.tabs[tabName];
 
 					tab.active = '';
 
 					tag.classList.add('hide');
 				}
+
+				for(const tabName in this.args.resultTabs)
+				{
+					const tag = this.tags.edit[tabName].element.parentNode.parentNode;
+
+					const tab = this.args.resultTabs[tabName];
+
+					tab.active = '';
+
+					tag.classList.add('hide');
+				}
+
 				this.hideResult();
 			}
 
@@ -280,10 +339,9 @@ export class View extends BaseView
 			this.args.showSplit = '';
 		}
 
-		for(const tabName of tabs)
+		for(const tab of tabs)
 		{
-			const tab = this.args.tabs[tabName];
-			const tag = this.tags.edit[tabName].element.parentNode.parentNode;
+			const tag = this.tags.edit[tab.name].element.parentNode.parentNode;
 
 			if(tab.active)
 			{
@@ -300,8 +358,8 @@ export class View extends BaseView
 
 		for(const tab of tabs)
 		{
-			this.editors[tab].resize();
-			this.args[tab] = true;
+			this.editors[tab.name].resize();
+			this.args[tab.name] = true;
 		}
 	}
 
@@ -320,6 +378,10 @@ export class View extends BaseView
 		{
 			this.editors[tab].resize();
 		}
+		for(const tab in this.args.resultTabs)
+		{
+			this.editors[tab].resize();
+		}
 	}
 
 	clear(clearVar)
@@ -330,5 +392,25 @@ export class View extends BaseView
 	joinClass(input)
 	{
 		return (input || []).join(' ');
+	}
+
+	expand(event)
+	{
+		this.args.expanded = this.args.expanded
+			? ''
+			: 'expanded';
+
+		if(this.args.expanded)
+		{
+			document.body.classList.add('no-scroll');
+
+		}
+		else
+		{
+			document.body.classList.remove('no-scroll');
+
+		}
+
+		this.resizeEditor(event);
 	}
 }

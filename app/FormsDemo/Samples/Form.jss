@@ -25,7 +25,7 @@ class DemoView extends View
 
 			_method: 'POST'
 
-			, hidden: {type:'hidden', value: 'LMAO YOU CANT SEE MEE'}
+			, hidden: {type:'hidden', value: 'hidden value'}
 
 			, id: {type:'number', value: 1000}
 			, name: {}

@@ -36,9 +36,9 @@ export class View extends BaseView
 			, mode: 'ace/mode/html'
 		};
 
-		editor.args.tabs.output = {
-			title:  'output'
-			, file: 'Return JSON'
+		editor.args.resultTabs.output = {
+			title:  'json'
+			, file: 'Result JSON'
 			, body: '{}'
 			, mode: 'ace/mode/javascript'
 			, readonly: true
@@ -46,9 +46,11 @@ export class View extends BaseView
 
 		editor.refreshCode();
 
+		console.log(editor);
+
 		const onMessage = event => {
 
-			editor.args.tabs.output.body = event.data || '';
+			editor.args.resultTabs.output.body = event.data || '';
 
 		};
 

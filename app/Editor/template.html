@@ -1,12 +1,16 @@
-<div class = "editor-window" cv-on = "mouseup:resizeEditor(event)" data-orientation = "[[orientation]]" data-multiselect="[[multiselect]]">
+<div class = "editor-window [[expanded]]" cv-on = "mouseup:resizeEditor(event)" data-orientation = "[[orientation]]" data-multiselect="[[multiselect]]">
 
 	<div class = "row full tabs [[showClasses|joinClass]]">
 
 		<span cv-each = "tabs:tab:t" class = "row dcontent">
-			<div class = "tab [[tab.active]]" cv-on = "click:showTab(t)">[[t]]</div>
+			<div class = "tab [[tab.active]]" cv-on = "click:showTab(tab)">[[tab.title]]</div>
 		</span>
 
 		<div class = "tab [[showResult]]" cv-on = "click:showResult()">result</div>
+
+		<span cv-each = "resultTabs:tab:t" class = "row dcontent">
+			<div class = "tab [[tab.active]]" cv-on = "click:showTab(tab)">[[tab.title]]</div>
+		</span>
 
 		<div class = "tab [[showSplit]]" cv-on = "click:showTab()">all</div>
 
@@ -32,7 +36,24 @@
 			</div>
 		</div>
 
-		<div cv-on = "click:changeOrientation(event)" class = "orientation"><span class = "label">vert/horiz</span><div data-icon = "orientation"></div></div>
+		<span cv-each = "resultTabs:tab:t" class = "dcontent">
+			<div cv-carry = "t" class = "half">
+				<p>[[tab.file]]</p>
+				<div class = "box"><div class = "editor" cv-ref = "edit::t"><textarea cv-bind = "tab.body"></textarea></div></div>
+			</div>
+		</span>
+
+		<div class = "buttons">
+			<div cv-on = "click:expand(event)" class = "button expand">
+				<span class = "label">expand/contract</span>
+				<div data-icon = "expand"></div>
+			</div>
+
+			<div cv-on = "click:changeOrientation(event)" class = "button orientation">
+				<span class = "label">vert/horiz</span>
+				<div data-icon = "orientation"></div>
+			</div>
+		</div>
 
 	</div>
 

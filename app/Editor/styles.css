@@ -1,3 +1,8 @@
+.expanded .tabs {
+	color: white;
+	background-color: black;
+}
+
 .tabs .tab {
 	user-select: none;
 	cursor: pointer;
@@ -126,4 +131,21 @@
 
 .editor-window[data-multiselect="multiselect"] .tabs:hover .hint {
 	opacity: 0.333;
+}
+
+.editor-window .button.orientation [data-icon] {
+	background-image: url(/orientation.svg);
+}
+
+.editor-window .button.expand [data-icon] {
+	background-image: url(/expand.svg);
+	background-size: 70%;
+}
+
+.editor-window.expanded .button.expand [data-icon] {
+	background-image: url(/minimize.svg);
+}
+
+.editor-window[data-orientation="vertical"] .orientation [data-icon] {
+	transform: rotate(90deg);
 }
