@@ -34,6 +34,8 @@ export class View extends BaseView
 		this.args.showHtml   = true;
 		this.args.showResult = true;
 
+		this.args.location = location;
+
 		this.args.orientation = this.args.orientation || 'vertical'; //'horizontal';
 
 		this.args.tabs       = {};
@@ -57,15 +59,32 @@ export class View extends BaseView
 		this.args.showSplit = 'active';
 	}
 
-	stringToDataUrl(input, type = 'text/plain')
-	{
-		return `data:${type};base64,${btoa(input)}`;
-	}
-
-	postRender()
+	postRender(x)
 	{
 		this.tags.edit = {};
 		this.editors   = {};
+
+		const frame = this.tags.result.element;
+
+		// console.log(x);
+		// console.log(frame.getRootNode());
+		// console.log(frame.contentWindow);
+
+		// console.log(frame.contentWindow.frames[0]);
+
+		// this.onInterval(1000, () => {
+		// 	if(!this.tags.result)
+		// 	{
+		// 		return;
+		// 	}
+
+		// 	const frame = this.tags.result.element;
+
+		// 	frame.contentWindow.frames[0].postMessage(
+		// 		(new Date()).toISOString()
+		// 		, '*'
+		// 	);
+		// });
 
 		this.tags.edit.bindTo((tag, prop) => {
 			if(!tag)
@@ -126,6 +145,14 @@ export class View extends BaseView
 		});
 	}
 
+	attached()
+	{
+	}
+
+	frameLoaded(event)
+	{
+	}
+
 	refreshCode(event)
 	{
 		let resultTemplate = require('./results');
@@ -158,17 +185,10 @@ export class View extends BaseView
 			/\[STYLE\]/g, css
 		);
 
-		this.args.frameSource = this.stringToDataUrl(
-			resultTemplate, 'text/html'
-		);
+		this.args.frameSource = resultTemplate;
 
 		this.args.editorStatus  = `Last ran at ${(new Date).toISOString()}`
 		this.args.editorRefresh = 'refresh-disabled';
-	}
-
-	stringToDataUrl(input, type = 'text/plain')
-	{
-		return `data:${type};base64,${btoa(input)}`;
 	}
 
 	showResult()
@@ -412,5 +432,10 @@ export class View extends BaseView
 		}
 
 		this.resizeEditor(event);
+	}
+
+	escapeQuotes(input)
+	{
+		return String(input).replace(/"/g, '&quot;')
 	}
 }

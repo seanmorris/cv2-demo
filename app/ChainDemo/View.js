@@ -32,7 +32,7 @@ export class View extends BaseView
 
 			current[ k ] = v;
 
-			this.args.selectedJson = JSON.stringify(current, null, 4);
+			this.args.selectedJson = JSON.stringify(current, null, 2);
 		});
 
 		this.args.bindTo('selectedId', (v,k) => {
@@ -60,7 +60,7 @@ export class View extends BaseView
 				this.args.input[i] = selected[i];
 			}
 
-			this.args.selectedJson = JSON.stringify(this.current, null, 4);
+			this.args.selectedJson = JSON.stringify(this.current, null, 2);
 		});
 
 		this.args.selectedId = 0;

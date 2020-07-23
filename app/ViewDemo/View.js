@@ -4,9 +4,18 @@ import { View as ObjectView } from '../ObjectDemo/View';
 
 import { View as EditorView } from '../Editor/View';
 
+import { PhpEditor } from '../FormsDemo/PhpEditor';
+
+const Module = {
+	onRuntimeInitialized: () => {
+		console.log('WASM Loaded');
+	}
+};
+
 import * as ace from 'brace';
 
 import 'brace/mode/html';
+import 'brace/mode/php';
 import 'brace/mode/javascript';
 import 'brace/theme/monokai';
 
@@ -22,8 +31,10 @@ export class View extends BaseView
 
 		window.addEventListener('message', onMessage);
 
-		this.onRemove(()=>{
+		this.onRemove(() => {
+
 			window.removeEventListener('message', onMessage);
+
 		});
 
 		const editor = this.args.editor = new EditorView;
@@ -157,6 +168,17 @@ export class View extends BaseView
 		};
 
 		editorReuse.refreshCode();
+
+		const editorPhp = this.args.editorPhp = new PhpEditor;
+
+		editorPhp.args.tabs.php = {
+			title:  'php'
+			, file: 'HelloWorld.php'
+			, body: require('./Samples/HelloWorld.php')
+			, mode: 'ace/mode/php'
+		};
+
+		editorPhp.refreshCode();
 	}
 
 	addItalicTags(input)

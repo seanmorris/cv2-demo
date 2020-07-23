@@ -1,8 +1,6 @@
 import { View as BaseView   } from 'curvature/base/View';
-import { View as ArrayView  } from '../ArrayDemo/View';
-import { View as ObjectView } from '../ObjectDemo/View';
 
-import { View as EditorView } from '../Editor/View';
+import { FormEditor as EditorView } from './FormEditor';
 
 import * as ace from 'brace';
 
@@ -20,115 +18,226 @@ export class View extends BaseView
 
 		this.template = require('./template');
 
-		const editor = this.args.editor = new EditorView;
+		const basic = this.args.basic = new EditorView;
 
-		editor.args.tabs.js   = {
+		basic.args.tabs.js   = {
 			title:  'js'
 			, file: 'DemoView.js'
-			, body: require('./Samples/Form.jss')
+			, body: require('./Samples/Basic.jss')
 			, mode: 'ace/mode/javascript'
 		};
 
-		editor.args.tabs.html = {
+		basic.args.tabs.html = {
 			title:  'html'
 			, file: 'template.html'
 			, body: require('./Samples/Form.html')
 			, mode: 'ace/mode/html'
 		};
 
-		editor.args.resultTabs.output = {
-			title:  'json'
-			, file: 'Result JSON'
-			, body: '{}'
+		basic.refreshCode();
+
+		const group = this.args.group = new EditorView;
+
+		group.args.tabs.js   = {
+			title:  'js'
+			, file: 'DemoView.js'
+			, body: require('./Samples/Groups.jss')
 			, mode: 'ace/mode/javascript'
-			, readonly: true
 		};
 
-		editor.refreshCode();
-
-		console.log(editor);
-
-		const onMessage = event => {
-
-			editor.args.resultTabs.output.body = event.data || '';
-
+		group.args.tabs.html = {
+			title:  'html'
+			, file: 'template.html'
+			, body: require('./Samples/Form.html')
+			, mode: 'ace/mode/html'
 		};
 
-		window.addEventListener('message', onMessage);
+		group.refreshCode();
 
-		this.onRemove(()=>{
-			window.removeEventListener('message', onMessage);
-		});
+		const textField = this.args.textField = new EditorView;
 
-
-		const commentField = {
-			type: 'fieldset'
-			, array: true
-			, children: {
-				id: {type: 'number'}
-				, content: {
-					type: 'textarea',
-					name: 'comments[0][content]'
-
-				}
-			}
+		textField.args.tabs.js   = {
+			title:  'js'
+			, file: 'DemoView.js'
+			, body: require('./Samples/TextField.jss')
+			, mode: 'ace/mode/javascript'
 		};
 
-		const formSkeleton = {
-
-			_method: 'POST'
-
-			, hidden: {type:'hidden', value: 'LMAO YOU CANT SEE MEE'}
-
-			, id: {type:'number', value: 1000}
-			, name: {}
-
-			, access: {
-				type:    'radios'
-				, options: {
-					'private':  0
-					, 'public': 1
-				}
-			}
-
-			, image: {type: 'file'}
-
-			, type: {
-				type:    'select'
-				, value: 300
-				, options: {
-					'-select-': null
-					, 'image':  100
-					, 'text':   200
-					, 'video':  300
-				}
-			}
-
-			, comments: {
-				name: 'comments'
-				, type: 'fieldset'
-				, array: true
-				, children: {
-					0: Object.assign({}, commentField)
-					, 1: Object.assign({}, commentField)
-				}
-			}
-
-			, submit: {
-				type: 'submit'
-			}
+		textField.args.tabs.html = {
+			title:  'html'
+			, file: 'template.html'
+			, body: require('./Samples/Form.html')
+			, mode: 'ace/mode/html'
 		};
 
-		const form = new Form(formSkeleton);
+		textField.refreshCode();
 
-		form.bindTo('json', v => this.args.output = this.toJson(form.value));
+		const textareaField = this.args.textareaField = new EditorView;
 
-		this.args.form = form;
-		this.args.formSkeleton = formSkeleton;
+		textareaField.args.tabs.js   = {
+			title:  'js'
+			, file: 'DemoView.js'
+			, body: require('./Samples/TextAreaField.jss')
+			, mode: 'ace/mode/javascript'
+		};
+
+		textareaField.args.tabs.html = {
+			title:  'html'
+			, file: 'template.html'
+			, body: require('./Samples/Form.html')
+			, mode: 'ace/mode/html'
+		};
+
+		textareaField.refreshCode();
+
+		const fileField = this.args.fileField = new EditorView;
+
+		fileField.args.tabs.js   = {
+			title:  'js'
+			, file: 'DemoView.js'
+			, body: require('./Samples/FileField.jss')
+			, mode: 'ace/mode/javascript'
+		};
+
+		fileField.args.tabs.html = {
+			title:  'html'
+			, file: 'template.html'
+			, body: require('./Samples/Form.html')
+			, mode: 'ace/mode/html'
+		};
+
+		fileField.refreshCode();
+
+		const submitField = this.args.submitField = new EditorView;
+
+		submitField.args.tabs.js   = {
+			title:  'js'
+			, file: 'DemoView.js'
+			, body: require('./Samples/SubmitField.jss')
+			, mode: 'ace/mode/javascript'
+		};
+
+		submitField.args.tabs.html = {
+			title:  'html'
+			, file: 'template.html'
+			, body: require('./Samples/Form.html')
+			, mode: 'ace/mode/html'
+		};
+
+		submitField.refreshCode();
+
+		const buttonField = this.args.buttonField = new EditorView;
+
+		buttonField.args.tabs.js   = {
+			title:  'js'
+			, file: 'DemoView.js'
+			, body: require('./Samples/ButtonField.jss')
+			, mode: 'ace/mode/javascript'
+		};
+
+		buttonField.args.tabs.html = {
+			title:  'html'
+			, file: 'template.html'
+			, body: require('./Samples/Form.html')
+			, mode: 'ace/mode/html'
+		};
+
+		buttonField.refreshCode();
+
+		const checkboxField = this.args.checkboxField = new EditorView;
+
+		checkboxField.args.tabs.js   = {
+			title:  'js'
+			, file: 'DemoView.js'
+			, body: require('./Samples/Checkbox.jss')
+			, mode: 'ace/mode/javascript'
+		};
+
+		checkboxField.args.tabs.html = {
+			title:  'html'
+			, file: 'template.html'
+			, body: require('./Samples/Form.html')
+			, mode: 'ace/mode/html'
+		};
+
+		checkboxField.refreshCode();
+
+		const selectField = this.args.selectField = new EditorView;
+
+		selectField.args.tabs.js   = {
+			title:  'js'
+			, file: 'DemoView.js'
+			, body: require('./Samples/SelectField.jss')
+			, mode: 'ace/mode/javascript'
+		};
+
+		selectField.args.tabs.html = {
+			title:  'html'
+			, file: 'template.html'
+			, body: require('./Samples/Form.html')
+			, mode: 'ace/mode/html'
+		};
+
+		selectField.refreshCode();
+
+		const radioField = this.args.radioField = new EditorView;
+
+		radioField.args.tabs.js   = {
+			title:  'js'
+			, file: 'DemoView.js'
+			, body: require('./Samples/RadioField.jss')
+			, mode: 'ace/mode/javascript'
+		};
+
+		radioField.args.tabs.html = {
+			title:  'html'
+			, file: 'template.html'
+			, body: require('./Samples/Form.html')
+			, mode: 'ace/mode/html'
+		};
+
+		radioField.refreshCode();
+
+		const hiddenField = this.args.hiddenField = new EditorView;
+
+		hiddenField.args.tabs.js   = {
+			title:  'js'
+			, file: 'DemoView.js'
+			, body: require('./Samples/HiddenField.jss')
+			, mode: 'ace/mode/javascript'
+		};
+
+		hiddenField.args.tabs.html = {
+			title:  'html'
+			, file: 'template.html'
+			, body: require('./Samples/Form.html')
+			, mode: 'ace/mode/html'
+		};
+
+		hiddenField.refreshCode();
+
+		const htmlField = this.args.htmlField = new EditorView;
+
+		htmlField.args.tabs.js   = {
+			title:  'js'
+			, file: 'DemoView.js'
+			, body: require('./Samples/HtmlField.jss')
+			, mode: 'ace/mode/javascript'
+		};
+
+		htmlField.args.tabs.html = {
+			title:  'html'
+			, file: 'template.html'
+			, body: require('./Samples/HtmlForm.html')
+			, mode: 'ace/mode/html'
+		};
+
+		htmlField.refreshCode();
 	}
 
 	postRender()
 	{
+
 	}
 
 	toJson(input)

@@ -35,8 +35,7 @@ fieldset {
 iframe {
 	flex: 1;
 	border: 0px;
-	background-color: #DFF;
-	filter: invert(100%);
+	background-color: #FFF;
 }
 
 .dcontent {

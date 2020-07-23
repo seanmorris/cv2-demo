@@ -1,3 +1,5 @@
+const View = require('curvature/base/View').View;
+
 class DemoView extends View
 {
 	constructor()
@@ -5,8 +7,6 @@ class DemoView extends View
 		super();
 
 		this.template = require('template');
-
-		this.args.time = 'k.';
 
 		this.args.time = (new Date()).toISOString();
 

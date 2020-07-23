@@ -1,26 +1,43 @@
 <!DOCTYPE HTML>
 <head>
-	<style>
-		[STYLE]
-	</style>
-	<script src = "[ORIGIN]/vendor.js"></script>
-	<script>require.register('Config', function(exports, require, module) { return module.exports = {}});</script>
-	<script>require.register('template', function(exports, require, module) { return module.exports = `[TEMPLATE]`});</script>
-	<script src = "[ORIGIN]/curvature.js"></script>
-	<script>document.addEventListener('DOMContentLoaded', () => {
-		const View = require('curvature/base/View').View;
-		// const Form = require('curvature/form/Form').Form;
+<style>[STYLE]</style>
+<script src = "[ORIGIN]/vendor.js"></script>
+<script>require.register('Config', (exports, require, module)=>{ return module.exports = {}});</script>
 
-		[SCRIPT]
+<script>require.register('template', (exports, require, module)=>{ return module.exports = `[TEMPLATE]`});</script>
 
-		if(typeof DemoView !== 'undefined')
-		{
-			const view = new DemoView;
+<script src = "[ORIGIN]/curvature.js"></script>
 
-			view.render(document.body);
-		}
+<script>
 
-	});</script>
+window.addEventListener('submit', (event) => {
+
+	console.log(event);
+
+	const error = event.message;
+
+	window.parent.parent.postMessage(
+		JSON.stringify({'@error': error}, null, 2)
+	, '*');
+
+}, false);
+
+document.addEventListener('DOMContentLoaded', () => {
+
+	[SCRIPT]
+
+	if(typeof DemoView !== 'undefined')
+	{
+		const view = new DemoView;
+
+		view.render(document.body);
+	}
+
+	console.debug()
+
+});
+
+</script>
 </head>
 <body>
 </body>

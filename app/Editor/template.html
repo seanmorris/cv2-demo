@@ -14,7 +14,10 @@
 
 		<div class = "tab [[showSplit]]" cv-on = "click:showTab()">all</div>
 
-		<span class = "hint">hold ctrl / ⌘ to select multiple tabs.</span>
+		<span class = "hint">
+			<div data-icon = "check"></div>
+			hold ctrl / ⌘ to select multiple tabs.
+		</span>
 
 	</div>
 
@@ -32,7 +35,27 @@
 		<div class = "half [[showResult]]">
 			<p>Result</p>
 			<div class = "result">
-				<iframe src = "[[frameSource]]"></iframe>
+				<iframe
+					cv-ref = "result"
+					cv-on  = "load:frameLoaded(event)"
+					srcdoc = '
+				<meta http-equiv="Content-Security-Policy" content="default-src [[location.origin]]/curvature.js ws://[[location.hostname]]:9485
+				[[location.origin]]/vendor.js &apos;unsafe-inline&apos;;">
+				<style>
+					iframe {
+						position: absolute;
+						top: 0px;
+						left: 0px;
+						width: 100%;
+						height: 100%;
+						border: none;
+					}
+				</style>
+				<iframe
+					sandbox = "allow-scripts"
+					srcdoc  = "[[frameSource|escapeQuotes]]"
+				></iframe>
+				'></iframe>
 			</div>
 		</div>
 
@@ -44,15 +67,17 @@
 		</span>
 
 		<div class = "buttons">
-			<div cv-on = "click:expand(event)" class = "button expand">
-				<span class = "label">expand/contract</span>
-				<div data-icon = "expand"></div>
-			</div>
 
 			<div cv-on = "click:changeOrientation(event)" class = "button orientation">
 				<span class = "label">vert/horiz</span>
 				<div data-icon = "orientation"></div>
 			</div>
+
+			<div cv-on = "click:expand(event)" class = "button expand">
+				<span class = "label">expand/contract</span>
+				<div data-icon = "expand"></div>
+			</div>
+
 		</div>
 
 	</div>

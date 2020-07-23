@@ -130,7 +130,11 @@
 }
 
 .editor-window[data-multiselect="multiselect"] .tabs:hover .hint {
-	opacity: 0.333;
+	opacity: 0.666;
+}
+
+.editor-window[data-multiselect="multiselect"] [data-icon="check"] {
+	opacity: 1;
 }
 
 .editor-window .button.orientation [data-icon] {
@@ -142,10 +146,25 @@
 	background-size: 70%;
 }
 
+.editor-window.expanded [data-icon="check"] {
+	filter: invert(100%);
+}
+
 .editor-window.expanded .button.expand [data-icon] {
 	background-image: url(/minimize.svg);
 }
 
 .editor-window[data-orientation="vertical"] .orientation [data-icon] {
 	transform: rotate(90deg);
+}
+
+[data-icon="check"] {
+	transition: opacity 0.2s ease-out;
+	opacity: 0;
+	background-image: url(/check.svg);
+	background-color: transparent;
+	display: inline-flex;
+	margin: 0.5em;
+	margin-top: auto;
+	margin-bottom: auto;
 }

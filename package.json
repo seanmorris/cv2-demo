@@ -4,12 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "postinstall": [
+      "cp node_modules/php-wasm/php-web.* public/",
+      "cp node_modules/php-wasm/php-web.data public/"
+    ]
   },
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "curvature": "^0.0.48"
+    "curvature": "^0.0.53",
+    "php-wasm": "^0.0.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",

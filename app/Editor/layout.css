@@ -161,7 +161,7 @@
 	opacity: 0.95;
 }
 
-.editor-window .buttons [data-icon] {
+[data-icon] {
 	color: #CCC;
 	background-color: #999;
 	background-size: contain;

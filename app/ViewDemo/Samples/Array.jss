@@ -1,3 +1,5 @@
+const View = require('curvature/base/View').View;
+
 class DemoView extends View
 {
 	constructor()

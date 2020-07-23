@@ -1,3 +1,6 @@
+const View = require('curvature/base/View').View;
+const Form = require('curvature/form/Form').Form;
+
 class DemoView extends View
 {
 	constructor()
@@ -6,18 +9,12 @@ class DemoView extends View
 
 		this.template = require('template');
 
-		const Form = require('curvature/form/Form').Form;
-
 		const commentField = {
 			type: 'fieldset'
 			, array: true
 			, children: {
-				id: {type: 'number'}
-				, content: {
-					type: 'textarea',
-					name: 'comments[0][content]'
-
-				}
+				id:        {type: 'number'}
+				, content: {type: 'textarea'}
 			}
 		};
 
@@ -33,8 +30,10 @@ class DemoView extends View
 			, access: {
 				type:    'radios'
 				, options: {
+
 					'private':  0
 					, 'public': 1
+
 				}
 			}
 
@@ -44,21 +43,25 @@ class DemoView extends View
 				type:    'select'
 				, value: 300
 				, options: {
+
 					'-select-': null
 					, 'image':  100
 					, 'text':   200
 					, 'video':  300
+
 				}
 			}
 
 			, comments: {
-				name: 'comments'
+				name:   'comments'
 				, type: 'fieldset'
 				, array: true
-				, children: {
-					0: Object.assign({}, commentField)
-					, 1: Object.assign({}, commentField)
-				}
+				, children: [
+
+					commentField
+					, commentField
+
+				]
 			}
 
 			, submit: {
@@ -73,7 +76,7 @@ class DemoView extends View
 
 			this.args.output = output;
 
-			window.parent.postMessage(output, 'http://localhost:3333');
+			window.parent.parent.postMessage(output, 'http://localhost:3333');
 		});
 
 		this.args.form = form;
