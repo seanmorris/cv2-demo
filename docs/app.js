@@ -1,1 +1,3674 @@
-!function(){"use strict";var t="undefined"==typeof global?self:global;if("function"!=typeof t.require){var e={},n={},r={},o={}.hasOwnProperty,i=/^\.\.?(\/|$)/,s=function(t,e){for(var n,r=[],o=(i.test(e)?t+"/"+e:e).split("/"),s=0,a=o.length;s<a;s++)".."===(n=o[s])?r.pop():"."!==n&&""!==n&&r.push(n);return r.join("/")},a=function(t){return t.split("/").slice(0,-1).join("/")},l=function(e,r){var o,i={id:e,exports:{},hot:d&&d.createHot(e)};return n[e]=i,r(i.exports,(o=e,function(e){var n=s(a(o),e);return t.require(n,o)}),i),i.exports},u=function(t){var e=r[t];return e&&t!==e?u(e):t},c=function(t,r){null==r&&(r="/");var i=u(t);if(o.call(n,i))return n[i].exports;if(o.call(e,i))return l(i,e[i]);throw new Error("Cannot find module '"+t+"' from '"+r+"'")};c.alias=function(t,e){r[e]=t};var f=/\.[^.\/]+$/,p=/\/index(\.[^\/]+)?$/;c.register=c.define=function(t,i){if(t&&"object"==typeof t)for(var s in t)o.call(t,s)&&c.register(s,t[s]);else e[t]=i,delete n[t],function(t){if(f.test(t)){var e=t.replace(f,"");o.call(r,e)&&r[e].replace(f,"")!==e+"/index"||(r[e]=t)}if(p.test(t)){var n=t.replace(p,"");o.call(r,n)||(r[n]=t)}}(t)},c.list=function(){var t=[];for(var n in e)o.call(e,n)&&t.push(n);return t};var d=t._hmr&&new t._hmr(function(t,e){return u(s(a(t),e))},c,e,n);c._cache=n,c.hmr=d&&d.wrap,c.brunch=!0,t.require=c}}(),function(){"undefined"==typeof window||window;var t=function(t,e,n){var r={},o=function(e,n){try{return t(n+"/node_modules/"+e)}catch(t){if(-1===t.toString().indexOf("Cannot find module"))throw t;if(-1!==n.indexOf("node_modules")){var i=n.split("/"),s=i.lastIndexOf("node_modules"),a=i.slice(0,s).join("/");return o(e,a)}}return r};return function(i){if(i in e&&(i=e[i]),i){if("."!==i[0]&&n){var s=o(i,n);if(s!==r)return s}return t(i)}}};require.register("curvature/form/multiField/FormWrapper.js",function(e,n,r){n=t(n,{},"curvature"),function(){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.FormWrapper=void 0;var t=n("../../base/Repository"),r=n("../../form/Form"),o=n("../../toast/Toast"),i=(n("../../toast/ToastAlert"),n("../../base/View")),s=n("../../base/Router");function a(t){"@babel/helpers - typeof";return(a="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t})(t)}function l(t,e){for(var n=0;n<e.length;n++){var r=e[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(t,r.key,r)}}function u(t,e){return!e||"object"!==a(e)&&"function"!=typeof e?function(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}(t):e}function c(t){return(c=Object.setPrototypeOf?Object.getPrototypeOf:function(t){return t.__proto__||Object.getPrototypeOf(t)})(t)}function f(t,e){return(f=Object.setPrototypeOf||function(t,e){return t.__proto__=e,t})(t,e)}var p=function(e){function n(e,o){var i,s=arguments.length>2&&void 0!==arguments[2]?arguments[2]:"GET",a=arguments.length>3&&void 0!==arguments[3]?arguments[3]:{};return function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,n),(i=u(this,c(n).call(this,e))).path=o,i.args.method=s,i.args.action=i.args.action||null,i.args.form=null,i.args.title=null,i.args.class="",i.template='\n\t\t\t<div class = "form constrict [[class]]">\n\t\t\t\t<div cv-if = "title"><label>[[title]]</label></div>\n\t\t\t\t[[form]]\n\t\t\t</div>\n\t\t',i._onLoad=[],i._onSubmit=[],i._onRender=[],i._onRequest=[],i._onError=[],i._onResponse=[],o instanceof r.Form?i.loadForm(form,a):t.Repository.request(o).then(function(t){t&&t.meta&&t.meta.form&&t.meta.form instanceof Object?(i.loadForm(new r.Form(t.meta.form,a)),i.onLoad(i.args.form,t.body)):console.log("Cannot render form with ",t)}),i}var a,p,d;return function(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),e&&f(t,e)}(n,i.View),a=n,(p=[{key:"loadForm",value:function(e){var n=this;this.args.form=e,this.args.form.onSubmit(function(e,r){if(!1!==n.onSubmit(e,r)){r&&(r.preventDefault(),r.stopPropagation());var o=e.tags.formTag.element,i=o.getAttribute("action")||n.args.action||n.path,a=o.getAttribute("method")||n.args.method,l=e.args.flatValue;if("GET"==(a=a.toUpperCase())){var u={};for(var c in n.args.content&&n.args.content.args&&(n.args.content.args.page=0),u.page=0,l)"api"!==c&&(u[c]=l[c]);n.onRequest(u).then(function(){n.onResponse({}),s.Router.go(i+"?"+s.Router.queryToString(u)),n.update(u)}).catch(function(t){n.onRequestError(t)})}else if("POST"==a){var f=e.formData(),p=!0,d=!1,m=void 0;try{for(var h,b=f.entries()[Symbol.iterator]();!(p=(h=b.next()).done);p=!0)h.value}catch(t){d=!0,m=t}finally{try{p||null==b.return||b.return()}finally{if(d)throw m}}var y=n.onRequest(f);y&&y.then(function(){t.Repository.request(i,{api:"json"},f,!1,{progressDown:function(t){n.progressDown(t)},progressUp:function(t){n.progressUp(t)}}).then(function(t){n.onResponse(t)}).catch(function(t){n.onRequestError(t)})})}}})}},{key:"onRequest",value:function(t){var e=[];for(var n in this._onRequest){var r=this._onRequest[n](t,this);r&&e.push(r)}return 0==e.length?Promise.resolve():Promise.all(e)}},{key:"onRequestError",value:function(t){for(var e in this._onError)this._onError[e](t,this);if(t.messages)for(var n in t.messages)o.Toast.instance().alert(t.body&&t.body.id?"Success!":"Error!",t.messages[n],3500)}},{key:"onResponse",value:function(t){for(var e in this._onResponse)this._onResponse[e](t,this);if(t.messages)for(var n in t.messages)o.Toast.instance().alert(t.body&&t.body.id?"Success!":"Error!",t.messages[n],3500)}},{key:"onLoad",value:function(t,e){for(var n in this._onLoad)this._onLoad[n](this,t,e)}},{key:"onSubmit",value:function(t,e){for(var n in this._onSubmit)this._onSubmit[n](this,e)}},{key:"postRender",value:function(){for(var t in this._onRender)this._onRender[t](this.args.form)}},{key:"customFields",value:function(){return{}}},{key:"submit",value:function(){}},{key:"progressUp",value:function(t){console.log(t.loaded,t.total,t.loaded/t.total)}},{key:"progressDown",value:function(t){console.log(t.loaded,t.total,t.loaded/t.total)}}])&&l(a.prototype,p),d&&l(a,d),n}();e.FormWrapper=p}()}),require.register("curvature/form/multiField/Wrapper.js",function(e,n,r){n=t(n,{},"curvature"),function(){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.Wrapper=void 0;var t=n("Config"),r=n("../../base/View"),o=n("../../base/Repository");function i(t){"@babel/helpers - typeof";return(i="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t})(t)}function s(t,e){for(var n=0;n<e.length;n++){var r=e[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(t,r.key,r)}}function a(t,e){return!e||"object"!==i(e)&&"function"!=typeof e?function(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}(t):e}function l(t){return(l=Object.setPrototypeOf?Object.getPrototypeOf:function(t){return t.__proto__||Object.getPrototypeOf(t)})(t)}function u(t,e){return(u=Object.setPrototypeOf||function(t,e){return t.__proto__=e,t})(t,e)}var c=function(e){function n(t){var e;return function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,n),(e=a(this,l(n).call(this,t))).template='\n\t\t\t<div\n\t\t\t\tclass = "wrapped-field [[classes]]"\n\t\t\t\tcv-on = "click:editRecord(event, key)"\n\t\t\t\ttitle = "[[fieldName]]: [[id]]"\n\t\t\t>\n\t\t\t\t<div\n\t\t\t\t\tcv-on = "click:deleteImage(event, key)"\n\t\t\t\t\tstyle = "display: inline; cursor:pointer;"\n\t\t\t\t>\n\t\t\t\t\t[[icon]]\n\t\t\t\t</div>\n\t\t\t\t<div class = "field-content">\n\t\t\t\t\t[[title]]\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<div style = "display:none">[[field]]</div>\n\t\t',e.args.field=e.args.field||"!",e.args.keyword="",e.args.title="",e.args.record={},e.args.key=e.args.field.key,e.args.classes="",e.args.icon="×",e.deleted=!1,e.args.field.args.bindTo("fieldName",function(t){e.args.fieldName=t}),e.args.fieldName=e.args.field.args.name,e.args.id=e.args.field.args.value.id,e.args.bindTo("id",function(t){e.args.field.args.value.id=t}),e.args.field.args.value.bindTo("id",function(t,n){t&&o.Repository.request(e.backendPath(),{id:t}).then(function(n){e.args.id=t;var r=n.body[0];if(!r)return e.args.publicId=null,void(e.args.title=null);e.refresh(r)})},{wait:0}),e.args.field.args.value.bindTo("keyword",function(t){e.args.keyword=t}),e}var i,c,f;return function(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),e&&u(t,e)}(n,r.View),i=n,(c=[{key:"editRecord",value:function(){this.args.parent.editRecord(this.args.record,this)}},{key:"deleteImage",value:function(t,e){t.stopPropagation(),this.deleted?(this.args.icon="×",this.args.parent.undeleteImage(e),this.deleted=!1):(this.args.icon="↺",this.args.parent.deleteImage(e),this.deleted=!0)}},{key:"backendPath",value:function(){return(t.Config?t.Config.backend:"//")+this.args.parent.args.attrs["data-endpoint"]}},{key:"getRecordTitle",value:function(t){return t._titleField?t[t._titleField]:t.title||t.publicId||t.id}},{key:"refresh",value:function(t){for(var e in t)this.args[e]=t[e];this.args.record=t,this.args.title=this.getRecordTitle(t)}}])&&s(i.prototype,c),f&&s(i,f),n}();e.Wrapper=c}()}),require.register("ArrayDemo/View.js",function(t,e,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.View=void 0;var r=e("curvature/base/View");function o(t){"@babel/helpers - typeof";return(o="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t})(t)}function i(t,e){for(var n=0;n<e.length;n++){var r=e[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(t,r.key,r)}}function s(t,e){return(s=Object.setPrototypeOf||function(t,e){return t.__proto__=e,t})(t,e)}function a(t){var e=function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],function(){})),!0}catch(t){return!1}}();return function(){var n,r=l(t);if(e){var i=l(this).constructor;n=Reflect.construct(r,arguments,i)}else n=r.apply(this,arguments);return function(t,e){if(e&&("object"===o(e)||"function"==typeof e))return e;return function(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}(t)}(this,n)}}function l(t){return(l=Object.setPrototypeOf?Object.getPrototypeOf:function(t){return t.__proto__||Object.getPrototypeOf(t)})(t)}var u=function(t){!function(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),e&&s(t,e)}(c,r.View);var n,o,l,u=a(c);function c(){var t;return function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,c),(t=u.call(this)).template=e("./template"),t.z=0,t.routes={},t.args.list=[0,1,2,3,4,5],t.args.obj={a:1,b:2,c:3},t}return n=c,(o=[{key:"splice",value:function(t,e,n){this.args.list.splice(t,e,n)}},{key:"arrayUnshift",value:function(){this.args.list.unshift(this.z+++"new_shift")}},{key:"arrayShift",value:function(){this.args.list.shift()}},{key:"arrayPush",value:function(){this.args.list.push(this.z+++" new_push")}},{key:"arrayPop",value:function(){this.args.list.pop()}},{key:"arraySort",value:function(){this.args.list.sort()}},{key:"arrayReverse",value:function(){this.args.list=this.args.list.reverse()}},{key:"setIndex",value:function(t,e){this.args.list[t]=e}},{key:"delIndex",value:function(t){delete this.args.list[t]}}])&&i(n.prototype,o),l&&i(n,l),c}();t.View=u}),require.register("ArrayDemo/template.html",function(t,e,n){n.exports='<h2>Array Binding Demo</h2>\n\n<div class = "row">\n\t<fieldset>\n\t\t<label>set</label>\n\t\t<input cv-bind = "setIndex" />\n\t\t<input cv-bind = "setIndexValue" />\n\t\t<button cv-on = "click:setIndex(setIndex,setIndexValue)">set</button>\n\t</fieldset>\n\n\t<fieldset>\n\t\t<label>delete</label>\n\t\t<input cv-bind = "delIndex" />\n\t\t<button cv-on = "click:delIndex(delIndex)">set</button>\n\t</fieldset>\n\n\t<fieldset>\n\t\t<label>splice</label>\n\t\t<input cv-bind = "splicePosition" />\n\t\t<input cv-bind = "spliceDelete" />\n\t\t<input cv-bind = "spliceItem" />\n\t\t<button cv-on = "click:splice(splicePosition,spliceDelete,spliceItem)">Splice</button>\n\t</fieldset>\n</div>\n\n<div class = "row">\n\t<fieldset>\n\t\t<button cv-on = "click:arrayUnshift">Unshift</button>\n\t\t<button cv-on = "click:arrayShift">Shift</button>\n\t</fieldset>\n\n\t<fieldset>\n\t\t<button cv-on = "click:arrayPush">Push</button>\n\t\t<button cv-on = "click:arrayPop">Pop</button>\n\t</fieldset>\n\n\t<fieldset>\n\t\t<button cv-on = "click:arraySort">Sort</button>\n\t\t<button cv-on = "click:arrayReverse">Reverse</button>\n\t</fieldset>\n</div>\n\n<div cv-each = "list:item:i">\n\t<p>[[item]]</p>\n</div>\n'}),require.register("ChainDemo/View.js",function(t,e,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.View=void 0;var r=e("curvature/base/View");e("../ArrayDemo/View"),e("../ObjectDemo/View");function o(t){"@babel/helpers - typeof";return(o="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t})(t)}function i(t,e){return(i=Object.setPrototypeOf||function(t,e){return t.__proto__=e,t})(t,e)}function s(t){var e=function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],function(){})),!0}catch(t){return!1}}();return function(){var n,r=a(t);if(e){var i=a(this).constructor;n=Reflect.construct(r,arguments,i)}else n=r.apply(this,arguments);return function(t,e){if(e&&("object"===o(e)||"function"==typeof e))return e;return function(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}(t)}(this,n)}}function a(t){return(a=Object.setPrototypeOf?Object.getPrototypeOf:function(t){return t.__proto__||Object.getPrototypeOf(t)})(t)}var l=function(t){!function(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),e&&i(t,e)}(o,r.View);var n=s(o);function o(){var t;return function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,o),(t=n.call(this)).template=e("./template"),t.current=null,t.args.objects=[],t.args.input={},t.args.selectedJson="{}",t.args.objects.push({},{},{},{}),t.args.input.bindTo(function(e,n,r,o){t.args.selectedId;var i=t.current;i&&(i[n]=e,t.args.selectedJson=JSON.stringify(i,null,2))}),t.args.bindTo("selectedId",function(e,n){if(t.args.objects[e]){var r=t.args.objects[e];for(var o in console.log(r),t.current=null,t.args.input)t.args.input[o]=null;for(var i in t.current=r,r)t.args.input[i]=r[i];t.args.selectedJson=JSON.stringify(t.current,null,2)}}),t.args.selectedId=0,t}return o}();t.View=l}),require.register("ChainDemo/template.html",function(t,e,n){n.exports='<h2>Chain Binding Demo</h2>\n\n<pre>objects[[[selectedId]]] === [[selectedJson]];</pre>\n\n<p>input.a: <input cv-bind = "input.a"> : [[input.a]]</p>\n<p>input.b: <input cv-bind = "input.b"> : [[input.b]]</p>\n<p>input.c: <input cv-bind = "input.c"> : [[input.c]]</p>\n\n<button>add</button>\n<button>remove</button>\n\n<br />\n\n<select\n\tsize = "10"\n\tcv-bind = "selectedId"\n\tcv-each = "objects:object:o"\n>\n\t<option value = "[[o]]">object [[o]]</option>\n</select>\n'}),require.register("Config.js",function(t,e,n){"use strict";function r(t,e){for(var n=0;n<e.length;n++){var r=e[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(t,r.key,r)}}Object.defineProperty(t,"__esModule",{value:!0}),t.Config=void 0;var o=function(){function t(){!function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,t)}var e,n,o;return e=t,o=[{key:"theme",get:function(){return"cv-playground"}}],(n=null)&&r(e.prototype,n),o&&r(e,o),t}();t.Config=o}),require.register("ConfigDemo/Samples/Config.jss",function(t,e,n){n.exports="const View   = require('curvature/base/View').View;\nconst Config = require('curvature/base/Config').Config;\nconst TopLvl = require('Config').Config;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tConfig.init({'foo':'FOO'});\n\t\tConfig.init('{\"bar\":\"BAR\"}');\n\t\tConfig.set('baz', 'BAZ');\n\t\tTopLvl.quz = 'QUZ';\n\n\t\tthis.args.configFoo = Config.get('foo');\n\t\tthis.args.topLvlFoo = TopLvl.foo;\n\n\t\tthis.args.configBar = Config.get('bar');\n\t\tthis.args.topLvlBar = TopLvl.bar;\n\n\t\tthis.args.configBaz = Config.get('baz');\n\t\tthis.args.topLvlBaz = TopLvl.baz;\n\n\t\tthis.args.configQuz = Config.get('quz');\n\t\tthis.args.topLvlQuz = TopLvl.quz;\n\t}\n\n\ttoJson(input = '')\n\t{\n\t\treturn JSON.stringify(input);\n\t}\n}\n"}),require.register("ConfigDemo/Samples/template.html",function(t,e,n){n.exports="<pre>\nConfig Foo: [[configFoo]]\n\nTopLvl Foo: [[topLvlFoo]]\n\nConfig Bar: [[configBar]]\n\nTopLvl Bar: [[topLvlBar]]\n\nConfig Baz: [[configBaz]]\n\nTopLvl Baz: [[topLvlBaz]]\n\nConfig Quz: [[configQuz]]\n\nTopLvl Quz: [[topLvlQuz]]\n</pre>\n"}),require.register("ConfigDemo/View.js",function(t,e,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.View=void 0;var r=e("curvature/base/Config"),o=(e("curvature/base/Import"),e("curvature/base/View")),i=e("../Editor/View");function s(t){"@babel/helpers - typeof";return(s="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t})(t)}function a(t,e){return(a=Object.setPrototypeOf||function(t,e){return t.__proto__=e,t})(t,e)}function l(t){var e=function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],function(){})),!0}catch(t){return!1}}();return function(){var n,r=u(t);if(e){var o=u(this).constructor;n=Reflect.construct(r,arguments,o)}else n=r.apply(this,arguments);return function(t,e){if(e&&("object"===s(e)||"function"==typeof e))return e;return function(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}(t)}(this,n)}}function u(t){return(u=Object.setPrototypeOf?Object.getPrototypeOf:function(t){return t.__proto__||Object.getPrototypeOf(t)})(t)}var c=e("Config"),f=function(t){!function(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),e&&a(t,e)}(s,o.View);var n=l(s);function s(){var t;!function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,s),(t=n.call(this)).template=e("./template"),t.args.theme=r.Config.get("theme"),console.log(c);var o=new i.View;return o.args.tabs.js={title:"js",file:"DemoView.js",body:e("./Samples/Config.jss"),mode:"ace/mode/javascript"},o.args.tabs.html={title:"html",file:"template.html",body:e("./Samples/template.html"),mode:"ace/mode/html"},o.refreshCode(),t.args.editor=o,t}return s}();t.View=f}),require.register("ConfigDemo/template.html",function(t,e,n){n.exports="<h2>Configuration</h2>\n\n<p>Configs may be set in a few ways:</p>\n\n<ul>\n\t<li>Calling <code>Config.set('name', 'value')</code> on <code>curvature/base/Config</code>.</li>\n\t<li>Calling <code>Config.init({name: value, ...})</code> on <code>curvature/base/Config</code>.</li>\n\t<li>Creating a top-level <code>Config</code> class and setting static properties on it.</li>\n</ul>\n\n<p>Configs may be read in two ways:</p>\n\n<ul>\n\t<li>Calling <code>Config.get('name')</code> on <code>curvature/base/Config</code>.</li>\n\t<li>Reading a static property from a top level <code>Config</code> class.\n</ul>\n\n[[editor]]\n"}),require.register("Editor/PhpEditor.js",function(t,e,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.PhpEditor=void 0;var r=e("php-wasm/Php"),o=e("../Editor/View");function i(t){"@babel/helpers - typeof";return(i="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t})(t)}function s(t,e){for(var n=0;n<e.length;n++){var r=e[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(t,r.key,r)}}function a(t,e){return(a=Object.setPrototypeOf||function(t,e){return t.__proto__=e,t})(t,e)}function l(t){var e=function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],function(){})),!0}catch(t){return!1}}();return function(){var n,r=u(t);if(e){var o=u(this).constructor;n=Reflect.construct(r,arguments,o)}else n=r.apply(this,arguments);return function(t,e){if(e&&("object"===i(e)||"function"==typeof e))return e;return function(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}(t)}(this,n)}}function u(t){return(u=Object.setPrototypeOf?Object.getPrototypeOf:function(t){return t.__proto__||Object.getPrototypeOf(t)})(t)}var c=function(t){!function(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),e&&a(t,e)}(c,o.View);var e,n,i,u=l(c);function c(t){var e;!function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,c),(e=u.call(this,t)).args.subframe=!1,e.messageQueue=[];var n=function(t){return e.onMessage(t)};window.addEventListener("message",n),e.onRemove(function(){return window.removeEventListener("message",n)});var o=new r.Php;return o.addEventListener("ready",function(t){}),o.addEventListener("output",function(t){t.detail&&e.tags.result.element.contentWindow.document.write(t.detail.join(""))}),e.php=o,e.onRemove(function(){return e.php=!1}),e}return e=c,(n=[{key:"refreshCode",value:function(t){var e=this;this.rendered.then(function(){var t=e.args.tabs.php.body;e.tags.result.element.contentWindow.document.body.innerHTML="",e.php.run(t),e.args.editorStatus="Last ran at ".concat((new Date).toISOString()),e.args.editorRefresh="refresh-disabled"})}}])&&s(e.prototype,n),i&&s(e,i),c}();t.PhpEditor=c}),require.register("Editor/View.js",function(t,e,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.View=void 0;var r=e("curvature/base/View"),o=e("curvature/input/Keyboard"),i=(e("../ArrayDemo/View"),e("../ObjectDemo/View"),function(t){if(t&&t.__esModule)return t;if(null===t||"object"!==a(t)&&"function"!=typeof t)return{default:t};var e=s();if(e&&e.has(t))return e.get(t);var n={},r=Object.defineProperty&&Object.getOwnPropertyDescriptor;for(var o in t)if(Object.prototype.hasOwnProperty.call(t,o)){var i=r?Object.getOwnPropertyDescriptor(t,o):null;i&&(i.get||i.set)?Object.defineProperty(n,o,i):n[o]=t[o]}n.default=t,e&&e.set(t,n);return n}(e("brace")));function s(){if("function"!=typeof WeakMap)return null;var t=new WeakMap;return s=function(){return t},t}function a(t){"@babel/helpers - typeof";return(a="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t})(t)}function l(t,e){for(var n=0;n<e.length;n++){var r=e[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(t,r.key,r)}}function u(t,e){return(u=Object.setPrototypeOf||function(t,e){return t.__proto__=e,t})(t,e)}function c(t){var e=function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],function(){})),!0}catch(t){return!1}}();return function(){var n,r=f(t);if(e){var o=f(this).constructor;n=Reflect.construct(r,arguments,o)}else n=r.apply(this,arguments);return function(t,e){if(e&&("object"===a(e)||"function"==typeof e))return e;return function(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}(t)}(this,n)}}function f(t){return(f=Object.setPrototypeOf?Object.getPrototypeOf:function(t){return t.__proto__||Object.getPrototypeOf(t)})(t)}e("brace/mode/html"),e("brace/mode/javascript"),e("brace/theme/monokai");var p=function(t){!function(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),e&&u(t,e)}(p,r.View);var n,s,a,f=c(p);function p(){var t;!function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,p),(t=f.call(this)).multi=!1;var n=o.Keyboard.get().keys.bindTo("Control",function(e){t.multi=e>0,t.args.multiselect=t.multi?"multiselect":"select"});return t.onRemove(n),t.template=e("./template"),t.args.showJs=!0,t.args.showHtml=!0,t.args.showResult=!0,t.args.location=location,t.args.orientation=t.args.orientation||"vertical",t.args.tabs={},t.args.resultTabs={},t.args.tabs.bindTo(function(t,e){return t.name=e}),t.args.resultTabs.bindTo(function(t,e){return t.name=e}),t.args.time=(new Date).toISOString(),t.onFrame(function(){t.args.time=(new Date).toISOString()}),t.args.showClasses=["showSplit"],t.args.showSplit="active",t.args.frameSource="...",t}return n=p,(s=[{key:"postRender",value:function(t){var e=this;this.tags.edit={},this.editors={};this.tags.result.element;this.tags.edit.bindTo(function(t,n){if(t&&!e.editors[n]){var r=e.args.tabs[n]||e.args.resultTabs[n],o=i.edit(t.element);e.editors[n]=o,o.setValue(r.body||"",-1),o.session.setMode(r.mode||"ace/mode/javascript"),o.setTheme("ace/theme/monokai"),o.setOptions({autoScrollEditorIntoView:!0,printMargin:!1,readOnly:r.readonly||!1,scrollbarWidth:6});var s=function(t){r.readonly||(r.body=o.getValue(),e.args.editorStatus="Code updated at ".concat((new Date).toISOString()),e.args.editorRefresh="refresh-enabled")};o.session.on("change",s),e.onRemove(function(){o.session.off("change",s),o.destroy(),delete e.editors[n]}),r.bindTo("body",function(t){r.readonly&&(o.setValue(t,-1),r.readonly||e.refreshCode())}),o.resize()}})}},{key:"attached",value:function(){}},{key:"frameLoaded",value:function(t){}},{key:"refreshCode",value:function(t){var n=e("./results");n=n.replace(/\[ORIGIN\]/g,location.origin);var r=this.args.tabs.js?this.args.tabs.js.body:"",o=this.args.tabs.html?this.args.tabs.html.body:"",i=this.args.tabs.css?this.args.tabs.css.body:"";n=(n=(n=n.replace(/\[SCRIPT\]/g,r)).replace(/\[TEMPLATE\]/g,o)).replace(/\[STYLE\]/g,i),this.args.frameSource=n,this.args.editorStatus="Last ran at ".concat((new Date).toISOString()),this.args.editorRefresh="refresh-disabled"}},{key:"showResult",value:function(){if(this.args.showSplit){for(var t in this.args.tabs){var e=this.args.tabs[t],n=this.tags.edit[t].element.parentNode.parentNode;e.active="",n.classList.add("hide")}for(var r in this.args.resultTabs){var o=this.args.resultTabs[r],i=this.tags.edit[r].element.parentNode.parentNode;o.active="",i.classList.add("hide")}this.hideResult()}if(!this.multi){for(var s in this.args.tabs){var a=this.args.tabs[s],l=this.tags.edit[s].element.parentNode.parentNode;a.active="",l.classList.add("hide")}for(var u in this.args.resultTabs){var c=this.args.resultTabs[u],f=this.tags.edit[u].element.parentNode.parentNode;c.active="",f.classList.add("hide")}}for(var p in this.multi&&this.args.showResult&&"hide"!==this.args.showResult?(this.args.showSplit="",this.args.showResult="hide"):(this.args.showSplit="",this.args.showResult="active"),this.args.tabs)this.editors[p].resize(),this.args[p]=!0}},{key:"hideResult",value:function(){this.args.showSplit="hide",this.args.showResult="hide"}},{key:"showTab",value:function(){for(var t=arguments.length,e=new Array(t),n=0;n<t;n++)e[n]=arguments[n];if(!this.multi||!e.length){for(var r in this.args.tabs){var o=this.tags.edit[r].element.parentNode.parentNode;this.args.tabs[r].active="",o.classList.add("hide")}for(var i in this.args.resultTabs){var s=this.tags.edit[i].element.parentNode.parentNode;this.args.resultTabs[i].active="",s.classList.add("hide")}}if(this.args.showClasses=[],e.length){if(this.args.showSplit){for(var a in this.args.tabs){var l=this.tags.edit[a].element.parentNode.parentNode;this.args.tabs[a].active="",l.classList.add("hide")}for(var u in this.args.resultTabs){var c=this.tags.edit[u].element.parentNode.parentNode;this.args.resultTabs[u].active="",c.classList.add("hide")}this.hideResult()}this.multi||this.hideResult(),this.args.showClasses=[],this.args.showSplit=""}else{for(var f in this.args.showResult="",this.args.showSplit="active",this.args.tabs){var p=this.tags.edit[f].element.parentNode.parentNode;this.args.tabs[f];p.classList.remove("hide")}for(var d in this.args.resultTabs){var m=this.tags.edit[d].element.parentNode.parentNode;this.args.resultTabs[d];m.classList.remove("hide")}this.args.showClasses=["showSplit"]}for(var h=0,b=e;h<b.length;h++){var y=b[h],v=this.tags.edit[y.name].element.parentNode.parentNode;y.active?(y.active="",v.classList.add("hide")):(y.active="active",v.classList.remove("hide"))}for(var g=0,w=e;g<w.length;g++){var j=w[g];this.editors[j.name].resize(),this.args[j.name]=!0}}},{key:"changeOrientation",value:function(){this.args.orientation="horizontal"==this.args.orientation?"vertical":"horizontal",this.resizeEditor()}},{key:"resizeEditor",value:function(t){for(var e in this.args.tabs)this.editors[e].resize();for(var n in this.args.resultTabs)this.editors[n].resize()}},{key:"clear",value:function(t){this.args[t]=""}},{key:"joinClass",value:function(t){return(t||[]).join(" ")}},{key:"expand",value:function(t){this.args.expanded=this.args.expanded?"":"expanded",this.args.expanded?document.body.classList.add("no-scroll"):document.body.classList.remove("no-scroll"),this.resizeEditor(t)}},{key:"escapeQuotes",value:function(t){return String(t).replace(/"/g,"&quot;")}}])&&l(n.prototype,s),a&&l(n,a),p}();t.View=p}),require.register("Editor/results.html",function(t,e,n){n.exports="<!DOCTYPE HTML>\n<head>\n<style>[STYLE]</style>\n<script src = \"[ORIGIN]/vendor.js\"><\/script>\n<script>require.register('Config', (exports, require, module)=>{ return module.exports = {Config:{}}});<\/script>\n\n<script>require.register('template', (exports, require, module)=>{ return module.exports = `[TEMPLATE]`});<\/script>\n\n<script src = \"[ORIGIN]/curvature.js\"><\/script>\n\n<script>\n\nwindow.addEventListener('submit', (event) => {\n\n\tconsole.log(event);\n\n\tconst error = event.message;\n\n\twindow.parent.parent.postMessage(\n\t\tJSON.stringify({'@error': error}, null, 2)\n\t, '*');\n\n}, false);\n\ndocument.addEventListener('DOMContentLoaded', () => {\n\n\t[SCRIPT]\n\n\tif(typeof DemoView !== 'undefined')\n\t{\n\t\tconst view = new DemoView;\n\n\t\tview.render(document.body);\n\t}\n\n\tconsole.debug()\n\n});\n\n<\/script>\n</head>\n<body>\n</body>\n"}),require.register("Editor/template.html",function(t,e,n){n.exports='<div class = "editor-window [[expanded]]" cv-on = "mouseup:resizeEditor(event)" data-orientation = "[[orientation]]" data-multiselect="[[multiselect]]">\n\n\t<div class = "row full tabs [[showClasses|joinClass]]">\n\n\t\t<span cv-each = "tabs:tab:t" class = "row dcontent">\n\t\t\t<div class = "tab [[tab.active]]" cv-on = "click:showTab(tab)">[[tab.title]]</div>\n\t\t</span>\n\n\t\t<div class = "tab [[showResult]]" cv-on = "click:showResult()">result</div>\n\n\t\t<span cv-each = "resultTabs:tab:t" class = "row dcontent">\n\t\t\t<div class = "tab [[tab.active]]" cv-on = "click:showTab(tab)">[[tab.title]]</div>\n\t\t</span>\n\n\t\t<div class = "tab [[showSplit]]" cv-on = "click:showTab()">all</div>\n\n\t\t<span class = "hint">\n\t\t\t<div data-icon = "check"></div>\n\t\t\thold ctrl / ⌘ to select multiple tabs.\n\t\t</span>\n\n\t</div>\n\n\t<div class = "row full editors [[showClasses|joinClass]]">\n\n\t\t<p>Select a tab.</p>\n\n\t\t<span cv-each = "tabs:tab:t" class = "dcontent">\n\t\t\t<div cv-carry = "t" class = "half">\n\t\t\t\t<p>[[tab.file]]</p>\n\t\t\t\t<div class = "box"><div class = "editor" cv-ref = "edit::t"><textarea cv-bind = "tab.body"></textarea></div></div>\n\t\t\t</div>\n\t\t</span>\n\n\t\t<div class = "half [[showResult]]">\n\t\t\t<p>Result</p>\n\t\t\t<div class = "result">\n\t\t\t\t<iframe\n\t\t\t\t\tcv-ref = "result"\n\t\t\t\t\tcv-on  = "load:frameLoaded(event)"\n\t\t\t\t\tsrcdoc = \'\n\t\t\t\t<meta http-equiv="Content-Security-Policy" content="default-src [[location.origin]]/curvature.js ws://[[location.hostname]]:9485\n\t\t\t\t[[location.origin]]/vendor.js &apos;unsafe-inline&apos;;">\n\t\t\t\t<style>\n\t\t\t\t\tiframe {\n\t\t\t\t\t\tposition: absolute;\n\t\t\t\t\t\ttop: 0px;\n\t\t\t\t\t\tleft: 0px;\n\t\t\t\t\t\twidth: 100%;\n\t\t\t\t\t\theight: 100%;\n\t\t\t\t\t\tborder: none;\n\t\t\t\t\t}\n\t\t\t\t</style>\n\t\t\t\t<iframe\n\t\t\t\t\tsandbox = "allow-scripts"\n\t\t\t\t\tsrc     = "about:blank"\n\t\t\t\t\tsrcdoc  = "[[frameSource|escapeQuotes]]"\n\t\t\t\t></iframe>\n\t\t\t\t\'></iframe>\n\t\t\t</div>\n\t\t</div>\n\n\t\t<span cv-each = "resultTabs:tab:t" class = "dcontent">\n\t\t\t<div cv-carry = "t" class = "half">\n\t\t\t\t<p>[[tab.file]]</p>\n\t\t\t\t<div class = "box"><div class = "editor" cv-ref = "edit::t"><textarea cv-bind = "tab.body"></textarea></div></div>\n\t\t\t</div>\n\t\t</span>\n\n\t\t<div class = "buttons">\n\n\t\t\t<div cv-on = "click:changeOrientation(event)" class = "button orientation">\n\t\t\t\t<span class = "label">vert/horiz</span>\n\t\t\t\t<div data-icon = "orientation"></div>\n\t\t\t</div>\n\n\t\t\t<div cv-on = "click:expand(event)" class = "button expand">\n\t\t\t\t<span class = "label">expand/contract</span>\n\t\t\t\t<div data-icon = "expand"></div>\n\t\t\t</div>\n\n\t\t</div>\n\n\t</div>\n\n\t<div class = "row full status">\n\t\t<div class = "[[editorRefresh]]">\n\t\t\t<span>[[editorStatus]]</span>\n\t\t\t<button cv-on = "click:refreshCode(event)">⟳</button>\n\t\t</div>\n\t</div>\n\n</div>\n'}),require.register("Experiments/InfiniteScroll/List.js",function(t,e,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.List=void 0;var r=e("curvature/base/View"),o=e("./Row");function i(t){"@babel/helpers - typeof";return(i="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t})(t)}function s(t,e){for(var n=0;n<e.length;n++){var r=e[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(t,r.key,r)}}function a(t,e){return(a=Object.setPrototypeOf||function(t,e){return t.__proto__=e,t})(t,e)}function l(t){var e=function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],function(){})),!0}catch(t){return!1}}();return function(){var n,r=u(t);if(e){var o=u(this).constructor;n=Reflect.construct(r,arguments,o)}else n=r.apply(this,arguments);return function(t,e){if(e&&("object"===i(e)||"function"==typeof e))return e;return function(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}(t)}(this,n)}}function u(t){return(u=Object.setPrototypeOf?Object.getPrototypeOf:function(t){return t.__proto__||Object.getPrototypeOf(t)})(t)}var c=function(t){!function(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),e&&a(t,e)}(f,r.View);var n,i,u,c=l(f);function f(){var t;return function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,f),(t=c.call(this)).template=e("./list"),t.args.visible=[],t.args.content=void 0,t.first=null,t.last=null,t.args.max=666,t.changing=!1,t}return n=f,(i=[{key:"attached",value:function(){var t=this;this.container=this.findTag('div[data-tag="container"]');var e=this.container,n=document.createElement("div");n.setAttribute("data-tag","shim"),n.setAttribute("style","position: absolute;width: 1px;height: var(--shimHeight);pointer-events: none;opacity: 0;"),e.append(n),this.args.bindTo("rowHeight",function(e,n,r){r[n]=parseInt(e);var o=t.args.content.length;o&&t.args.rowHeight&&(t.args.shimHeight=o*t.args.rowHeight),t.container&&t.updateViewport()}),this.contentDebind=this.args.bindTo("content",function(e,n,r){var o,i=null!==(o=e.length)&&void 0!==o?o:0;t.args.rowHeight&&(t.args.shimHeight=i*t.args.rowHeight),r[n]=e,t.updateViewport()}),this.args.rowHeight=this.args.rowHeight||32,this.onNextFrame(function(){return t.updateViewport()})}},{key:"updateViewport",value:function(t){if(!this.changing){var e=this.container,n=e.scrollTop,r=e.offsetHeight,o=Math.floor(n/this.args.rowHeight),i=Math.ceil((n+r)/this.args.rowHeight);o>this.args.content.length&&(o=this.args.content.length-1),i>this.args.content.length&&(i=this.args.content.length-1),this.setVisible(o,i)}}},{key:"setVisible",value:function(t,e){var n=this;if(!this.changing&&(this.first!==t||this.last!==e)){this.changing=!0;var r=[];for(var i in this.args.visible){var s=parseInt(i),a=this.args.visible[s];t!==e||0!==e?s<t||s>e?r.unshift(s):!a||a.visible||r.unshift(s):r.unshift(s)}for(var l=0,u=r;l<u.length;l++){var c=u[l];this.args.visible[c].remove(),delete this.args.visible[c]}for(var f=function(t){if(n.args.visible[t]&&!n.args.visible[t].removed&&n.args.visible[t].firstNode&&n.args.visible[t].firstNode.getRootNode()===document)return"continue";if(n.args.content.length<=t)return"continue";var e=new o.Row(n.args.content[t],t,n);n.args.visible[t]=e,n.args.visible[t].args.bindTo("content",function(e){n.args.content[t]=e})},p=t;p<=e;p++)f(p);this.first=t,this.last=e,this.changing=!1}}},{key:"leftPad",value:function(t){return String(t).padStart(4,0)}}])&&s(n.prototype,i),u&&s(n,u),f}();t.List=c}),require.register("Experiments/InfiniteScroll/Row.js",function(t,e,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.Row=void 0;var r=e("curvature/base/View");function o(t){"@babel/helpers - typeof";return(o="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t})(t)}function i(t){if("undefined"==typeof Symbol||null==t[Symbol.iterator]){if(Array.isArray(t)||(t=function(t,e){if(!t)return;if("string"==typeof t)return s(t,e);var n=Object.prototype.toString.call(t).slice(8,-1);"Object"===n&&t.constructor&&(n=t.constructor.name);if("Map"===n||"Set"===n)return Array.from(t);if("Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n))return s(t,e)}(t))){var e=0,n=function(){};return{s:n,n:function(){return e>=t.length?{done:!0}:{done:!1,value:t[e++]}},e:function(t){throw t},f:n}}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}var r,o,i=!0,a=!1;return{s:function(){r=t[Symbol.iterator]()},n:function(){var t=r.next();return i=t.done,t},e:function(t){a=!0,o=t},f:function(){try{i||null==r.return||r.return()}finally{if(a)throw o}}}}function s(t,e){(null==e||e>t.length)&&(e=t.length);for(var n=0,r=new Array(e);n<e;n++)r[n]=t[n];return r}function a(t,e){for(var n=0;n<e.length;n++){var r=e[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(t,r.key,r)}}function l(t,e){return(l=Object.setPrototypeOf||function(t,e){return t.__proto__=e,t})(t,e)}function u(t){var e=function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],function(){})),!0}catch(t){return!1}}();return function(){var n,r=c(t);if(e){var i=c(this).constructor;n=Reflect.construct(r,arguments,i)}else n=r.apply(this,arguments);return function(t,e){if(e&&("object"===o(e)||"function"==typeof e))return e;return function(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}(t)}(this,n)}}function c(t){return(c=Object.setPrototypeOf?Object.getPrototypeOf:function(t){return t.__proto__||Object.getPrototypeOf(t)})(t)}var f=function(t){!function(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),e&&l(t,e)}(f,r.View);var n,o,s,c=u(f);function f(t,n,r){var o;return function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,f),(o=c.call(this,{content:t,index:n})).container=r,o.template=e("./row"),o.visible=!0,o.args.x=Math.random(),o.preserve=!0,o}return n=f,(o=[{key:"attached",value:function(){var t=this,e=this.container.containerTag,n=this.findTag('div[data-tag="row"]');new IntersectionObserver(function(e,n){return t.scrollObserved(e,n)},{root:e}).observe(n)}},{key:"scrollObserved",value:function(t,e){var n,r=!1,o=i(t);try{for(o.s();!(n=o.n()).done;){if(n.value.intersectionRatio){r=!0;break}}}catch(t){o.e(t)}finally{o.f()}this.visible=r}}])&&a(n.prototype,o),s&&a(n,s),f}();t.Row=f}),require.register("Experiments/InfiniteScroll/View.js",function(t,e,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.View=void 0;var r=e("curvature/base/View"),o=(e("./Row"),e("./List"));function i(t){"@babel/helpers - typeof";return(i="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t})(t)}function s(t,e){for(var n=0;n<e.length;n++){var r=e[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(t,r.key,r)}}function a(t,e){return(a=Object.setPrototypeOf||function(t,e){return t.__proto__=e,t})(t,e)}function l(t){var e=function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],function(){})),!0}catch(t){return!1}}();return function(){var n,r=u(t);if(e){var o=u(this).constructor;n=Reflect.construct(r,arguments,o)}else n=r.apply(this,arguments);return function(t,e){if(e&&("object"===i(e)||"function"==typeof e))return e;return function(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}(t)}(this,n)}}function u(t){return(u=Object.setPrototypeOf?Object.getPrototypeOf:function(t){return t.__proto__||Object.getPrototypeOf(t)})(t)}var c=function(t){!function(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),e&&a(t,e)}(f,r.View);var n,i,u,c=l(f);function f(){var t;!function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,f),(t=c.call(this)).template=e("./template"),t.args.rows=1e5,t.args.rowHeight=32;var n=new o.List;return t.args.list=n,t.args.bindTo("rowHeight",function(t){return n.args.rowHeight=t}),t.args.bindTo("rows",function(t){n.args.content=Array(parseInt(t)||0).fill(0).map(function(t,e){return 10*(1+e)})}),t}return n=f,(i=[{key:"leftPad",value:function(t){return String(t).padStart(4,0)}}])&&s(n.prototype,i),u&&s(n,u),f}();t.View=c}),require.register("Experiments/InfiniteScroll/list.html",function(t,e,n){n.exports='<div data-tag = "container" class = "infinite-scroll demo" cv-on = "scroll:updateViewport(event):p" style = "--rowHeight:[[rowHeight]]px;--shimHeight: [[shimHeight]]px; overflow-y: scroll; position: relative;">\n\t<div cv-each  = "visible:row:r">\n\t\t[[row]]\n\t</div>\n</div>\n'}),require.register("Experiments/InfiniteScroll/row.html",function(t,e,n){n.exports='<div\n\tdata-tag = "row"\n\tstyle = "--index:[[index]]; top: calc(var(--rowHeight) * var(--index)); \theight: var(--rowHeight); position: absolute;">\n\t<input cv-bind = "content" type = "range" min = "0" max = "[[max]]" />\n\t[[content]]\n</div>\n'}),require.register("Experiments/InfiniteScroll/template.html",function(t,e,n){n.exports='<label>\n\tRows: <input cv-bind = "rows" type = "number" min = "0"/>\n</label>\n<label>\n\tRow Height ([[rowHeight|leftPad]]):\n\t<input cv-bind = "rowHeight" type = "range" max = "100" />\n</label>\n\n[[list]]\n\n\x3c!-- <div data-tag = "container" class = "infinite-scroll demo" cv-on = "scroll:containerScrolled(event):p" style = "--rowHeight:[[rowHeight]]px;--shimHeight: [[shimHeight]]px; overflow-y: scroll; position: relative;">\n\t<div cv-each  = "visible:row:r">\n\t\t[[row]]\n\t</div>\n</div>\n --\x3e\n'}),require.register("Experiments/Php/View.js",function(t,e,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.View=void 0;var r=e("curvature/base/View"),o=e("../../Editor/PhpEditor");function i(t){"@babel/helpers - typeof";return(i="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t})(t)}function s(t,e){return(s=Object.setPrototypeOf||function(t,e){return t.__proto__=e,t})(t,e)}function a(t){var e=function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],function(){})),!0}catch(t){return!1}}();return function(){var n,r=l(t);if(e){var o=l(this).constructor;n=Reflect.construct(r,arguments,o)}else n=r.apply(this,arguments);return function(t,e){if(e&&("object"===i(e)||"function"==typeof e))return e;return function(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}(t)}(this,n)}}function l(t){return(l=Object.setPrototypeOf?Object.getPrototypeOf:function(t){return t.__proto__||Object.getPrototypeOf(t)})(t)}var u=function(t){!function(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),e&&s(t,e)}(i,r.View);var n=a(i);function i(){var t;!function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,i),(t=n.call(this)).template=e("./template");var r=t.args.editor=new o.PhpEditor;return r.args.tabs.php={title:"php",file:"HelloWorld.php",body:e("./phpinfo.php"),mode:"ace/mode/php"},t.onNextFrame(function(){return r.refreshCode()}),t}return i}();t.View=u}),require.register("Experiments/Php/phpinfo.php",function(t,e,n){n.exports="<?php\n\nphpinfo();\n"}),require.register("Experiments/Php/template.html",function(t,e,n){n.exports="<h2>Basic PHP Integration</h2>\n\nPHP is running in-browser here. Open your dev tools and watch your network tab to verify that no server communication is happening here.\n\n[[editor]]\n"}),require.register("FormsDemo/FormEditor.js",function(t,e,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.FormEditor=void 0;var r=e("../Editor/View");function o(t){"@babel/helpers - typeof";return(o="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t})(t)}function i(t,e){for(var n=0;n<e.length;n++){var r=e[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(t,r.key,r)}}function s(t,e){return(s=Object.setPrototypeOf||function(t,e){return t.__proto__=e,t})(t,e)}function a(t){var e=function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],function(){})),!0}catch(t){return!1}}();return function(){var n,r=l(t);if(e){var i=l(this).constructor;n=Reflect.construct(r,arguments,i)}else n=r.apply(this,arguments);return function(t,e){if(e&&("object"===o(e)||"function"==typeof e))return e;return function(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}(t)}(this,n)}}function l(t){return(l=Object.setPrototypeOf?Object.getPrototypeOf:function(t){return t.__proto__||Object.getPrototypeOf(t)})(t)}var u=function(t){!function(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),e&&s(t,e)}(u,r.View);var e,n,o,l=a(u);function u(t){var e;!function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,u),(e=l.call(this,t)).args.subframe=!1,e.messageQueue=[],e.args.resultTabs.output={title:"json",file:"Result JSON",body:"{}",mode:"ace/mode/javascript",readonly:!0};var n=function(t){return e.onMessage(t)};return window.addEventListener("message",n),e.onRemove(function(){return window.removeEventListener("message",n)}),e}return e=u,(n=[{key:"frameLoaded",value:function(t){for(this.args.subframe=t.target.contentWindow.frames[0];t=this.messageQueue.shift();)this.onMessage(t)}},{key:"onMessage",value:function(t){this.args.subframe?t.source===this.args.subframe&&(this.args.resultTabs.output.body=t.data+"\n"||""):this.messageQueue.push(t)}}])&&i(e.prototype,n),o&&i(e,o),u}();t.FormEditor=u}),require.register("FormsDemo/Samples/Basic.jss",function(t,e,n){n.exports="const View = require('curvature/base/View').View;\nconst Form = require('curvature/form/Form').Form;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tthis.args.form = new Form({\n\t\t\t_method: 'POST'\n\t\t\t, id: {type:'number', value: 1}\n\t\t\t, name: {}\n\t\t\t, submit: {type: 'submit', value: 'submit'}\n\t\t});\n\n\t\tthis.args.form.bindTo('json', v => {\n\n\t\t\twindow.parent.parent.postMessage(v, '*');\n\n\t\t});\n\t}\n}\n"}),require.register("FormsDemo/Samples/ButtonField.jss",function(t,e,n){n.exports="const View = require('curvature/base/View').View;\nconst Form = require('curvature/form/Form').Form;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tconst field = {type: 'button', value: 'this is a button'};\n\n\t\tthis.args.form = new Form({field});\n\n\t\tthis.args.form.bindTo('json', v => {\n\n\t\t\twindow.parent.parent.postMessage(v, '*');\n\n\t\t});\n\t}\n}\n"}),require.register("FormsDemo/Samples/Checkbox.jss",function(t,e,n){n.exports="const View = require('curvature/base/View').View;\nconst Form = require('curvature/form/Form').Form;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tconst field = {\n\t\t\ttitle:   'Checkbox Field'\n\t\t\t, type:  'checkbox'\n\t\t};\n\n\t\tthis.args.form = new Form({field});\n\n\t\tthis.args.form.bindTo('json', v => {\n\n\t\t\twindow.parent.parent.postMessage(v, '*');\n\n\t\t});\n\t}\n}\n"}),require.register("FormsDemo/Samples/FileField.jss",function(t,e,n){n.exports="const View = require('curvature/base/View').View;\nconst Form = require('curvature/form/Form').Form;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tconst field = {\n\t\t\ttitle:   'File field'\n\t\t\t, type:  'file'\n\t\t};\n\n\t\tthis.args.form = new Form({field});\n\n\t\tthis.args.form.bindTo('json', v => {\n\n\t\t\twindow.parent.parent.postMessage(v, '*');\n\n\t\t});\n\t}\n}\n"}),require.register("FormsDemo/Samples/Form.html",function(t,e,n){n.exports='<style>\nlabel,input:not([type="radio"]),select,textarea{display: block; margin: 0.5em;}\n</style>\n\n[[form]]\n'}),require.register("FormsDemo/Samples/Form.jss",function(t,e,n){n.exports="const View = require('curvature/base/View').View;\nconst Form = require('curvature/form/Form').Form;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tconst commentField = {\n\t\t\ttype: 'fieldset'\n\t\t\t, array: true\n\t\t\t, children: {\n\t\t\t\tid:        {type: 'number'}\n\t\t\t\t, content: {type: 'textarea'}\n\t\t\t}\n\t\t};\n\n\t\tconst formSkeleton = {\n\n\t\t\t_method: 'POST'\n\n\t\t\t, hidden: {type:'hidden', value: 'hidden value'}\n\n\t\t\t, id: {type:'number', value: 1000}\n\t\t\t, name: {}\n\n\t\t\t, access: {\n\t\t\t\ttype:    'radios'\n\t\t\t\t, options: {\n\n\t\t\t\t\t'private':  0\n\t\t\t\t\t, 'public': 1\n\n\t\t\t\t}\n\t\t\t}\n\n\t\t\t, image: {type: 'file'}\n\n\t\t\t, type: {\n\t\t\t\ttype:    'select'\n\t\t\t\t, value: 300\n\t\t\t\t, options: {\n\n\t\t\t\t\t'-select-': null\n\t\t\t\t\t, 'image':  100\n\t\t\t\t\t, 'text':   200\n\t\t\t\t\t, 'video':  300\n\n\t\t\t\t}\n\t\t\t}\n\n\t\t\t, comments: {\n\t\t\t\tname:   'comments'\n\t\t\t\t, type: 'fieldset'\n\t\t\t\t, array: true\n\t\t\t\t, children: [\n\n\t\t\t\t\tcommentField\n\t\t\t\t\t, commentField\n\n\t\t\t\t]\n\t\t\t}\n\n\t\t\t, submit: {\n\t\t\t\ttype: 'submit'\n\t\t\t}\n\t\t};\n\n\t\tconst form = new Form(formSkeleton);\n\n\t\tform.bindTo('json', v => {\n\t\t\tconst output = v;\n\n\t\t\tthis.args.output = output;\n\n\t\t\twindow.parent.parent.postMessage(output, 'http://localhost:3333');\n\t\t});\n\n\t\tthis.args.form = form;\n\t\tthis.args.formSkeleton = formSkeleton;\n\t}\n\n\ttoJson(input)\n\t{\n\t\treturn JSON.stringify(input, null, 2);\n\t}\n}\n"}),require.register("FormsDemo/Samples/Groups.jss",function(t,e,n){n.exports="const View = require('curvature/base/View').View;\nconst Form = require('curvature/form/Form').Form;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tconst personField = {\n\t\t\ttype:    'fieldset'\n\t\t\t, title: 'Person'\n\t\t\t, array: true\n\t\t\t, children: {\n\t\t\t\tid: {type:'number'}\n\t\t\t\t, name:  {}\n\t\t\t}\n\t\t};\n\n\t\tconst peopleField = {\n\t\t\ttype:    'fieldset'\n\t\t\t, title: 'People'\n\t\t\t, array: true\n\t\t\t, children: [\n\t\t\t\tpersonField\n\t\t\t\t, personField\n\t\t\t\t, personField\n\t\t\t]\n\t\t};\n\n\t\tthis.args.form = new Form({\n\t\t\t_method:  'POST'\n\t\t\t, field:  peopleField\n\t\t\t, submit: {type: 'submit', value: 'submit'}\n\t\t});\n\n\t\tthis.args.form.bindTo('json', v => {\n\n\t\t\twindow.parent.parent.postMessage(v, '*');\n\n\t\t});\n\t}\n}\n"}),require.register("FormsDemo/Samples/HiddenField.jss",function(t,e,n){n.exports="const View = require('curvature/base/View').View;\nconst Form = require('curvature/form/Form').Form;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tconst field = {\n\t\t\ttitle:   'Hidden field'\n\t\t\t, type:  'hidden'\n\t\t\t, value: 'You cant see me.'\n\t\t};\n\n\t\tthis.args.form = new Form({field});\n\n\t\tthis.args.form.bindTo('json', v => {\n\n\t\t\twindow.parent.parent.postMessage(v, '*');\n\n\t\t});\n\t}\n}\n"}),require.register("FormsDemo/Samples/Html5.jss",function(t,e,n){n.exports="const View = require('curvature/base/View').View;\nconst Form = require('curvature/form/Form').Form;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tthis.args.form = new Form({\n\t\t\t_method: 'POST'\n\t\t\t, id:        {type:'number', value: 1}\n\t\t\t, name:      {}\n\t\t\t, phone:     {type:'tel',attrs:{pattern:'[0-9]{3}-[0-9]{2}-[0-9]{3}'}}\n\t\t\t, favColor:  {type:'color', title: 'Favorite Color'}\n\t\t\t, birthday:  {type:'date'}\n\t\t\t, available: {type:'time'}\n\t\t\t, week:      {type:'week'}\n\t\t\t, email:     {type:'email'}\n\t\t\t, homepage:  {type:'url'}\n\t\t\t, submit:    {type: 'submit', value: 'submit'}\n\t\t});\n\n\t\tthis.args.form.bindTo('json', v => {\n\n\t\t\twindow.parent.parent.postMessage(v, '*');\n\n\t\t});\n\t}\n}\n"}),require.register("FormsDemo/Samples/Html5Form.html",function(t,e,n){n.exports='<style>\nlabel,input:not([type="radio"]),select,textarea{display: block; margin: 0.5em;}\ninput:invalid { background-color: pink; }\n</style>\n\n[[form]]\n'}),require.register("FormsDemo/Samples/HtmlField.jss",function(t,e,n){n.exports="const View = require('curvature/base/View').View;\nconst Form = require('curvature/form/Form').Form;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tconst staticHtml = {\n\t\t\ttitle:   'Static HTML Field'\n\t\t\t, type:  'html'\n\t\t\t, value: '<li><b><u>This is static HTML</u></b></li>'\n\t\t};\n\n\t\tconst editableHtml = {\n\t\t\ttitle:   'Editable HTML Field'\n\t\t\t, type:  'html'\n\t\t\t, attrs: { contenteditable: true }\n\t\t\t, value: `\n\t\t\t    <li><b>These</b></li>\n\t\t\t    <li><b>Items</b></li>\n\t\t\t    <li><b>Are</b></li>\n\t\t\t    <li><b>Editable</b></li>`\n\t\t};\n\n\t\tthis.args.form = new Form({staticHtml, editableHtml});\n\n\t\tthis.args.form.bindTo('json', v => {\n\n\t\t\twindow.parent.parent.postMessage(v, '*');\n\n\t\t});\n\t}\n}\n"}),require.register("FormsDemo/Samples/HtmlForm.html",function(t,e,n){n.exports='<style>\nul div {display: content};\nlabel,input:not([type="radio"]),select,textarea{display: block; margin: 0.5em;}\n</style>\n\n<ul>[[form]]</ul>\n\n<pre>\n<b>ctrl / ⌘ + b</b>\n<i>ctrl / ⌘ + i</i>\n<u>ctrl / ⌘ + u</u>\n</pre>\n'}),require.register("FormsDemo/Samples/RadioField.jss",function(t,e,n){n.exports="const View = require('curvature/base/View').View;\nconst Form = require('curvature/form/Form').Form;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tconst field = {\n\t\t\ttitle:   'Radio Field'\n\t\t\t, type:  'radios'\n\t\t\t, options: {\n\t\t\t\t'Red':     1\n\t\t\t\t, 'Blue':  2\n\t\t\t\t, 'Green': 3\n\t\t\t}\n\t\t};\n\n\t\tthis.args.form = new Form({field});\n\n\t\tthis.args.form.bindTo('json', v => {\n\n\t\t\twindow.parent.parent.postMessage(v, '*');\n\n\t\t});\n\t}\n}\n"}),require.register("FormsDemo/Samples/SelectField.jss",function(t,e,n){n.exports="const View = require('curvature/base/View').View;\nconst Form = require('curvature/form/Form').Form;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tconst field = {\n\t\t\ttitle:   'Select Field'\n\t\t\t, type:  'select'\n\t\t\t, options: {\n\t\t\t\t'Select One': null\n\t\t\t\t, 'Red':   1\n\t\t\t\t, 'Blue':  2\n\t\t\t\t, 'Green': 3\n\t\t\t}\n\t\t};\n\n\t\tthis.args.form = new Form({field});\n\n\t\tthis.args.form.bindTo('json', v => {\n\n\t\t\twindow.parent.parent.postMessage(v, '*');\n\n\t\t});\n\t}\n}\n"}),require.register("FormsDemo/Samples/SubmitField.jss",function(t,e,n){n.exports="const View = require('curvature/base/View').View;\nconst Form = require('curvature/form/Form').Form;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tconst field = {type: 'submit', value: 'submit'};\n\n\t\tthis.args.form = new Form({field});\n\n\t\tthis.args.form.bindTo('json', v => {\n\n\t\t\twindow.parent.parent.postMessage(v, '*');\n\n\t\t});\n\t}\n}\n"}),require.register("FormsDemo/Samples/TextAreaField.jss",function(t,e,n){n.exports="const View = require('curvature/base/View').View;\nconst Form = require('curvature/form/Form').Form;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tconst field = {\n\t\t\ttitle:  'TextArea Field'\n\t\t\t, type: 'textarea'\n\t\t};\n\n\t\tthis.args.form = new Form({field});\n\n\t\tthis.args.form.bindTo('json', v => {\n\n\t\t\twindow.parent.parent.postMessage(v, '*');\n\n\t\t});\n\t}\n}\n"}),require.register("FormsDemo/Samples/TextField.jss",function(t,e,n){n.exports="const View = require('curvature/base/View').View;\nconst Form = require('curvature/form/Form').Form;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tconst field = {\n\t\t\ttitle:  'Text Field'\n\t\t\t, type: 'text'\n\t\t};\n\n\t\tthis.args.form = new Form({field});\n\n\t\tthis.args.form.bindTo('json', v => {\n\n\t\t\twindow.parent.parent.postMessage(v, '*');\n\n\t\t});\n\t}\n}\n"}),require.register("FormsDemo/View.js",function(t,e,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.View=void 0;var r=e("curvature/base/View"),o=e("./FormEditor");!function(t){if(t&&t.__esModule)return t;if(null===t||"object"!==s(t)&&"function"!=typeof t)return{default:t};var e=i();if(e&&e.has(t))return e.get(t);var n={},r=Object.defineProperty&&Object.getOwnPropertyDescriptor;for(var o in t)if(Object.prototype.hasOwnProperty.call(t,o)){var a=r?Object.getOwnPropertyDescriptor(t,o):null;a&&(a.get||a.set)?Object.defineProperty(n,o,a):n[o]=t[o]}n.default=t,e&&e.set(t,n)}(e("brace"));e("brace/mode/html"),e("brace/mode/javascript"),e("brace/theme/monokai");e("curvature/form/Form");function i(){if("function"!=typeof WeakMap)return null;var t=new WeakMap;return i=function(){return t},t}function s(t){"@babel/helpers - typeof";return(s="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t})(t)}function a(t,e){for(var n=0;n<e.length;n++){var r=e[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(t,r.key,r)}}function l(t,e){return(l=Object.setPrototypeOf||function(t,e){return t.__proto__=e,t})(t,e)}function u(t){var e=function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],function(){})),!0}catch(t){return!1}}();return function(){var n,r=c(t);if(e){var o=c(this).constructor;n=Reflect.construct(r,arguments,o)}else n=r.apply(this,arguments);return function(t,e){if(e&&("object"===s(e)||"function"==typeof e))return e;return function(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}(t)}(this,n)}}function c(t){return(c=Object.setPrototypeOf?Object.getPrototypeOf:function(t){return t.__proto__||Object.getPrototypeOf(t)})(t)}var f=function(t){!function(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),e&&l(t,e)}(f,r.View);var n,i,s,c=u(f);function f(){var t;!function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,f),(t=c.call(this)).template=e("./template");var n=t.args.basic=new o.FormEditor;n.args.tabs.js={title:"js",file:"DemoView.js",body:e("./Samples/Basic.jss"),mode:"ace/mode/javascript"},n.args.tabs.html={title:"html",file:"template.html",body:e("./Samples/Form.html"),mode:"ace/mode/html"},n.refreshCode();var r=t.args.group=new o.FormEditor;r.args.tabs.js={title:"js",file:"DemoView.js",body:e("./Samples/Groups.jss"),mode:"ace/mode/javascript"},r.args.tabs.html={title:"html",file:"template.html",body:e("./Samples/Form.html"),mode:"ace/mode/html"},r.refreshCode();var i=t.args.textField=new o.FormEditor;i.args.tabs.js={title:"js",file:"DemoView.js",body:e("./Samples/TextField.jss"),mode:"ace/mode/javascript"},i.args.tabs.html={title:"html",file:"template.html",body:e("./Samples/Form.html"),mode:"ace/mode/html"},i.refreshCode();var s=t.args.textareaField=new o.FormEditor;s.args.tabs.js={title:"js",file:"DemoView.js",body:e("./Samples/TextAreaField.jss"),mode:"ace/mode/javascript"},s.args.tabs.html={title:"html",file:"template.html",body:e("./Samples/Form.html"),mode:"ace/mode/html"},s.refreshCode();var a=t.args.fileField=new o.FormEditor;a.args.tabs.js={title:"js",file:"DemoView.js",body:e("./Samples/FileField.jss"),mode:"ace/mode/javascript"},a.args.tabs.html={title:"html",file:"template.html",body:e("./Samples/Form.html"),mode:"ace/mode/html"},a.refreshCode();var l=t.args.submitField=new o.FormEditor;l.args.tabs.js={title:"js",file:"DemoView.js",body:e("./Samples/SubmitField.jss"),mode:"ace/mode/javascript"},l.args.tabs.html={title:"html",file:"template.html",body:e("./Samples/Form.html"),mode:"ace/mode/html"},l.refreshCode();var u=t.args.buttonField=new o.FormEditor;u.args.tabs.js={title:"js",file:"DemoView.js",body:e("./Samples/ButtonField.jss"),mode:"ace/mode/javascript"},u.args.tabs.html={title:"html",file:"template.html",body:e("./Samples/Form.html"),mode:"ace/mode/html"},u.refreshCode();var p=t.args.checkboxField=new o.FormEditor;p.args.tabs.js={title:"js",file:"DemoView.js",body:e("./Samples/Checkbox.jss"),mode:"ace/mode/javascript"},p.args.tabs.html={title:"html",file:"template.html",body:e("./Samples/Form.html"),mode:"ace/mode/html"},p.refreshCode();var d=t.args.selectField=new o.FormEditor;d.args.tabs.js={title:"js",file:"DemoView.js",body:e("./Samples/SelectField.jss"),mode:"ace/mode/javascript"},d.args.tabs.html={title:"html",file:"template.html",body:e("./Samples/Form.html"),mode:"ace/mode/html"},d.refreshCode();var m=t.args.radioField=new o.FormEditor;m.args.tabs.js={title:"js",file:"DemoView.js",body:e("./Samples/RadioField.jss"),mode:"ace/mode/javascript"},m.args.tabs.html={title:"html",file:"template.html",body:e("./Samples/Form.html"),mode:"ace/mode/html"},m.refreshCode();var h=t.args.hiddenField=new o.FormEditor;h.args.tabs.js={title:"js",file:"DemoView.js",body:e("./Samples/HiddenField.jss"),mode:"ace/mode/javascript"},h.args.tabs.html={title:"html",file:"template.html",body:e("./Samples/Form.html"),mode:"ace/mode/html"},h.refreshCode();var b=t.args.htmlField=new o.FormEditor;b.args.tabs.js={title:"js",file:"DemoView.js",body:e("./Samples/HtmlField.jss"),mode:"ace/mode/javascript"},b.args.tabs.html={title:"html",file:"template.html",body:e("./Samples/HtmlForm.html"),mode:"ace/mode/html"},b.refreshCode();var y=t.args.html5Fields=new o.FormEditor;return y.args.tabs.js={title:"js",file:"DemoView.js",body:e("./Samples/Html5.jss"),mode:"ace/mode/javascript"},y.args.tabs.html={title:"html",file:"template.html",body:e("./Samples/Html5Form.html"),mode:"ace/mode/html"},y.refreshCode(),t}return n=f,(i=[{key:"postRender",value:function(){}},{key:"toJson",value:function(t){return JSON.stringify(t,null,2)}}])&&a(n.prototype,i),s&&a(n,s),f}();t.View=f}),require.register("FormsDemo/template.html",function(t,e,n){n.exports='<h2>Forms Demo</h2>\n\n<p>Forms can be generated by passing an object describing the desired fields & properties. Keys prefixed with "_" will affect the form itself rather than generating fields. Other keys will map to fields.</p>\n\n<ul>\n\t<li><b>_method</b> - The "method" attribute of the form element.</li>\n\t<li><b>_action</b> - The "action" attribute of the form element.</li>\n</ul>\n\n<p>Fields are object with 0 or more of the following keys</p>\n\n<ul>\n\t<li><b>name</b> - Field name attribute (key will be used if not provided.)</li>\n\t<li><b>title</b> - Field title (key will be used if not provided.)</li>\n\t<li><b>type</b> - Field Type</li>\n\t<li><b>attrs</b> - Additional attributes for field tag (k/v object)</li>\n</ul>\n\n<p><i>Note form submisions are disabled in the editor</i></p>\n\n[[basic]]\n\n<h3>Field Groupings</h3>\n\n<p>Fields may be grouped with the <b>fieldset</b> field type.</p>\n\n<p>Fieldset definitions may have the following keys in additions to the standard keys:</p>\n\n<ul>\n\t<li><b>children</b> - Array or object listing child field.</li>\n\t<li><b>array</b> - Boolean determining if field names should cascade.</li>\n</ul>\n\n<p>Array field names will appear normal in output JSON but will have their name attributs in the form fieldset[fieldname]. Nested fieldsets can cascade this property to produce names like fieldset[subset][fieldname].</p>\n\n[[group]]\n\n<h3>Traditional Field Types</h3>\n\n<h4>Text Field</h4>\n\n[[textField]]\n\n<h4>Textarea</h4>\n\n[[textareaField]]\n\n<h4>File Field</h4>\n\n[[fileField]]\n\n\n<h4>Submit</h4>\n\n[[submitField]]\n\n<h4>Button</h4>\n\n[[buttonField]]\n\n<h4>Checkbox Field</h4>\n\n[[checkboxField]]\n\n<h4>Select Field</h4>\n\n[[selectField]]\n\n<h4>Radio Button Field</h4>\n\n[[radioField]]\n\n<h4>Hidden Field</h4>\n\nHidden fields have no user-visible representation. Not even the title will render, but the field will be present.\n\n[[hiddenField]]\n\n<h4>HTML Field</h4>\n\n[[htmlField]]\n\n<h3>HTML5 Input Types</h3>\n\nIf the input type is not recognized, it will be passed through and treated like any other input. It is up to the browser at that point to do any specialized rendering and/or validation.\n\n[[html5Fields]]\n\n<h3>Custom Fields</h3>\n'}),require.register("Layout/View.js",function(t,e,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.View=void 0;var r=e("curvature/base/View"),o=e("../ViewDemo/View"),i=e("../FormsDemo/View"),s=e("../ThemeDemo/View"),a=e("../ConfigDemo/View"),l=e("../RulesDemo/View"),u=e("../ScalarDemo/View"),c=e("../ChainDemo/View"),f=e("../ArrayDemo/View"),p=e("../ObjectDemo/View"),d=e("../Experiments/InfiniteScroll/View"),m=e("../Experiments/Php/View");function h(t){"@babel/helpers - typeof";return(h="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t})(t)}function b(t,e){return(b=Object.setPrototypeOf||function(t,e){return t.__proto__=e,t})(t,e)}function y(t){var e=function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],function(){})),!0}catch(t){return!1}}();return function(){var n,r=v(t);if(e){var o=v(this).constructor;n=Reflect.construct(r,arguments,o)}else n=r.apply(this,arguments);return function(t,e){if(e&&("object"===h(e)||"function"==typeof e))return e;return function(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}(t)}(this,n)}}function v(t){return(v=Object.setPrototypeOf?Object.getPrototypeOf:function(t){return t.__proto__||Object.getPrototypeOf(t)})(t)}var g=function(t){!function(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),e&&b(t,e)}(h,r.View);var n=y(h);function h(){var t;return function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,h),(t=n.call(this)).template=e("./template"),t.routes={"":function(){return"home"},views:function(){return new o.View},forms:function(){return new i.View},config:function(){return new a.View},rules:function(){return new l.View},themes:function(){return new s.View},scalars:function(){return new u.View},chains:function(){return new c.View},arrays:function(){return new f.View},objects:function(){return new p.View},php:function(){return new m.View},"infinite-scroll":function(){return new d.View}},t}return h}();t.View=g}),require.register("Layout/template.html",function(t,e,n){n.exports='<h1>curvature-2</h1>\n<div class = "layout">\n\t<div class = "navigation">\n\t\t<ul>\n\t\t\t<li>Components\n\t\t\t\t<ul>\n\t\t\t\t\t<li><a cv-link = "/views">Views</a></li>\n\t\t\t\t\t<li><a cv-link = "/forms">Forms</a></li>\n\t\t\t\t\t<li><a cv-link = "/config">Config</a></li>\n\t\t\t\t\t<li><a cv-link = "/rules">Rules</a></li>\n\t\t\t\t\t<li cv-link = "/models"><a>Models</a></li>\n\t\t\t\t\t<li cv-link = "/routes"><a>Routes</a></li>\n\t\t\t\t\t<li><a cv-link = "/themes">Themes</a></li>\n\t\t\t\t</ul>\n\t\t\t</li>\n\n\t\t\t<li>Binding:\n\t\t\t\t<ul>\n\t\t\t\t\t<li><a cv-link = "/scalars">Scalars</a></li>\n\t\t\t\t\t<li><a cv-link = "/arrays">Arrays</a></li>\n\t\t\t\t\t<li><a cv-link = "/objects">Objects</a></li>\n\t\t\t\t\t<li><a cv-link = "/chains">Chain Binding</a></li>\n\t\t\t\t</ul>\n\t\t\t</li>\n\n\x3c!-- \t\t\t<li>Integrations:\n\t\t\t\t<ul>\n\t\t\t\t\t<li><a cv-link = "/presskit">PressKit</a></li>\n\t\t\t\t\t<li><a cv-link = "/eventi">Eventi</a></li>\n\t\t\t\t\t<li><a cv-link = "/subspace">Tigl-2d</a></li>\n\t\t\t\t\t<li><a cv-link = "/subspace">Subspace</a></li>\n\t\t\t\t\t<li><a cv-link = "/cv-markdown">cv-Markdown</a></li>\n\t\t\t\t</ul>\n\t\t\t</li> --\x3e\n\n\t\t\t<li>Experiments:\n\t\t\t\t<ul>\n\t\t\t\t\t<li><a cv-link = "/php">PHP Integration</a></li>\n\t\t\t\t\t<li><a cv-link = "/infinite-scroll">Infinite Scroll</a></li>\n\t\t\t\t</ul>\n\t\t\t</li>\n\n\t\t</ul>\n\t</div>\n\n\t<div class = "content">[[content]]</div>\n\n\t<div></div>\n\n</div>\n'}),require.register("ObjectDemo/View.js",function(t,e,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.View=void 0;var r=e("curvature/base/View");function o(t){"@babel/helpers - typeof";return(o="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t})(t)}function i(t,e){for(var n=0;n<e.length;n++){var r=e[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(t,r.key,r)}}function s(t,e){return(s=Object.setPrototypeOf||function(t,e){return t.__proto__=e,t})(t,e)}function a(t){var e=function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],function(){})),!0}catch(t){return!1}}();return function(){var n,r=l(t);if(e){var i=l(this).constructor;n=Reflect.construct(r,arguments,i)}else n=r.apply(this,arguments);return function(t,e){if(e&&("object"===o(e)||"function"==typeof e))return e;return function(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}(t)}(this,n)}}function l(t){return(l=Object.setPrototypeOf?Object.getPrototypeOf:function(t){return t.__proto__||Object.getPrototypeOf(t)})(t)}var u=function(t){!function(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),e&&s(t,e)}(c,r.View);var n,o,l,u=a(c);function c(){var t;return function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,c),(t=u.call(this)).template=e("./template"),t.z=0,t.args.obj={a:1,b:2,c:3},t}return n=c,(o=[{key:"setKey",value:function(t,e){this.args.obj[t]=e}},{key:"delKey",value:function(t){delete this.args.obj[t]}}])&&i(n.prototype,o),l&&i(n,l),c}();t.View=u}),require.register("ObjectDemo/template.html",function(t,e,n){n.exports='<h2>Object Binding Demo</h2>\n\n<div class = "row">\n\t<fieldset>\n\t\t<label>set</label>\n\t\t<input cv-bind = "setKey" />\n\t\t<input cv-bind = "seyValue" />\n\t\t<button cv-on = "click:setKey(setKey,seyValue)">set</button>\n\t</fieldset>\n\n\t<fieldset>\n\t\t<label>delete</label>\n\t\t<input cv-bind  = "delKey" />\n\t\t<button cv-on = "click:delKey(delKey)">set</button>\n\t</fieldset>\n</div>\n\n<div cv-each = "obj:item:i">\n\t<p>[[i]] [[item]]</p>\n</div>\n'}),require.register("PHP.js",function(t,e,n){"use strict"}),require.register("RulesDemo/Samples/BasicRule.html",function(t,e,n){n.exports='<style>\ntextarea,input,progress { display: block; width: 100%; padding: 0.5em; margin-top: 0.5em;  margin-bottom: 0.25em; box-sizing: border-box;}\np { font-size: 0.5em; text-align: right; margin: 0.25em; }\n</style>\n\n<textarea maxlength = "140">Typing here will update the elements below.</textarea>\n\n<input maxlength = "28" value = "It works for inputs as well." />\n'}),require.register("RulesDemo/Samples/BasicRule.jss",function(t,e,n){n.exports="const View = require('curvature/base/View').View;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tthis.ruleSet.add('textarea,input[maxlength]', tag => {\n\n\t\t\tconst element = tag.element;\n\t\t\tconst parent  = element.parentNode;\n\n\t\t\tconst max = element.getAttribute('maxlength');\n\t\t\tconst bar = document.createElement('progress');\n\t\t\tconst ind = document.createElement('p');\n\n\t\t\tconst length = element.value.length;\n\n\t\t\tind.innerText = `${length} / ${max}`;\n\n\t\t\tbar.setAttribute('max', max);\n\t\t\tbar.setAttribute('value', length);\n\n\t\t\telement.addEventListener('input', event => {\n\n\t\t\t\tconst length = event.target.value.length;\n\n\t\t\t\tbar.setAttribute('value', length);\n\n\t\t\t\tind.innerText = `${length} / ${max}`;\n\n\t\t\t});\n\n\t\t\tconst next = element.nextSibling;\n\n\t\t\tparent.insertBefore(bar, next);\n\t\t\tparent.insertBefore(ind, next);\n\t\t});\n\t}\n}\n"}),require.register("RulesDemo/Samples/Mapper.html",function(t,e,n){n.exports="<custom-tag>this maps to a div tag.</custom-tag>\n"}),require.register("RulesDemo/Samples/Mapper.jss",function(t,e,n){n.exports="const View = require('curvature/base/View').View;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tthis.ruleSet.add('custom-tag', tag => {\n\n\t\t\tconst div = document.createElement('div');\n\t\t\tconst element = tag.element;\n\n\t\t\twhile(element.firstChild)\n\t\t\t{\n\t\t\t\tdiv.append('The tag that contained \"');\n\t\t\t\tdiv.append(element.firstChild);\n\t\t\t\tdiv.append('\" has been replaced with this div tag.');\n\t\t\t}\n\n\t\t\treturn div;\n\n\t\t});\n\t}\n}\n"}),require.register("RulesDemo/Samples/Preproc.html",function(t,e,n){n.exports="<h1>Editable title</h1>\n\n<p>Editable body</p>\n"}),require.register("RulesDemo/Samples/Preproc.jss",function(t,e,n){n.exports="const View = require('curvature/base/View').View;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tconst selector = 'h1,p';\n\n\t\tconst nodes = [];\n\t\tconst index = new WeakMap();\n\n\t\tconst nodeIndex = (node) => {\n\n\t\t\tif(index[node] !== undefined)\n\t\t\t{\n\t\t\t\treturn index[node];\n\t\t\t}\n\n\t\t\tindex[node] = nodes.length;\n\t\t\tnodes.push(node);\n\n\t\t\treturn index[node];\n\t\t};\n\n\t\tthis.preRuleSet.add(selector, tag => {\n\n\t\t\tconst element  = tag.element;\n\t\t\tconst view     = tag.parent;\n\t\t\tconst parent   = element.parentNode;\n\t\t\tconst tagIndex = nodeIndex(element);\n\t\t\tconst refName  = `node_${ tagIndex }`;\n\n\t\t\telement.setAttribute('tabindex', -1);\n\n\t\t\tconst input = document.createElement('input');\n\n\t\t\tinput.setAttribute('cv-bind', refName);\n\t\t\telement.setAttribute('cv-bind', refName);\n\n\t\t\tview.args[refName] = element.innerText;\n\n\t\t\telement.addEventListener('focus', () => {\n\t\t\t\tinput.style.display = '';\n\t\t\t\tinput.focus();\n\t\t\t\tinput.select();\n\t\t\t});\n\n\t\t\tinput.addEventListener('blur', () => {\n\t\t\t\tinput.style.display = 'none';\n\t\t\t});\n\n\t\t\tparent.insertBefore(input, element.nextSibling);\n\t\t\tinput.style.display = 'none';\n\t\t});\n\t}\n}\n"}),require.register("RulesDemo/Samples/Static.html",function(t,e,n){n.exports="<p></p>\n"}),require.register("RulesDemo/Samples/Static.jss",function(t,e,n){n.exports="const RuleSet = require('curvature/base/RuleSet').RuleSet;\nconst View    = require('curvature/base/View').View;\n\nRuleSet.add('p', tag => {\n\ttag.element.innerText = 'Global rule applied!';\n});\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\t}\n}\n"}),require.register("RulesDemo/Samples/ViewMapper.html",function(t,e,n){n.exports="<p>Class:</p>\n<div data-class>this maps to a view class.</div>\n\n<p>Object:</p>\n<div data-object>this maps to a view object.</div>\n"}),require.register("RulesDemo/Samples/ViewMapper.jss",function(t,e,n){n.exports='const View = require(\'curvature/base/View\').View;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require(\'template\');\n\n\t\tthis.ruleSet.add(\'[data-class]\', Clock);\n\n\t\tconst clock = new Clock();\n\n\t\tthis.ruleSet.add(\'[data-object]\', clock);\n\t}\n}\n\nclass Clock extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = `\n\t\t\t<p><progress max = "24"   value = "[[h]]"></progress>[[h]]</p>\n\t\t\t<p><progress max = "60"   value = "[[m]]"></progress>[[m]]</p>\n\t\t\t<p><progress max = "60"   value = "[[s]]"></progress>[[s]]</p>\n\t\t\t<p><progress max = "1000" value = "[[n]]"></progress>[[n]]</p>\n\t\t`;\n\n\t\tthis.onFrame(() => {\n\n\t\t\tconst d = new Date();\n\n\t\t\tthis.args.h = d.getHours();\n\t\t\tthis.args.m = d.getMinutes();\n\t\t\tthis.args.s = d.getSeconds();\n\t\t\tthis.args.n = d.getMilliseconds();\n\n\t\t});\n\t}\n}\n'}),require.register("RulesDemo/View.js",function(t,e,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.View=void 0;var r=e("curvature/base/View"),o=e("../Editor/View");function i(t){"@babel/helpers - typeof";return(i="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t})(t)}function s(t,e){return(s=Object.setPrototypeOf||function(t,e){return t.__proto__=e,t})(t,e)}function a(t){var e=function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],function(){})),!0}catch(t){return!1}}();return function(){var n,r=l(t);if(e){var o=l(this).constructor;n=Reflect.construct(r,arguments,o)}else n=r.apply(this,arguments);return function(t,e){if(e&&("object"===i(e)||"function"==typeof e))return e;return function(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}(t)}(this,n)}}function l(t){return(l=Object.setPrototypeOf?Object.getPrototypeOf:function(t){return t.__proto__||Object.getPrototypeOf(t)})(t)}var u=function(t){!function(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),e&&s(t,e)}(i,r.View);var n=a(i);function i(){var t;!function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,i),(t=n.call(this)).template=e("./template"),t.args.list=[1,2,3];var r=new o.View;r.args.tabs.js={title:"js",file:"DemoView.js",body:e("./Samples/BasicRule.jss"),mode:"ace/mode/javascript"},r.args.tabs.html={title:"html",file:"template.html",body:e("./Samples/BasicRule.html"),mode:"ace/mode/html"},r.refreshCode(),t.args.basic=r;var s=new o.View;s.args.tabs.js={title:"js",file:"DemoView.js",body:e("./Samples/Preproc.jss"),mode:"ace/mode/javascript"},s.args.tabs.html={title:"html",file:"template.html",body:e("./Samples/Preproc.html"),mode:"ace/mode/html"},s.refreshCode(),t.args.preproc=s;var a=new o.View;a.args.tabs.js={title:"js",file:"DemoView.js",body:e("./Samples/Mapper.jss"),mode:"ace/mode/javascript"},a.args.tabs.html={title:"html",file:"template.html",body:e("./Samples/Mapper.html"),mode:"ace/mode/html"},a.refreshCode(),t.args.mapper=a;var l=new o.View;l.args.tabs.js={title:"js",file:"DemoView.js",body:e("./Samples/ViewMapper.jss"),mode:"ace/mode/javascript"},l.args.tabs.html={title:"html",file:"template.html",body:e("./Samples/ViewMapper.html"),mode:"ace/mode/html"},l.refreshCode(),t.args.viewMapper=l;var u=new o.View;return u.args.tabs.js={title:"js",file:"DemoView.js",body:e("./Samples/Static.jss"),mode:"ace/mode/javascript"},u.args.tabs.html={title:"html",file:"template.html",body:e("./Samples/Static.html"),mode:"ace/mode/html"},u.refreshCode(),t.args.globalRules=u,t}return i}();t.View=u}),require.register("RulesDemo/template.html",function(t,e,n){n.exports="<h2>Rules</h2>\n\n<p>The most basic rules simply map CSS selectors to callbacks. Whenever a tag matching a rule is encountered, the callback is applied.</p>\n\n<p>Every View comes with a RuleSet, so you can add Rules by calling <code>this.ruleSet.add</code>.</p>\n\n[[basic]]\n\n<h3>Preprocessing</h3>\n\n<p>If <code>this.preRuleSet.add</code> is used rather than <code>this.ruleSet.add</code>, the rules will be appled BEFORE the template is processed, rather than after.</p>\n\n<p>This allows us \x3c!-- to [[<span>interpolate</span>]] values and--\x3e use cv-* attributes.</p>\n\n[[preproc]]\n\n<h3>Mapping tags to tags</h3>\n\n<p>If the callback returns an HTMLElement, the original tag will be replaced.</p>\n\n[[mapper]]\n\n<h3>Mapping tags to views</h3>\n\n<p>View classes, or instances of them may both be passed instead of a callback. In this case, the view will be rendered <b>inside</b> the existing tag.</p>\n\n[[viewMapper]]\n\n<h3>Global Rules</h3>\n\n<p>The <code>RuleSet.add</code> method may be called statically to add global rules.</p>\n\n[[globalRules]]\n\n\x3c!-- <h3>The RuleSet class <i>per se</i></h3> --\x3e\n"}),require.register("ScalarDemo/View.js",function(t,e,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.View=void 0;var r=e("curvature/base/View");e("../ArrayDemo/View"),e("../ObjectDemo/View");function o(t){"@babel/helpers - typeof";return(o="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t})(t)}function i(t,e){for(var n=0;n<e.length;n++){var r=e[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(t,r.key,r)}}function s(t,e){return(s=Object.setPrototypeOf||function(t,e){return t.__proto__=e,t})(t,e)}function a(t){var e=function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],function(){})),!0}catch(t){return!1}}();return function(){var n,r=l(t);if(e){var i=l(this).constructor;n=Reflect.construct(r,arguments,i)}else n=r.apply(this,arguments);return function(t,e){if(e&&("object"===o(e)||"function"==typeof e))return e;return function(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}(t)}(this,n)}}function l(t){return(l=Object.setPrototypeOf?Object.getPrototypeOf:function(t){return t.__proto__||Object.getPrototypeOf(t)})(t)}var u=function(t){!function(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),e&&s(t,e)}(c,r.View);var n,o,l,u=a(c);function c(){var t;return function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,c),(t=u.call(this)).template=e("./template"),t}return n=c,(o=[{key:"clear",value:function(t){this.args[t]=""}}])&&i(n.prototype,o),l&&i(n,l),c}();t.View=u}),require.register("ScalarDemo/template.html",function(t,e,n){n.exports='<h2>Scalar Binding Demo</h2>\n\n<p>\n\ta:\n\t<input cv-bind = "a">\n\t<button cv-on = "click:clear(\'a\')">x</button> : "[[a]]"\n</p>\n\n<p>\n\tb:\n\t<input cv-bind = "b">\n\t<button cv-on = "click:clear(\'b\')">x</button> : "[[b]]"\n</p>\n\n<p>\n\tc:\n\t<input cv-bind = "c">\n\t<button cv-on = "click:clear(\'c\')">x</button> : "[[c]]"\n</p>\n'}),require.register("ThemeDemo/Theme.js",function(t,e,n){"use strict";function r(t,e){return function(t){if(Array.isArray(t))return t}(t)||function(t,e){if("undefined"==typeof Symbol||!(Symbol.iterator in Object(t)))return;var n=[],r=!0,o=!1,i=void 0;try{for(var s,a=t[Symbol.iterator]();!(r=(s=a.next()).done)&&(n.push(s.value),!e||n.length!==e);r=!0);}catch(t){o=!0,i=t}finally{try{r||null==a.return||a.return()}finally{if(o)throw i}}return n}(t,e)||i(t,e)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function o(t){if("undefined"==typeof Symbol||null==t[Symbol.iterator]){if(Array.isArray(t)||(t=i(t))){var e=0,n=function(){};return{s:n,n:function(){return e>=t.length?{done:!0}:{done:!1,value:t[e++]}},e:function(t){throw t},f:n}}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}var r,o,s=!0,a=!1;return{s:function(){r=t[Symbol.iterator]()},n:function(){var t=r.next();return s=t.done,t},e:function(t){a=!0,o=t},f:function(){try{s||null==r.return||r.return()}finally{if(a)throw o}}}}function i(t,e){if(t){if("string"==typeof t)return s(t,e);var n=Object.prototype.toString.call(t).slice(8,-1);return"Object"===n&&t.constructor&&(n=t.constructor.name),"Map"===n||"Set"===n?Array.from(t):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?s(t,e):void 0}}function s(t,e){(null==e||e>t.length)&&(e=t.length);for(var n=0,r=new Array(e);n<e;n++)r[n]=t[n];return r}function a(t,e){for(var n=0;n<e.length;n++){var r=e[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(t,r.key,r)}}function l(t,e,n){return e&&a(t.prototype,e),n&&a(t,n),t}Object.defineProperty(t,"__esModule",{value:!0}),t.Theme=void 0;var u=function(){function t(e){!function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,t),this.key=e,this.viewMap=new Map,this.templateMap=new Map,this.fallbacks=[]}return l(t,null,[{key:"get",value:function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:"";return this.instances||(this.instances={}),this.instances[t]||(this.instances[t]=new this(t)),this.instances[t]}}]),l(t,[{key:"setFallback",value:function(){var t;return(t=this.fallbacks).push.apply(t,arguments),this}},{key:"setView",value:function(t,e){return this.viewMap.set(t,e),this}},{key:"getView",value:function(t){var e=this.resolve(t,"viewMap");return e?new e(t):null}},{key:"setTemplate",value:function(t,e){return this.templateMap.set(t,e),this}},{key:"getTemplate",value:function(t){return this.resolve(t,"templateMap")}},{key:"resolve",value:function(t,e){t.___object___&&t.isBound&&(t=t.___object___);var n=t.constructor,i=this[e];if(i.has(n))return i.get(n);var s,a=null,l=o(i);try{for(l.s();!(s=l.n()).done;){var u=r(s.value,2),c=u[0],f=u[1];n.prototype instanceof c&&(a=f)}}catch(t){l.e(t)}finally{l.f()}if(!a){var p,d=o(this.fallbacks);try{for(d.s();!(p=d.n()).done;){if(a=p.value.resolve(t,e))return a}}catch(t){d.e(t)}finally{d.f()}}return a&&i.set(n,a),a}}]),t}();t.Theme=u}),require.register("ThemeDemo/View.js",function(t,e,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.View=void 0;var r=e("./Theme"),o=e("curvature/base/View"),i=e("./types/TypeX"),s=e("./types/TypeY"),a=e("./types/TypeZ"),l=e("./views/ViewX"),u=e("./views/ViewY"),c=e("./views/ViewZ"),f=e("./types/TypeZAlpha"),p=e("./views/ViewZAlpha");function d(t){"@babel/helpers - typeof";return(d="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t})(t)}function m(t,e){return(m=Object.setPrototypeOf||function(t,e){return t.__proto__=e,t})(t,e)}function h(t){var e=function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],function(){})),!0}catch(t){return!1}}();return function(){var n,r=y(t);if(e){var o=y(this).constructor;n=Reflect.construct(r,arguments,o)}else n=r.apply(this,arguments);return function(t,e){if(e&&("object"===d(e)||"function"==typeof e))return e;return b(t)}(this,n)}}function b(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}function y(t){return(y=Object.setPrototypeOf?Object.getPrototypeOf:function(t){return t.__proto__||Object.getPrototypeOf(t)})(t)}var v=function(t){!function(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),e&&m(t,e)}(d,o.View);var n=h(d);function d(t){var o;!function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,d),(o=n.call(this,t)).template=e("./template");var m=r.Theme.get(),h=r.Theme.get("alpha");m.setTemplate(l.ViewX,e("./views/templateX")).setTemplate(u.ViewY,e("./views/templateY")).setTemplate(c.ViewZ,e("./views/templateZ")).setView(i.TypeX,l.ViewX).setView(s.TypeY,u.ViewY).setView(a.TypeZ,c.ViewZ),h.setTemplate(p.ViewZAlpha,e("./views/templateZAlpha")).setFallback(r.Theme.get()).setView(f.TypeZAlpha,p.ViewZAlpha);var y=new i.TypeX(b(o)),v=new s.TypeY(b(o)),g=new a.TypeZ(b(o)),w=new f.TypeZAlpha(b(o));return o.args.views=[y,y,v,g,w].map(function(t){return h.getView(t)}),o}return d}();t.View=v}),require.register("ThemeDemo/template.html",function(t,e,n){n.exports='<div cv-each = "views:view:v">[[view]]</div>\n'}),require.register("ThemeDemo/types/TypeX.js",function(t,e,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.TypeX=void 0;var r=e("curvature/base/Bindable");t.TypeX=function t(e){!function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,t);var n=r.Bindable.makeBindable(this);this.type="X",this.value=1/Math.random(),this.interval=e.onInterval(100,function(){n.value="0x"+Math.floor(1e4*Math.random()).toString(16).padStart(4,0)})}}),require.register("ThemeDemo/types/TypeY.js",function(t,e,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.TypeY=void 0;t.TypeY=function t(){!function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,t),this.type="Y",this.value=1/Math.random()}}),require.register("ThemeDemo/types/TypeZ.js",function(t,e,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.TypeZ=void 0;var r=e("curvature/base/Bindable");t.TypeZ=function t(e){!function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,t);var n=r.Bindable.makeBindable(this);return this.type="Z",this.value=0,this.interval=e.onInterval(250,function(){n.value++}),n}}),require.register("ThemeDemo/types/TypeZAlpha.js",function(t,e,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.TypeZAlpha=void 0;var r=e("./TypeZ");function o(t){"@babel/helpers - typeof";return(o="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t})(t)}function i(t,e){return(i=Object.setPrototypeOf||function(t,e){return t.__proto__=e,t})(t,e)}function s(t){var e=function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],function(){})),!0}catch(t){return!1}}();return function(){var n,r=a(t);if(e){var i=a(this).constructor;n=Reflect.construct(r,arguments,i)}else n=r.apply(this,arguments);return function(t,e){if(e&&("object"===o(e)||"function"==typeof e))return e;return function(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}(t)}(this,n)}}function a(t){return(a=Object.setPrototypeOf?Object.getPrototypeOf:function(t){return t.__proto__||Object.getPrototypeOf(t)})(t)}var l=function(t){!function(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),e&&i(t,e)}(n,r.TypeZ);var e=s(n);function n(t){var r;return function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,n),(r=e.call(this,t)).type="Z𝛼",clearInterval(r.interval),r.interval=t.onInterval(20,function(){r.value++}),r}return n}();t.TypeZAlpha=l}),require.register("ThemeDemo/views/ViewX.js",function(t,e,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.ViewX=void 0;var r=e("../Theme"),o=e("../../Config"),i=e("curvature/base/View");function s(t){"@babel/helpers - typeof";return(s="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t})(t)}function a(t,e){return(a=Object.setPrototypeOf||function(t,e){return t.__proto__=e,t})(t,e)}function l(t){var e=function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],function(){})),!0}catch(t){return!1}}();return function(){var n,r=c(t);if(e){var o=c(this).constructor;n=Reflect.construct(r,arguments,o)}else n=r.apply(this,arguments);return function(t,e){if(e&&("object"===s(e)||"function"==typeof e))return e;return u(t)}(this,n)}}function u(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}function c(t){return(c=Object.setPrototypeOf?Object.getPrototypeOf:function(t){return t.__proto__||Object.getPrototypeOf(t)})(t)}var f=function(t){!function(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),e&&a(t,e)}(n,i.View);var e=l(n);function n(t){var i;return function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,n),(i=e.call(this,t)).template=r.Theme.get(o.Config.theme||"").getTemplate(u(i)),i}return n}();t.ViewX=f}),require.register("ThemeDemo/views/ViewY.js",function(t,e,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.ViewY=void 0;var r=e("../Theme"),o=e("../../Config"),i=e("curvature/base/View");function s(t){"@babel/helpers - typeof";return(s="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t})(t)}function a(t,e){return(a=Object.setPrototypeOf||function(t,e){return t.__proto__=e,t})(t,e)}function l(t){var e=function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],function(){})),!0}catch(t){return!1}}();return function(){var n,r=c(t);if(e){var o=c(this).constructor;n=Reflect.construct(r,arguments,o)}else n=r.apply(this,arguments);return function(t,e){if(e&&("object"===s(e)||"function"==typeof e))return e;return u(t)}(this,n)}}function u(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}function c(t){return(c=Object.setPrototypeOf?Object.getPrototypeOf:function(t){return t.__proto__||Object.getPrototypeOf(t)})(t)}var f=function(t){!function(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),e&&a(t,e)}(n,i.View);var e=l(n);function n(t){var i;return function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,n),(i=e.call(this,t)).template=r.Theme.get(o.Config.theme||"").getTemplate(u(i)),i}return n}();t.ViewY=f}),require.register("ThemeDemo/views/ViewZ.js",function(t,e,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.ViewZ=void 0;var r=e("../Theme"),o=e("../../Config"),i=e("curvature/base/View");function s(t){"@babel/helpers - typeof";return(s="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t})(t)}function a(t,e){return(a=Object.setPrototypeOf||function(t,e){return t.__proto__=e,t})(t,e)}function l(t){var e=function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],function(){})),!0}catch(t){return!1}}();return function(){var n,r=c(t);if(e){var o=c(this).constructor;n=Reflect.construct(r,arguments,o)}else n=r.apply(this,arguments);return function(t,e){if(e&&("object"===s(e)||"function"==typeof e))return e;return u(t)}(this,n)}}function u(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}function c(t){return(c=Object.setPrototypeOf?Object.getPrototypeOf:function(t){return t.__proto__||Object.getPrototypeOf(t)})(t)}var f=function(t){!function(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),e&&a(t,e)}(n,i.View);var e=l(n);function n(t){var i;return function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,n),(i=e.call(this,t)).template=r.Theme.get(o.Config.theme||"").getTemplate(u(i)),i}return n}();t.ViewZ=f}),require.register("ThemeDemo/views/ViewZAlpha.js",function(t,e,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.ViewZAlpha=void 0;var r=e("./ViewZ");function o(t){"@babel/helpers - typeof";return(o="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t})(t)}function i(t,e){return(i=Object.setPrototypeOf||function(t,e){return t.__proto__=e,t})(t,e)}function s(t){var e=function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],function(){})),!0}catch(t){return!1}}();return function(){var n,r=a(t);if(e){var i=a(this).constructor;n=Reflect.construct(r,arguments,i)}else n=r.apply(this,arguments);return function(t,e){if(e&&("object"===o(e)||"function"==typeof e))return e;return function(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}(t)}(this,n)}}function a(t){return(a=Object.setPrototypeOf?Object.getPrototypeOf:function(t){return t.__proto__||Object.getPrototypeOf(t)})(t)}var l=function(t){!function(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),e&&i(t,e)}(n,r.ViewZ);var e=s(n);function n(){return function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,n),e.apply(this,arguments)}return n}();t.ViewZAlpha=l}),require.register("ThemeDemo/views/templateX.html",function(t,e,n){n.exports='<div class = "[[type]]">X;[[type]]: [[value]]</div>\n'}),require.register("ThemeDemo/views/templateY.html",function(t,e,n){n.exports='<div class = "[[type]]">Y;[[type]]: [[value]]</div>\n'}),require.register("ThemeDemo/views/templateZ.html",function(t,e,n){n.exports='<div class = "[[type]]">Z;[[type]]: [[value]]</div>\n'}),require.register("ThemeDemo/views/templateZAlpha.html",function(t,e,n){n.exports='<div class = "[[type]]">Z𝛼;[[type]]: [[value]]</div>\n'}),require.register("ViewDemo/Samples/Array.html",function(t,e,n){n.exports='<p>List:</p>\n\n<ul cv-each = "list:item:i">\n\t<li>[[item]]</li>\n</ul>\n'}),require.register("ViewDemo/Samples/Array.jss",function(t,e,n){n.exports="const View = require('curvature/base/View').View;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tthis.args.list = ['Milk','Eggs','Bread'];\n\t}\n\n\ttoJson(input)\n\t{\n\t\treturn JSON.stringify(input);\n\t}\n}\n"}),require.register("ViewDemo/Samples/ArrayJson.html",function(t,e,n){n.exports="<p>Json:</p>\n<pre>[[list|toJson]]</pre>\n"}),require.register("ViewDemo/Samples/Escape.html",function(t,e,n){n.exports="<p>[[time|addItalicTags]]</p>\n<p>[[$time|addItalicTags]]</p>\n"}),require.register("ViewDemo/Samples/HelloWorld.php",function(t,e,n){n.exports='<?php\n\necho "???\\n";\n'}),require.register("ViewDemo/Samples/Reuse.html",function(t,e,n){n.exports='<template cv-template = "item">\n\t<li><label><input type = "checkbox">[[item]]</label></li>\n</template>\n\n<ol cv-each = "list:item:i" cv-slot = "item"></ol>\n<ul cv-each = "list:item:i" cv-slot = "item"></ul>\n'}),require.register("ViewDemo/Samples/Reverse.html",function(t,e,n){n.exports="<p>[[time|reverseString]]</p>\n"}),require.register("ViewDemo/Samples/Scalar.html",function(t,e,n){n.exports="<p>[[time]]</p>\n"}),require.register("ViewDemo/Samples/Scalar.jss",function(t,e,n){n.exports="const View = require('curvature/base/View').View;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tthis.args.time = (new Date()).toISOString();\n\n\t\tthis.onFrame(() => {\n\n\t\t\tthis.args.time = (new Date()).toISOString();\n\n\t\t});\n\t}\n\n\taddItalicTags(input)\n\t{\n\t\treturn `<i>${input}</i>`;\n\t}\n\n\treverseString(input = '')\n\t{\n\t\treturn input.split('').reverse().join('');\n\t}\n}\n"}),require.register("ViewDemo/Samples/TwoWay.html",function(t,e,n){n.exports='<input cv-bind = "val" placeholder = "type here...">\n\n<button cv-on = "click:random(\'val\')">random</button>\n\n<button cv-on = "click:clear(\'val\')">clear</button>\n\n<p>[[val]]</p>\n'}),require.register("ViewDemo/Samples/TwoWay.jss",function(t,e,n){n.exports="const View = require('curvature/base/View').View;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\t\tthis.template = require('template');\n\t\tthis.args.val = '';\n\t}\n\n\trandom()\n\t{\n\t\tthis.args.val = (0xFFFF * Math.random()).toString(36);\n\t}\n\n\tclear()\n\t{\n\t\tthis.args.val = '';\n\t}\n}\n"}),require.register("ViewDemo/Samples/document.html",function(t,e,n){n.exports="<!DOCTYPE HTML>\n<head>\n\t<style>\n\t\tbody { font-family: courier-new, monospace; line-height: 1.5em; }\n\t</style>\n\t<script src = \"[ORIGIN]/vendor.js\"><\/script>\n\t<script>require.register('Config', function(exports, require, module) { return module.exports = {}});<\/script>\n\t<script>require.register('template.html', function(exports, require, module) { return module.exports = `[TEMPLATE]`});<\/script>\n\t<script src = \"[ORIGIN]/curvature.js\"><\/script>\n\t<script>document.addEventListener('DOMContentLoaded', () => {\n\t\tconst View = require('curvature/base/View').View;\n\n\t\t[SCRIPT]\n\n\t\tif(typeof DemoView !== 'undefined')\n\t\t{\n\t\t\tconst view = new DemoView;\n\n\t\t\tview.render(document.body);\n\t\t}\n\n\t});<\/script>\n</head>\n<body>\n</body>\n"}),require.register("ViewDemo/View.js",function(t,e,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.View=void 0;var r=e("curvature/base/View"),o=(e("../ArrayDemo/View"),e("../ObjectDemo/View"),e("../Editor/View"));!function(t){if(t&&t.__esModule)return t;if(null===t||"object"!==s(t)&&"function"!=typeof t)return{default:t};var e=i();if(e&&e.has(t))return e.get(t);var n={},r=Object.defineProperty&&Object.getOwnPropertyDescriptor;for(var o in t)if(Object.prototype.hasOwnProperty.call(t,o)){var a=r?Object.getOwnPropertyDescriptor(t,o):null;a&&(a.get||a.set)?Object.defineProperty(n,o,a):n[o]=t[o]}n.default=t,e&&e.set(t,n)}(e("brace"));function i(){if("function"!=typeof WeakMap)return null;var t=new WeakMap;return i=function(){return t},t}function s(t){"@babel/helpers - typeof";return(s="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t})(t)}function a(t,e){for(var n=0;n<e.length;n++){var r=e[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(t,r.key,r)}}function l(t,e){return(l=Object.setPrototypeOf||function(t,e){return t.__proto__=e,t})(t,e)}function u(t){var e=function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],function(){})),!0}catch(t){return!1}}();return function(){var n,r=c(t);if(e){var o=c(this).constructor;n=Reflect.construct(r,arguments,o)}else n=r.apply(this,arguments);return function(t,e){if(e&&("object"===s(e)||"function"==typeof e))return e;return function(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}(t)}(this,n)}}function c(t){return(c=Object.setPrototypeOf?Object.getPrototypeOf:function(t){return t.__proto__||Object.getPrototypeOf(t)})(t)}e("brace/mode/html"),e("brace/mode/php"),e("brace/mode/javascript"),e("brace/theme/monokai");var f=function(t){!function(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),e&&l(t,e)}(f,r.View);var n,i,s,c=u(f);function f(){var t;!function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,f),(t=c.call(this)).template=e("./template"),window.addEventListener("message",i),t.onRemove(function(){window.removeEventListener("message",i)});var n=t.args.editor=new o.View;n.args.tabs.js={title:"js",file:"DemoView.js",body:e("./Samples/Scalar.jss"),mode:"ace/mode/javascript"},n.args.tabs.html={title:"html",file:"template.html",body:e("./Samples/Scalar.html"),mode:"ace/mode/html"},n.refreshCode();var r=t.args.editorTwoWay=new o.View;r.args.tabs.js={title:"js",file:"DemoView.js",body:e("./Samples/TwoWay.jss"),mode:"ace/mode/javascript"},r.args.tabs.html={title:"html",file:"template.html",body:e("./Samples/TwoWay.html"),mode:"ace/mode/html"},r.refreshCode();var i=function(t){console.log(t)},s=t.args.editorReverse=new o.View;s.args.tabs.js={title:"js",file:"DemoView.js",body:e("./Samples/Scalar.jss"),mode:"ace/mode/javascript"},s.args.tabs.html={title:"html",file:"template.html",body:e("./Samples/Reverse.html"),mode:"ace/mode/html"},s.refreshCode();var a=t.args.editorEscape=new o.View;a.args.tabs.js={title:"js",file:"DemoView.js",body:e("./Samples/Scalar.jss"),mode:"ace/mode/javascript"},a.args.tabs.html={title:"html",file:"template.html",body:e("./Samples/Escape.html"),mode:"ace/mode/html"},a.refreshCode();var l=t.args.editorArray=new o.View;l.args.orientation="vertical",l.args.tabs.js={title:"js",file:"DemoView.js",body:e("./Samples/Array.jss"),mode:"ace/mode/javascript"},l.args.tabs.html={title:"html",file:"template.html",body:e("./Samples/Array.html"),mode:"ace/mode/html"},l.refreshCode();var u=t.args.editorJson=new o.View;u.args.tabs.js={title:"js",file:"DemoView.js",body:e("./Samples/Array.jss"),mode:"ace/mode/javascript"},u.args.tabs.html={title:"html",file:"template.html",body:e("./Samples/ArrayJson.html"),mode:"ace/mode/html"},u.refreshCode();var p=t.args.editorReuse=new o.View;return p.args.tabs.js={title:"js",file:"DemoView.js",body:e("./Samples/Array.jss"),mode:"ace/mode/javascript"},p.args.tabs.html={title:"html",file:"template.html",body:e("./Samples/Reuse.html"),mode:"ace/mode/html"},p.refreshCode(),t}return n=f,(i=[{key:"addItalicTags",value:function(t){return"<i>".concat(t,"</i>")}},{key:"reverseString",value:function(){return(arguments.length>0&&void 0!==arguments[0]?arguments[0]:"").split("").reverse().join("")}},{key:"clear",value:function(t){this.args[t]=""}}])&&a(n.prototype,i),s&&a(n,s),f}();t.View=f}),require.register("ViewDemo/template.html",function(t,e,n){n.exports='<h2>Views Demo</h2>\n\x3c!--\n<h3>PHP</h3>\n\n[[editorPhp]]\n --\x3e\n<h3>Scalar Binding</h3>\n\n<p>Scalars can be bound with double square brackets:</p>\n\n[[editor]]\n\n<h3>Two way binding, Events & Methods</h3>\n\n<p>Two way binding is also supported.</p>\n\n<p>Methods can be bound to events with cv-on.</p>\n\n[[editorTwoWay]]\n\n<h3>Transformations</h3>\n\n<p>Values can also be transformed with methods:</p>\n\n[[editorReverse]]\n\n<h3>Escaping</h3>\n\n<p>HTML is automatically escaped unless "$" is used:</p>\n\n[[editorEscape]]\n\n<h3>Arrays & Objects</h3>\n\n<p>Arrays and objects may be looped over with the cv-each attribute:</p>\n\n[[editorArray]]\n\n<h3>Methods</h3>\n\n<p>Values of any type may be transformed by methods:</p>\n\n[[editorJson]]\n\n<h3>Templates</h3>\n\n<p>Reusable templates can be created with the cv-template attribute.</p>\n\n<p>Templates may be reused within the same view with the cv-slot attribute.</p>\n\n[[editorReuse]]\n\n<h3>Lifecycle</h3>\n\n<h3>Construct</h3>\n<h3>On Render</h3>\n<h3>On Attachment</h3>\n<h3>On Detachment</h3>\n<h3>On Final Removal</h3>\n'}),require.register("initialize.js",function(t,e,n){"use strict";var r=e("curvature/base/Router"),o=e("curvature/base/RuleSet"),i=e("./Layout/View");document.addEventListener("DOMContentLoaded",function(){var t=new i.View;o.RuleSet.add("body",t),o.RuleSet.apply(),r.Router.listen(t)})}),require.alias("buffer/index.js","buffer"),require.alias("process/browser.js","process"),require("process"),require.register("___globals___",function(t,e,n){})}(),require("___globals___");
+(function() {
+  'use strict';
+
+  var globals = typeof global === 'undefined' ? self : global;
+  if (typeof globals.require === 'function') return;
+
+  var modules = {};
+  var cache = {};
+  var aliases = {};
+  var has = {}.hasOwnProperty;
+
+  var expRe = /^\.\.?(\/|$)/;
+  var expand = function(root, name) {
+    var results = [], part;
+    var parts = (expRe.test(name) ? root + '/' + name : name).split('/');
+    for (var i = 0, length = parts.length; i < length; i++) {
+      part = parts[i];
+      if (part === '..') {
+        results.pop();
+      } else if (part !== '.' && part !== '') {
+        results.push(part);
+      }
+    }
+    return results.join('/');
+  };
+
+  var dirname = function(path) {
+    return path.split('/').slice(0, -1).join('/');
+  };
+
+  var localRequire = function(path) {
+    return function expanded(name) {
+      var absolute = expand(dirname(path), name);
+      return globals.require(absolute, path);
+    };
+  };
+
+  var initModule = function(name, definition) {
+    var hot = hmr && hmr.createHot(name);
+    var module = {id: name, exports: {}, hot: hot};
+    cache[name] = module;
+    definition(module.exports, localRequire(name), module);
+    return module.exports;
+  };
+
+  var expandAlias = function(name) {
+    var val = aliases[name];
+    return (val && name !== val) ? expandAlias(val) : name;
+  };
+
+  var _resolve = function(name, dep) {
+    return expandAlias(expand(dirname(name), dep));
+  };
+
+  var require = function(name, loaderPath) {
+    if (loaderPath == null) loaderPath = '/';
+    var path = expandAlias(name);
+
+    if (has.call(cache, path)) return cache[path].exports;
+    if (has.call(modules, path)) return initModule(path, modules[path]);
+
+    throw new Error("Cannot find module '" + name + "' from '" + loaderPath + "'");
+  };
+
+  require.alias = function(from, to) {
+    aliases[to] = from;
+  };
+
+  var extRe = /\.[^.\/]+$/;
+  var indexRe = /\/index(\.[^\/]+)?$/;
+  var addExtensions = function(bundle) {
+    if (extRe.test(bundle)) {
+      var alias = bundle.replace(extRe, '');
+      if (!has.call(aliases, alias) || aliases[alias].replace(extRe, '') === alias + '/index') {
+        aliases[alias] = bundle;
+      }
+    }
+
+    if (indexRe.test(bundle)) {
+      var iAlias = bundle.replace(indexRe, '');
+      if (!has.call(aliases, iAlias)) {
+        aliases[iAlias] = bundle;
+      }
+    }
+  };
+
+  require.register = require.define = function(bundle, fn) {
+    if (bundle && typeof bundle === 'object') {
+      for (var key in bundle) {
+        if (has.call(bundle, key)) {
+          require.register(key, bundle[key]);
+        }
+      }
+    } else {
+      modules[bundle] = fn;
+      delete cache[bundle];
+      addExtensions(bundle);
+    }
+  };
+
+  require.list = function() {
+    var list = [];
+    for (var item in modules) {
+      if (has.call(modules, item)) {
+        list.push(item);
+      }
+    }
+    return list;
+  };
+
+  var hmr = globals._hmr && new globals._hmr(_resolve, require, modules, cache);
+  require._cache = cache;
+  require.hmr = hmr && hmr.wrap;
+  require.brunch = true;
+  globals.require = require;
+})();
+
+(function() {
+var global = typeof window === 'undefined' ? this : window;
+var process;
+var __makeRelativeRequire = function(require, mappings, pref) {
+  var none = {};
+  var tryReq = function(name, pref) {
+    var val;
+    try {
+      val = require(pref + '/node_modules/' + name);
+      return val;
+    } catch (e) {
+      if (e.toString().indexOf('Cannot find module') === -1) {
+        throw e;
+      }
+
+      if (pref.indexOf('node_modules') !== -1) {
+        var s = pref.split('/');
+        var i = s.lastIndexOf('node_modules');
+        var newPref = s.slice(0, i).join('/');
+        return tryReq(name, newPref);
+      }
+    }
+    return none;
+  };
+  return function(name) {
+    if (name in mappings) name = mappings[name];
+    if (!name) return;
+    if (name[0] !== '.' && pref) {
+      var val = tryReq(name, pref);
+      if (val !== none) return val;
+    }
+    return require(name);
+  }
+};
+
+require.register("curvature/form/multiField/FormWrapper.js", function(exports, require, module) {
+  require = __makeRelativeRequire(require, {}, "curvature");
+  (function() {
+    "use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.FormWrapper = void 0;
+
+var _Repository = require("../../base/Repository");
+
+var _Form = require("../../form/Form");
+
+var _Toast = require("../../toast/Toast");
+
+var _ToastAlert = require("../../toast/ToastAlert");
+
+var _View2 = require("../../base/View");
+
+var _Router = require("../../base/Router");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var FormWrapper = /*#__PURE__*/function (_View) {
+  _inherits(FormWrapper, _View);
+
+  function FormWrapper(args, path) {
+    var _this;
+
+    var method = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'GET';
+    var customFields = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+
+    _classCallCheck(this, FormWrapper);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(FormWrapper).call(this, args));
+    _this.path = path;
+    _this.args.method = method;
+    _this.args.action = _this.args.action || null;
+    _this.args.form = null;
+    _this.args.title = null;
+    _this.args["class"] = '';
+    _this.template = "\n\t\t\t<div class = \"form constrict [[class]]\">\n\t\t\t\t<div cv-if = \"title\"><label>[[title]]</label></div>\n\t\t\t\t[[form]]\n\t\t\t</div>\n\t\t";
+    _this._onLoad = [];
+    _this._onSubmit = [];
+    _this._onRender = [];
+    _this._onRequest = [];
+    _this._onError = [];
+    _this._onResponse = [];
+
+    if (path instanceof _Form.Form) {
+      _this.loadForm(form, customFields);
+    } else {
+      _Repository.Repository.request(path).then(function (resp) {
+        if (!resp || !resp.meta || !resp.meta.form || !(resp.meta.form instanceof Object)) {
+          console.log('Cannot render form with ', resp); // Router.go('/');
+
+          return;
+        }
+
+        _this.loadForm(new _Form.Form(resp.meta.form, customFields));
+
+        _this.onLoad(_this.args.form, resp.body);
+      });
+    }
+
+    return _this;
+  }
+
+  _createClass(FormWrapper, [{
+    key: "loadForm",
+    value: function loadForm(form) {
+      var _this2 = this;
+
+      this.args.form = form;
+      this.args.form.onSubmit(function (form, event) {
+        if (_this2.onSubmit(form, event) === false) {
+          return;
+        }
+
+        if (event) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+
+        var formElement = form.tags.formTag.element;
+
+        var uri = formElement.getAttribute('action') || _this2.args.action || _this2.path;
+
+        var method = formElement.getAttribute('method') || _this2.args.method;
+
+        var query = form.args.flatValue;
+        method = method.toUpperCase(); // console.log(method, uri);
+
+        if (method == 'GET') {
+          var _query = {};
+
+          if (_this2.args.content && _this2.args.content.args) {
+            _this2.args.content.args.page = 0;
+          }
+
+          _query.page = 0;
+
+          for (var i in query) {
+            if (i === 'api') {
+              continue;
+            }
+
+            _query[i] = query[i];
+          }
+
+          var promises = _this2.onRequest(_query);
+
+          promises.then(function () {
+            _this2.onResponse({});
+
+            _Router.Router.go(uri + '?' + _Router.Router.queryToString(_query));
+
+            _this2.update(_query);
+          })["catch"](function (error) {
+            _this2.onRequestError(error);
+          });
+        } else if (method == 'POST') {
+          var formData = form.formData();
+          var _iteratorNormalCompletion = true;
+          var _didIteratorError = false;
+          var _iteratorError = undefined;
+
+          try {
+            for (var _iterator = formData.entries()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {// console.log(pair[0]+ ', ' + pair[1]);
+
+              var pair = _step.value;
+            }
+          } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+                _iterator["return"]();
+              }
+            } finally {
+              if (_didIteratorError) {
+                throw _iteratorError;
+              }
+            }
+          }
+
+          var _promises = _this2.onRequest(formData);
+
+          if (_promises) {
+            _promises.then(function () {
+              _Repository.Repository.request(uri, {
+                api: 'json'
+              }, formData, false, {
+                progressDown: function progressDown(event) {
+                  _this2.progressDown(event);
+                },
+                progressUp: function progressUp(event) {
+                  _this2.progressUp(event);
+                }
+              }).then(function (response) {
+                _this2.onResponse(response);
+              })["catch"](function (error) {
+                _this2.onRequestError(error);
+              });
+            });
+          }
+        }
+      });
+    }
+  }, {
+    key: "onRequest",
+    value: function onRequest(requestData) {
+      var promises = [];
+
+      for (var i in this._onRequest) {
+        var onReq = this._onRequest[i](requestData, this);
+
+        if (onReq) {
+          promises.push(onReq);
+        }
+      }
+
+      if (promises.length == 0) {
+        return Promise.resolve();
+      }
+
+      return Promise.all(promises);
+    }
+  }, {
+    key: "onRequestError",
+    value: function onRequestError(error) {
+      for (var i in this._onError) {
+        this._onError[i](error, this);
+      }
+
+      if (error.messages) {
+        for (var _i in error.messages) {
+          _Toast.Toast.instance().alert(error.body && error.body.id ? 'Success!' : 'Error!', error.messages[_i], 3500);
+        }
+      }
+    }
+  }, {
+    key: "onResponse",
+    value: function onResponse(response) {
+      for (var i in this._onResponse) {
+        this._onResponse[i](response, this);
+      }
+
+      if (response.messages) {
+        for (var _i2 in response.messages) {
+          _Toast.Toast.instance().alert(response.body && response.body.id ? 'Success!' : 'Error!', response.messages[_i2], 3500);
+        }
+      }
+    }
+  }, {
+    key: "onLoad",
+    value: function onLoad(form, model) {
+      for (var i in this._onLoad) {
+        this._onLoad[i](this, form, model);
+      }
+    }
+  }, {
+    key: "onSubmit",
+    value: function onSubmit(form, event) {
+      for (var i in this._onSubmit) {
+        this._onSubmit[i](this, event);
+      }
+    }
+  }, {
+    key: "postRender",
+    value: function postRender() {
+      for (var i in this._onRender) {
+        this._onRender[i](this.args.form);
+      }
+    }
+  }, {
+    key: "customFields",
+    value: function customFields() {
+      return {};
+    }
+  }, {
+    key: "submit",
+    value: function submit() {// console.log(this);
+    }
+  }, {
+    key: "progressUp",
+    value: function progressUp(event) {
+      console.log(event.loaded, event.total, event.loaded / event.total);
+    }
+  }, {
+    key: "progressDown",
+    value: function progressDown(event) {
+      console.log(event.loaded, event.total, event.loaded / event.total);
+    }
+  }]);
+
+  return FormWrapper;
+}(_View2.View);
+
+exports.FormWrapper = FormWrapper;
+  })();
+});
+
+require.register("curvature/form/multiField/Wrapper.js", function(exports, require, module) {
+  require = __makeRelativeRequire(require, {}, "curvature");
+  (function() {
+    "use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Wrapper = void 0;
+
+var _Config = require("Config");
+
+var _View2 = require("../../base/View");
+
+var _Repository = require("../../base/Repository");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var Wrapper = /*#__PURE__*/function (_View) {
+  _inherits(Wrapper, _View);
+
+  function Wrapper(args) {
+    var _this;
+
+    _classCallCheck(this, Wrapper);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Wrapper).call(this, args));
+    _this.template = "\n\t\t\t<div\n\t\t\t\tclass = \"wrapped-field [[classes]]\"\n\t\t\t\tcv-on = \"click:editRecord(event, key)\"\n\t\t\t\ttitle = \"[[fieldName]]: [[id]]\"\n\t\t\t>\n\t\t\t\t<div\n\t\t\t\t\tcv-on = \"click:deleteImage(event, key)\"\n\t\t\t\t\tstyle = \"display: inline; cursor:pointer;\"\n\t\t\t\t>\n\t\t\t\t\t[[icon]]\n\t\t\t\t</div>\n\t\t\t\t<div class = \"field-content\">\n\t\t\t\t\t[[title]]\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<div style = \"display:none\">[[field]]</div>\n\t\t"; // console.log(this.args.field);
+
+    _this.args.field = _this.args.field || '!';
+    _this.args.keyword = '';
+    _this.args.title = '';
+    _this.args.record = {};
+    _this.args.key = _this.args.field.key;
+    _this.args.classes = '';
+    _this.args.icon = '×';
+    _this.deleted = false;
+
+    _this.args.field.args.bindTo('fieldName', function (v) {
+      _this.args.fieldName = v;
+    });
+
+    _this.args.fieldName = _this.args.field.args.name;
+    _this.args.id = _this.args.field.args.value.id;
+
+    _this.args.bindTo('id', function (v) {
+      _this.args.field.args.value.id = v;
+    });
+
+    _this.args.field.args.value.bindTo('id', function (v, k) {
+      if (!v) {
+        return;
+      }
+
+      _Repository.Repository.request(_this.backendPath(), {
+        id: v
+      }).then(function (response) {
+        _this.args.id = v;
+        var record = response.body[0];
+
+        if (!record) {
+          _this.args.publicId = null;
+          _this.args.title = null;
+          return;
+        }
+
+        _this.refresh(record);
+      });
+    }, {
+      wait: 0
+    });
+
+    _this.args.field.args.value.bindTo('keyword', function (v) {
+      _this.args.keyword = v;
+    });
+
+    return _this;
+  }
+
+  _createClass(Wrapper, [{
+    key: "editRecord",
+    value: function editRecord() {
+      this.args.parent.editRecord(this.args.record, this);
+    }
+  }, {
+    key: "deleteImage",
+    value: function deleteImage(event, index) {
+      event.stopPropagation();
+
+      if (!this.deleted) {
+        this.args.icon = '↺';
+        this.args.parent.deleteImage(index);
+        this.deleted = true;
+      } else {
+        this.args.icon = '×';
+        this.args.parent.undeleteImage(index);
+        this.deleted = false;
+      }
+    }
+  }, {
+    key: "backendPath",
+    value: function backendPath() {
+      var backend = _Config.Config ? _Config.Config.backend : '//';
+      return backend + this.args.parent.args.attrs['data-endpoint'];
+    }
+  }, {
+    key: "getRecordTitle",
+    value: function getRecordTitle(record) {
+      if (record._titleField) {
+        return record[record._titleField];
+      }
+
+      return record.title || record.publicId || record.id;
+    }
+  }, {
+    key: "refresh",
+    value: function refresh(model) {
+      for (var i in model) {
+        this.args[i] = model[i];
+      }
+
+      this.args.record = model;
+      this.args.title = this.getRecordTitle(model);
+    }
+  }]);
+
+  return Wrapper;
+}(_View2.View);
+
+exports.Wrapper = Wrapper;
+  })();
+});
+require.register("ArrayDemo/View.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.View = void 0;
+
+var _View = require("curvature/base/View");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var View = /*#__PURE__*/function (_BaseView) {
+  _inherits(View, _BaseView);
+
+  var _super = _createSuper(View);
+
+  function View() {
+    var _this;
+
+    _classCallCheck(this, View);
+
+    _this = _super.call(this);
+    _this.template = require('./template');
+    _this.z = 0;
+    _this.routes = {};
+    _this.args.list = [0, 1, 2, 3, 4, 5];
+    _this.args.obj = {
+      a: 1,
+      b: 2,
+      c: 3
+    };
+    return _this;
+  }
+
+  _createClass(View, [{
+    key: "splice",
+    value: function splice(position, del, item) {
+      this.args.list.splice(position, del, item);
+    }
+  }, {
+    key: "arrayUnshift",
+    value: function arrayUnshift() {
+      this.args.list.unshift(this.z++ + 'new_shift');
+    }
+  }, {
+    key: "arrayShift",
+    value: function arrayShift() {
+      this.args.list.shift();
+    }
+  }, {
+    key: "arrayPush",
+    value: function arrayPush() {
+      this.args.list.push(this.z++ + ' new_push');
+    }
+  }, {
+    key: "arrayPop",
+    value: function arrayPop() {
+      this.args.list.pop();
+    }
+  }, {
+    key: "arraySort",
+    value: function arraySort() {
+      this.args.list.sort();
+    }
+  }, {
+    key: "arrayReverse",
+    value: function arrayReverse() {
+      this.args.list = this.args.list.reverse();
+    }
+  }, {
+    key: "setIndex",
+    value: function setIndex(key, value) {
+      this.args.list[key] = value;
+    }
+  }, {
+    key: "delIndex",
+    value: function delIndex(key) {
+      delete this.args.list[key];
+    }
+  }]);
+
+  return View;
+}(_View.View);
+
+exports.View = View;
+});
+
+;require.register("ArrayDemo/template.html", function(exports, require, module) {
+module.exports = "<h2>Array Binding Demo</h2>\n\n<div class = \"row\">\n\t<fieldset>\n\t\t<label>set</label>\n\t\t<input cv-bind = \"setIndex\" />\n\t\t<input cv-bind = \"setIndexValue\" />\n\t\t<button cv-on = \"click:setIndex(setIndex,setIndexValue)\">set</button>\n\t</fieldset>\n\n\t<fieldset>\n\t\t<label>delete</label>\n\t\t<input cv-bind = \"delIndex\" />\n\t\t<button cv-on = \"click:delIndex(delIndex)\">set</button>\n\t</fieldset>\n\n\t<fieldset>\n\t\t<label>splice</label>\n\t\t<input cv-bind = \"splicePosition\" />\n\t\t<input cv-bind = \"spliceDelete\" />\n\t\t<input cv-bind = \"spliceItem\" />\n\t\t<button cv-on = \"click:splice(splicePosition,spliceDelete,spliceItem)\">Splice</button>\n\t</fieldset>\n</div>\n\n<div class = \"row\">\n\t<fieldset>\n\t\t<button cv-on = \"click:arrayUnshift\">Unshift</button>\n\t\t<button cv-on = \"click:arrayShift\">Shift</button>\n\t</fieldset>\n\n\t<fieldset>\n\t\t<button cv-on = \"click:arrayPush\">Push</button>\n\t\t<button cv-on = \"click:arrayPop\">Pop</button>\n\t</fieldset>\n\n\t<fieldset>\n\t\t<button cv-on = \"click:arraySort\">Sort</button>\n\t\t<button cv-on = \"click:arrayReverse\">Reverse</button>\n\t</fieldset>\n</div>\n\n<div cv-each = \"list:item:i\">\n\t<p>[[item]]</p>\n</div>\n"
+});
+
+;require.register("ChainDemo/View.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.View = void 0;
+
+var _View = require("curvature/base/View");
+
+var _View2 = require("../ArrayDemo/View");
+
+var _View3 = require("../ObjectDemo/View");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var View = /*#__PURE__*/function (_BaseView) {
+  _inherits(View, _BaseView);
+
+  var _super = _createSuper(View);
+
+  function View() {
+    var _this;
+
+    _classCallCheck(this, View);
+
+    _this = _super.call(this);
+    _this.template = require('./template');
+    _this.current = null;
+    _this.args.objects = [];
+    _this.args.input = {};
+    _this.args.selectedJson = '{}';
+
+    _this.args.objects.push({}, {}, {}, {});
+
+    _this.args.input.bindTo(function (v, k, t, d) {
+      var selectedId = _this.args.selectedId;
+      var current = _this.current;
+
+      if (!current) {
+        return;
+      }
+
+      current[k] = v;
+      _this.args.selectedJson = JSON.stringify(current, null, 2);
+    });
+
+    _this.args.bindTo('selectedId', function (v, k) {
+      if (!_this.args.objects[v]) {
+        return;
+      }
+
+      var selected = _this.args.objects[v];
+      console.log(selected);
+      _this.current = null;
+
+      for (var i in _this.args.input) {
+        _this.args.input[i] = null;
+      }
+
+      _this.current = selected;
+
+      for (var _i in selected) {
+        _this.args.input[_i] = selected[_i];
+      }
+
+      _this.args.selectedJson = JSON.stringify(_this.current, null, 2);
+    });
+
+    _this.args.selectedId = 0;
+    return _this;
+  }
+
+  return View;
+}(_View.View);
+
+exports.View = View;
+});
+
+;require.register("ChainDemo/template.html", function(exports, require, module) {
+module.exports = "<h2>Chain Binding Demo</h2>\n\n<pre>objects[[[selectedId]]] === [[selectedJson]];</pre>\n\n<p>input.a: <input cv-bind = \"input.a\"> : [[input.a]]</p>\n<p>input.b: <input cv-bind = \"input.b\"> : [[input.b]]</p>\n<p>input.c: <input cv-bind = \"input.c\"> : [[input.c]]</p>\n\n<button>add</button>\n<button>remove</button>\n\n<br />\n\n<select\n\tsize = \"10\"\n\tcv-bind = \"selectedId\"\n\tcv-each = \"objects:object:o\"\n>\n\t<option value = \"[[o]]\">object [[o]]</option>\n</select>\n"
+});
+
+;require.register("Config.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Config = void 0;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Config = /*#__PURE__*/function () {
+  function Config() {
+    _classCallCheck(this, Config);
+  }
+
+  _createClass(Config, null, [{
+    key: "theme",
+    // static title = 'cv-playground'
+    get: function get() {
+      return 'cv-playground';
+    }
+  }]);
+
+  return Config;
+}();
+
+exports.Config = Config;
+});
+
+;require.register("ConfigDemo/Samples/Config.jss", function(exports, require, module) {
+module.exports = "const View   = require('curvature/base/View').View;\nconst Config = require('curvature/base/Config').Config;\nconst TopLvl = require('Config').Config;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tConfig.init({'foo':'FOO'});\n\t\tConfig.init('{\"bar\":\"BAR\"}');\n\t\tConfig.set('baz', 'BAZ');\n\t\tTopLvl.quz = 'QUZ';\n\n\t\tthis.args.configFoo = Config.get('foo');\n\t\tthis.args.topLvlFoo = TopLvl.foo;\n\n\t\tthis.args.configBar = Config.get('bar');\n\t\tthis.args.topLvlBar = TopLvl.bar;\n\n\t\tthis.args.configBaz = Config.get('baz');\n\t\tthis.args.topLvlBaz = TopLvl.baz;\n\n\t\tthis.args.configQuz = Config.get('quz');\n\t\tthis.args.topLvlQuz = TopLvl.quz;\n\t}\n}\n"
+});
+
+;require.register("ConfigDemo/Samples/template.html", function(exports, require, module) {
+module.exports = "<pre>\nConfig Foo: [[configFoo]]\n\nTopLvl Foo: [[topLvlFoo]]\n\nConfig Bar: [[configBar]]\n\nTopLvl Bar: [[topLvlBar]]\n\nConfig Baz: [[configBaz]]\n\nTopLvl Baz: [[topLvlBaz]]\n\nConfig Quz: [[configQuz]]\n\nTopLvl Quz: [[topLvlQuz]]\n</pre>\n"
+});
+
+;require.register("ConfigDemo/View.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.View = void 0;
+
+var _Config = require("curvature/base/Config");
+
+var _Import = require("curvature/base/Import");
+
+var _View = require("curvature/base/View");
+
+var _View2 = require("../Editor/View");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var Legacy = require('Config');
+
+var View = /*#__PURE__*/function (_BaseView) {
+  _inherits(View, _BaseView);
+
+  var _super = _createSuper(View);
+
+  function View() {
+    var _this;
+
+    _classCallCheck(this, View);
+
+    _this = _super.call(this);
+    _this.template = require('./template');
+    _this.args.theme = _Config.Config.get('theme');
+    console.log(Legacy);
+    var editor = new _View2.View();
+    editor.args.tabs.js = {
+      title: 'js',
+      file: 'DemoView.js',
+      body: require('./Samples/Config.jss'),
+      mode: 'ace/mode/javascript'
+    };
+    editor.args.tabs.html = {
+      title: 'html',
+      file: 'template.html',
+      body: require('./Samples/template.html'),
+      mode: 'ace/mode/html'
+    };
+    editor.refreshCode();
+    _this.args.editor = editor;
+    return _this;
+  }
+
+  return View;
+}(_View.View);
+
+exports.View = View;
+});
+
+;require.register("ConfigDemo/template.html", function(exports, require, module) {
+module.exports = "<h2>Configuration</h2>\n\n<p>Configs may be set in a few ways:</p>\n\n<ul>\n\t<li>Calling <code>Config.set('name', 'value')</code> on <code>curvature/base/Config</code>.</li>\n\t<li>Calling <code>Config.init({name: value, ...})</code> on <code>curvature/base/Config</code>.</li>\n\t<li>Creating a top-level <code>Config</code> class and setting static properties on it.</li>\n</ul>\n\n<p>Configs may be read in two ways:</p>\n\n<ul>\n\t<li>Calling <code>Config.get('name')</code> on <code>curvature/base/Config</code>.</li>\n\t<li>Reading a static property from a top level <code>Config</code> class.\n</ul>\n\n[[editor]]\n"
+});
+
+;require.register("Editor/PhpEditor.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.PhpEditor = void 0;
+
+var _Php = require("php-wasm/Php");
+
+var _View = require("../Editor/View");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var PhpEditor = /*#__PURE__*/function (_Editor) {
+  _inherits(PhpEditor, _Editor);
+
+  var _super = _createSuper(PhpEditor);
+
+  function PhpEditor(args) {
+    var _this;
+
+    _classCallCheck(this, PhpEditor);
+
+    _this = _super.call(this, args);
+    _this.args.subframe = false;
+    _this.messageQueue = [];
+
+    var onMessage = function onMessage(event) {
+      return _this.onMessage(event);
+    };
+
+    window.addEventListener('message', onMessage);
+
+    _this.onRemove(function () {
+      return window.removeEventListener('message', onMessage);
+    });
+
+    var php = new _Php.Php();
+    php.addEventListener('ready', function (event) {});
+    php.addEventListener('output', function (event) {
+      if (!event.detail) {
+        return;
+      }
+
+      var frame = _this.tags.result.element;
+      var doc = frame.contentWindow.document;
+      doc.write(event.detail.join(''));
+    });
+    _this.php = php;
+
+    _this.onRemove(function () {
+      return _this.php = false;
+    });
+
+    return _this;
+  }
+
+  _createClass(PhpEditor, [{
+    key: "refreshCode",
+    value: function refreshCode(event) {
+      var _this2 = this;
+
+      this.rendered.then(function () {
+        var phpCode = _this2.args.tabs.php.body;
+        var frame = _this2.tags.result.element;
+        var doc = frame.contentWindow.document;
+        doc.body.innerHTML = '';
+
+        _this2.php.run(phpCode);
+
+        _this2.args.editorStatus = "Last ran at ".concat(new Date().toISOString());
+        _this2.args.editorRefresh = 'refresh-disabled';
+      });
+    }
+  }]);
+
+  return PhpEditor;
+}(_View.View);
+
+exports.PhpEditor = PhpEditor;
+});
+
+;require.register("Editor/View.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.View = void 0;
+
+var _View = require("curvature/base/View");
+
+var _Keyboard = require("curvature/input/Keyboard");
+
+var _View2 = require("../ArrayDemo/View");
+
+var _View3 = require("../ObjectDemo/View");
+
+var ace = _interopRequireWildcard(require("brace"));
+
+require("brace/mode/html");
+
+require("brace/mode/javascript");
+
+require("brace/theme/monokai");
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var View = /*#__PURE__*/function (_BaseView) {
+  _inherits(View, _BaseView);
+
+  var _super = _createSuper(View);
+
+  function View() {
+    var _this;
+
+    _classCallCheck(this, View);
+
+    _this = _super.call(this);
+    _this.multi = false;
+
+    var kbDebind = _Keyboard.Keyboard.get().keys.bindTo('Control', function (v) {
+      _this.multi = v > 0;
+      _this.args.multiselect = _this.multi ? 'multiselect' : 'select';
+    });
+
+    _this.onRemove(kbDebind);
+
+    _this.template = require('./template');
+    _this.args.showJs = true;
+    _this.args.showHtml = true;
+    _this.args.showResult = true;
+    _this.args.location = location;
+    _this.args.orientation = _this.args.orientation || 'vertical'; //'horizontal';
+
+    _this.args.tabs = {};
+    _this.args.resultTabs = {};
+
+    _this.args.tabs.bindTo(function (v, k) {
+      return v.name = k;
+    });
+
+    _this.args.resultTabs.bindTo(function (v, k) {
+      return v.name = k;
+    });
+
+    _this.args.time = new Date().toISOString();
+
+    _this.onFrame(function () {
+      _this.args.time = new Date().toISOString();
+    });
+
+    _this.args.showClasses = ['showSplit'];
+    _this.args.showSplit = 'active';
+    _this.args.frameSource = '...';
+    return _this;
+  }
+
+  _createClass(View, [{
+    key: "postRender",
+    value: function postRender(x) {
+      var _this2 = this;
+
+      this.tags.edit = {};
+      this.editors = {};
+      var frame = this.tags.result.element;
+      this.tags.edit.bindTo(function (tag, prop) {
+        if (!tag || _this2.editors[prop]) {
+          return;
+        }
+
+        var tab = _this2.args.tabs[prop] || _this2.args.resultTabs[prop];
+        var editor = ace.edit(tag.element);
+        _this2.editors[prop] = editor;
+        editor.setValue(tab.body || '', -1);
+        editor.session.setMode(tab.mode || 'ace/mode/javascript');
+        editor.setTheme('ace/theme/monokai');
+        editor.setOptions({
+          autoScrollEditorIntoView: true,
+          printMargin: false,
+          readOnly: tab.readonly || false,
+          scrollbarWidth: 6
+        });
+
+        var aceChanged = function aceChanged(newValue) {
+          if (tab.readonly) {
+            return;
+          }
+
+          tab.body = editor.getValue();
+          _this2.args.editorStatus = "Code updated at ".concat(new Date().toISOString());
+          _this2.args.editorRefresh = 'refresh-enabled';
+        };
+
+        editor.session.on('change', aceChanged);
+
+        _this2.onRemove(function () {
+          editor.session.off('change', aceChanged);
+          editor.destroy();
+          delete _this2.editors[prop];
+        });
+
+        tab.bindTo('body', function (v) {
+          if (!tab.readonly) {
+            return;
+          }
+
+          editor.setValue(v, -1);
+
+          if (tab.readonly) {
+            return;
+          }
+
+          _this2.refreshCode();
+        });
+        editor.resize();
+      });
+    }
+  }, {
+    key: "attached",
+    value: function attached() {}
+  }, {
+    key: "frameLoaded",
+    value: function frameLoaded(event) {}
+  }, {
+    key: "refreshCode",
+    value: function refreshCode(event) {
+      var resultTemplate = require('./results');
+
+      resultTemplate = resultTemplate.replace(/\[ORIGIN\]/g, location.origin);
+      var js = this.args.tabs.js ? this.args.tabs.js.body : '';
+      var html = this.args.tabs.html ? this.args.tabs.html.body : '';
+      var css = this.args.tabs.css ? this.args.tabs.css.body : '';
+      resultTemplate = resultTemplate.replace(/\[SCRIPT\]/g, js);
+      resultTemplate = resultTemplate.replace(/\[TEMPLATE\]/g, html);
+      resultTemplate = resultTemplate.replace(/\[STYLE\]/g, css);
+      this.args.frameSource = resultTemplate;
+      this.args.editorStatus = "Last ran at ".concat(new Date().toISOString());
+      this.args.editorRefresh = 'refresh-disabled';
+    }
+  }, {
+    key: "showResult",
+    value: function showResult() {
+      if (this.args.showSplit) {
+        for (var tabName in this.args.tabs) {
+          var tab = this.args.tabs[tabName];
+          var tag = this.tags.edit[tabName].element.parentNode.parentNode;
+          tab.active = '';
+          tag.classList.add('hide');
+        }
+
+        for (var _tabName in this.args.resultTabs) {
+          var _tab = this.args.resultTabs[_tabName];
+          var _tag = this.tags.edit[_tabName].element.parentNode.parentNode;
+          _tab.active = '';
+
+          _tag.classList.add('hide');
+        }
+
+        this.hideResult();
+      }
+
+      if (!this.multi) {
+        for (var _tabName2 in this.args.tabs) {
+          var _tab2 = this.args.tabs[_tabName2];
+          var _tag2 = this.tags.edit[_tabName2].element.parentNode.parentNode;
+          _tab2.active = '';
+
+          _tag2.classList.add('hide');
+        }
+
+        for (var _tabName3 in this.args.resultTabs) {
+          var _tab3 = this.args.resultTabs[_tabName3];
+          var _tag3 = this.tags.edit[_tabName3].element.parentNode.parentNode;
+          _tab3.active = '';
+
+          _tag3.classList.add('hide');
+        }
+      }
+
+      if (this.multi && this.args.showResult && this.args.showResult !== 'hide') {
+        this.args.showSplit = '';
+        this.args.showResult = 'hide';
+      } else {
+        this.args.showSplit = '';
+        this.args.showResult = 'active';
+      }
+
+      for (var _tab4 in this.args.tabs) {
+        this.editors[_tab4].resize();
+
+        this.args[_tab4] = true;
+      }
+    }
+  }, {
+    key: "hideResult",
+    value: function hideResult() {
+      this.args.showSplit = 'hide';
+      this.args.showResult = 'hide';
+    }
+  }, {
+    key: "showTab",
+    value: function showTab() {
+      for (var _len = arguments.length, tabs = new Array(_len), _key = 0; _key < _len; _key++) {
+        tabs[_key] = arguments[_key];
+      }
+
+      if (!this.multi || !tabs.length) {
+        for (var tabName in this.args.tabs) {
+          var tag = this.tags.edit[tabName].element.parentNode.parentNode;
+          var tab = this.args.tabs[tabName];
+          tab.active = '';
+          tag.classList.add('hide');
+        }
+
+        for (var _tabName4 in this.args.resultTabs) {
+          var _tag4 = this.tags.edit[_tabName4].element.parentNode.parentNode;
+          var _tab5 = this.args.resultTabs[_tabName4];
+          _tab5.active = '';
+
+          _tag4.classList.add('hide');
+        }
+      }
+
+      this.args.showClasses = [];
+
+      if (!tabs.length) {
+        this.args.showResult = '';
+        this.args.showSplit = 'active';
+
+        for (var _tabName5 in this.args.tabs) {
+          var _tag5 = this.tags.edit[_tabName5].element.parentNode.parentNode;
+          var _tab6 = this.args.tabs[_tabName5];
+
+          _tag5.classList.remove('hide');
+        }
+
+        for (var _tabName6 in this.args.resultTabs) {
+          var _tag6 = this.tags.edit[_tabName6].element.parentNode.parentNode;
+          var _tab7 = this.args.resultTabs[_tabName6];
+
+          _tag6.classList.remove('hide');
+        }
+
+        this.args.showClasses = ['showSplit'];
+      } else {
+        if (this.args.showSplit) {
+          for (var _tabName7 in this.args.tabs) {
+            var _tag7 = this.tags.edit[_tabName7].element.parentNode.parentNode;
+            var _tab8 = this.args.tabs[_tabName7];
+            _tab8.active = '';
+
+            _tag7.classList.add('hide');
+          }
+
+          for (var _tabName8 in this.args.resultTabs) {
+            var _tag8 = this.tags.edit[_tabName8].element.parentNode.parentNode;
+            var _tab9 = this.args.resultTabs[_tabName8];
+            _tab9.active = '';
+
+            _tag8.classList.add('hide');
+          }
+
+          this.hideResult();
+        }
+
+        if (!this.multi) {
+          this.hideResult();
+        }
+
+        this.args.showClasses = [];
+        this.args.showSplit = '';
+      }
+
+      for (var _i = 0, _tabs = tabs; _i < _tabs.length; _i++) {
+        var _tab10 = _tabs[_i];
+        var _tag9 = this.tags.edit[_tab10.name].element.parentNode.parentNode;
+
+        if (_tab10.active) {
+          _tab10.active = '';
+
+          _tag9.classList.add('hide');
+        } else {
+          _tab10.active = 'active';
+
+          _tag9.classList.remove('hide');
+        }
+      }
+
+      for (var _i2 = 0, _tabs2 = tabs; _i2 < _tabs2.length; _i2++) {
+        var _tab11 = _tabs2[_i2];
+
+        this.editors[_tab11.name].resize();
+
+        this.args[_tab11.name] = true;
+      }
+    }
+  }, {
+    key: "changeOrientation",
+    value: function changeOrientation() {
+      this.args.orientation = this.args.orientation == 'horizontal' ? 'vertical' : 'horizontal';
+      this.resizeEditor();
+    }
+  }, {
+    key: "resizeEditor",
+    value: function resizeEditor(event) {
+      for (var tab in this.args.tabs) {
+        this.editors[tab].resize();
+      }
+
+      for (var _tab12 in this.args.resultTabs) {
+        this.editors[_tab12].resize();
+      }
+    }
+  }, {
+    key: "clear",
+    value: function clear(clearVar) {
+      this.args[clearVar] = '';
+    }
+  }, {
+    key: "joinClass",
+    value: function joinClass(input) {
+      return (input || []).join(' ');
+    }
+  }, {
+    key: "expand",
+    value: function expand(event) {
+      this.args.expanded = this.args.expanded ? '' : 'expanded';
+
+      if (this.args.expanded) {
+        document.body.classList.add('no-scroll');
+      } else {
+        document.body.classList.remove('no-scroll');
+      }
+
+      this.resizeEditor(event);
+    }
+  }, {
+    key: "escapeQuotes",
+    value: function escapeQuotes(input) {
+      return String(input).replace(/"/g, '&quot;');
+    }
+  }]);
+
+  return View;
+}(_View.View);
+
+exports.View = View;
+});
+
+;require.register("Editor/results.html", function(exports, require, module) {
+module.exports = "<!DOCTYPE HTML>\n<head>\n<style>[STYLE]</style>\n<script src = \"[ORIGIN]/vendor.js\"></script>\n<script>require.register('Config', (exports, require, module)=>{ return module.exports = {Config:{}}});</script>\n\n<script>require.register('template', (exports, require, module)=>{ return module.exports = `[TEMPLATE]`});</script>\n\n<script src = \"[ORIGIN]/curvature.js\"></script>\n\n<script>\n\nwindow.addEventListener('submit', (event) => {\n\n\tconsole.log(event);\n\n\tconst error = event.message;\n\n\twindow.parent.parent.postMessage(\n\t\tJSON.stringify({'@error': error}, null, 2)\n\t, '*');\n\n}, false);\n\ndocument.addEventListener('DOMContentLoaded', () => {\n\n\t[SCRIPT]\n\n\tif(typeof DemoView !== 'undefined')\n\t{\n\t\tconst view = new DemoView;\n\n\t\tview.render(document.body);\n\t}\n\n\tconsole.debug()\n\n});\n\n</script>\n</head>\n<body>\n</body>\n"
+});
+
+;require.register("Editor/template.html", function(exports, require, module) {
+module.exports = "<div class = \"editor-window [[expanded]]\" cv-on = \"mouseup:resizeEditor(event)\" data-orientation = \"[[orientation]]\" data-multiselect=\"[[multiselect]]\">\n\n\t<div class = \"row full tabs [[showClasses|joinClass]]\">\n\n\t\t<span cv-each = \"tabs:tab:t\" class = \"row dcontent\">\n\t\t\t<div class = \"tab [[tab.active]]\" cv-on = \"click:showTab(tab)\">[[tab.title]]</div>\n\t\t</span>\n\n\t\t<div class = \"tab [[showResult]]\" cv-on = \"click:showResult()\">result</div>\n\n\t\t<span cv-each = \"resultTabs:tab:t\" class = \"row dcontent\">\n\t\t\t<div class = \"tab [[tab.active]]\" cv-on = \"click:showTab(tab)\">[[tab.title]]</div>\n\t\t</span>\n\n\t\t<div class = \"tab [[showSplit]]\" cv-on = \"click:showTab()\">all</div>\n\n\t\t<span class = \"hint\">\n\t\t\t<div data-icon = \"check\"></div>\n\t\t\thold ctrl / ⌘ to select multiple tabs.\n\t\t</span>\n\n\t</div>\n\n\t<div class = \"row full editors [[showClasses|joinClass]]\">\n\n\t\t<p>Select a tab.</p>\n\n\t\t<span cv-each = \"tabs:tab:t\" class = \"dcontent\">\n\t\t\t<div cv-carry = \"t\" class = \"half\">\n\t\t\t\t<p>[[tab.file]]</p>\n\t\t\t\t<div class = \"box\"><div class = \"editor\" cv-ref = \"edit::t\"><textarea cv-bind = \"tab.body\"></textarea></div></div>\n\t\t\t</div>\n\t\t</span>\n\n\t\t<div class = \"half [[showResult]]\">\n\t\t\t<p>Result</p>\n\t\t\t<div class = \"result\">\n\t\t\t\t<iframe\n\t\t\t\t\tcv-ref = \"result\"\n\t\t\t\t\tcv-on  = \"load:frameLoaded(event)\"\n\t\t\t\t\tsrcdoc = '\n\t\t\t\t<meta http-equiv=\"Content-Security-Policy\" content=\"default-src [[location.origin]]/curvature.js ws://[[location.hostname]]:9485\n\t\t\t\t[[location.origin]]/vendor.js &apos;unsafe-inline&apos;;\">\n\t\t\t\t<style>\n\t\t\t\t\tiframe {\n\t\t\t\t\t\tposition: absolute;\n\t\t\t\t\t\ttop: 0px;\n\t\t\t\t\t\tleft: 0px;\n\t\t\t\t\t\twidth: 100%;\n\t\t\t\t\t\theight: 100%;\n\t\t\t\t\t\tborder: none;\n\t\t\t\t\t}\n\t\t\t\t</style>\n\t\t\t\t<iframe\n\t\t\t\t\tsandbox = \"allow-scripts\"\n\t\t\t\t\tsrc     = \"about:blank\"\n\t\t\t\t\tsrcdoc  = \"[[frameSource|escapeQuotes]]\"\n\t\t\t\t></iframe>\n\t\t\t\t'></iframe>\n\t\t\t</div>\n\t\t</div>\n\n\t\t<span cv-each = \"resultTabs:tab:t\" class = \"dcontent\">\n\t\t\t<div cv-carry = \"t\" class = \"half\">\n\t\t\t\t<p>[[tab.file]]</p>\n\t\t\t\t<div class = \"box\"><div class = \"editor\" cv-ref = \"edit::t\"><textarea cv-bind = \"tab.body\"></textarea></div></div>\n\t\t\t</div>\n\t\t</span>\n\n\t\t<div class = \"buttons\">\n\n\t\t\t<div cv-on = \"click:changeOrientation(event)\" class = \"button orientation\">\n\t\t\t\t<span class = \"label\">vert/horiz</span>\n\t\t\t\t<div data-icon = \"orientation\"></div>\n\t\t\t</div>\n\n\t\t\t<div cv-on = \"click:expand(event)\" class = \"button expand\">\n\t\t\t\t<span class = \"label\">expand/contract</span>\n\t\t\t\t<div data-icon = \"expand\"></div>\n\t\t\t</div>\n\n\t\t</div>\n\n\t</div>\n\n\t<div class = \"row full status\">\n\t\t<div class = \"[[editorRefresh]]\">\n\t\t\t<span>[[editorStatus]]</span>\n\t\t\t<button cv-on = \"click:refreshCode(event)\">⟳</button>\n\t\t</div>\n\t</div>\n\n</div>\n"
+});
+
+;require.register("Experiments/InfiniteScroll/List.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.List = void 0;
+
+var _View = require("curvature/base/View");
+
+var _Row = require("./Row");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var List = /*#__PURE__*/function (_BaseView) {
+  _inherits(List, _BaseView);
+
+  var _super = _createSuper(List);
+
+  function List() {
+    var _this;
+
+    _classCallCheck(this, List);
+
+    _this = _super.call(this);
+    _this.template = require('./list');
+    _this.args.visible = [];
+    _this.args.content = undefined;
+    _this.first = null;
+    _this.last = null;
+    _this.args.max = 666;
+    _this.changing = false;
+    return _this;
+  }
+
+  _createClass(List, [{
+    key: "attached",
+    value: function attached() {
+      var _this2 = this;
+
+      this.container = this.findTag('div[data-tag="container"]');
+      var container = this.container;
+      var shim = document.createElement('div');
+      shim.setAttribute('data-tag', 'shim');
+      shim.setAttribute('style', "position: absolute;width: 1px;height: var(--shimHeight);pointer-events: none;opacity: 0;");
+      container.append(shim);
+      this.args.bindTo('rowHeight', function (v, k, t) {
+        t[k] = parseInt(v);
+        var rows = _this2.args.content.length;
+
+        if (rows && _this2.args.rowHeight) {
+          _this2.args.shimHeight = rows * _this2.args.rowHeight;
+        }
+
+        if (_this2.container) {
+          _this2.updateViewport();
+        }
+      });
+      this.contentDebind = this.args.bindTo('content', function (v, k, t) {
+        var _v$length;
+
+        var rows = (_v$length = v.length) !== null && _v$length !== void 0 ? _v$length : 0;
+
+        if (_this2.args.rowHeight) {
+          _this2.args.shimHeight = rows * _this2.args.rowHeight;
+        }
+
+        t[k] = v;
+
+        _this2.updateViewport();
+      });
+      this.args.rowHeight = this.args.rowHeight || 32;
+      this.onNextFrame(function () {
+        return _this2.updateViewport();
+      });
+    }
+  }, {
+    key: "updateViewport",
+    value: function updateViewport(event) {
+      if (this.changing) {
+        return;
+      }
+
+      var container = this.container;
+      var open = container.scrollTop;
+      var space = container.offsetHeight;
+      var first = Math.floor(open / this.args.rowHeight);
+      var last = Math.ceil((open + space) / this.args.rowHeight);
+
+      if (first > this.args.content.length) {
+        first = this.args.content.length - 1;
+      }
+
+      if (last > this.args.content.length) {
+        last = this.args.content.length - 1;
+      }
+
+      this.setVisible(first, last);
+    }
+  }, {
+    key: "setVisible",
+    value: function setVisible(first, last) {
+      var _this3 = this;
+
+      if (this.changing) {
+        return;
+      }
+
+      if (this.first === first && this.last === last) {
+        return;
+      }
+
+      this.changing = true;
+      var del = [];
+
+      for (var i in this.args.visible) {
+        var index = parseInt(i);
+        var entry = this.args.visible[index];
+
+        if (first === last && last === 0) {
+          del.unshift(index);
+          continue;
+        }
+
+        if (index < first || index > last) {
+          del.unshift(index);
+          continue;
+        }
+
+        if (entry && !entry.visible) {
+          del.unshift(index);
+          continue;
+        }
+      }
+
+      for (var _i = 0, _del = del; _i < _del.length; _i++) {
+        var d = _del[_i];
+        this.args.visible[d].remove();
+        delete this.args.visible[d];
+      }
+
+      var _loop = function _loop(_i2) {
+        if (_this3.args.visible[_i2] && !_this3.args.visible[_i2].removed && _this3.args.visible[_i2].firstNode && _this3.args.visible[_i2].firstNode.getRootNode() === document) {
+          return "continue";
+        }
+
+        if (_this3.args.content.length <= _i2) {
+          return "continue";
+        }
+
+        var row = new _Row.Row(_this3.args.content[_i2], _i2, _this3);
+        _this3.args.visible[_i2] = row;
+
+        _this3.args.visible[_i2].args.bindTo('content', function (v) {
+          _this3.args.content[_i2] = v;
+        });
+      };
+
+      for (var _i2 = first; _i2 <= last; _i2++) {
+        var _ret = _loop(_i2);
+
+        if (_ret === "continue") continue;
+      }
+
+      ;
+      this.first = first;
+      this.last = last;
+      this.changing = false;
+    }
+  }, {
+    key: "leftPad",
+    value: function leftPad(x) {
+      return String(x).padStart(4, 0);
+    }
+  }]);
+
+  return List;
+}(_View.View);
+
+exports.List = List;
+});
+
+;require.register("Experiments/InfiniteScroll/Row.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Row = void 0;
+
+var _View = require("curvature/base/View");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var Row = /*#__PURE__*/function (_BaseView) {
+  _inherits(Row, _BaseView);
+
+  var _super = _createSuper(Row);
+
+  function Row(content, index, container) {
+    var _this;
+
+    _classCallCheck(this, Row);
+
+    _this = _super.call(this, {
+      content: content,
+      index: index
+    });
+    _this.container = container;
+    _this.template = require('./row');
+    _this.visible = true;
+    _this.args.x = Math.random();
+    _this.preserve = true;
+    return _this;
+  }
+
+  _createClass(Row, [{
+    key: "attached",
+    value: function attached() {
+      var _this2 = this;
+
+      var containerTag = this.container.containerTag;
+      var rowTag = this.findTag('div[data-tag="row"]');
+      var observer = new IntersectionObserver(function (e, o) {
+        return _this2.scrollObserved(e, o);
+      }, {
+        root: containerTag
+      });
+      observer.observe(rowTag);
+    }
+  }, {
+    key: "scrollObserved",
+    value: function scrollObserved(entries, observer) {
+      var visible = false;
+
+      var _iterator = _createForOfIteratorHelper(entries),
+          _step;
+
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var entry = _step.value;
+
+          if (entry.intersectionRatio) {
+            visible = true;
+            break;
+          }
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+
+      this.visible = visible;
+    }
+  }]);
+
+  return Row;
+}(_View.View);
+
+exports.Row = Row;
+});
+
+;require.register("Experiments/InfiniteScroll/View.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.View = void 0;
+
+var _View = require("curvature/base/View");
+
+var _Row = require("./Row");
+
+var _List = require("./List");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var View = /*#__PURE__*/function (_BaseView) {
+  _inherits(View, _BaseView);
+
+  var _super = _createSuper(View);
+
+  function View() {
+    var _this;
+
+    _classCallCheck(this, View);
+
+    _this = _super.call(this);
+    _this.template = require('./template');
+    _this.args.rows = 100000;
+    _this.args.rowHeight = 32;
+    var list = new _List.List();
+    _this.args.list = list;
+
+    _this.args.bindTo('rowHeight', function (v) {
+      return list.args.rowHeight = v;
+    });
+
+    _this.args.bindTo('rows', function (v) {
+      list.args.content = Array(parseInt(v) || 0).fill(0).map(function (v, k) {
+        return (1 + k) * 10;
+      });
+    });
+
+    return _this;
+  }
+
+  _createClass(View, [{
+    key: "leftPad",
+    value: function leftPad(x) {
+      return String(x).padStart(4, 0);
+    }
+  }]);
+
+  return View;
+}(_View.View);
+
+exports.View = View;
+});
+
+;require.register("Experiments/InfiniteScroll/list.html", function(exports, require, module) {
+module.exports = "<div data-tag = \"container\" class = \"infinite-scroll demo\" cv-on = \"scroll:updateViewport(event):p\" style = \"--rowHeight:[[rowHeight]]px;--shimHeight: [[shimHeight]]px; overflow-y: scroll; position: relative;\">\n\t<div cv-each  = \"visible:row:r\">\n\t\t[[row]]\n\t</div>\n</div>\n"
+});
+
+;require.register("Experiments/InfiniteScroll/row.html", function(exports, require, module) {
+module.exports = "<div\n\tdata-tag = \"row\"\n\tstyle = \"--index:[[index]]; top: calc(var(--rowHeight) * var(--index)); \theight: var(--rowHeight); position: absolute;\">\n\t<input cv-bind = \"content\" type = \"range\" min = \"0\" max = \"[[max]]\" />\n\t[[content]]\n</div>\n"
+});
+
+;require.register("Experiments/InfiniteScroll/template.html", function(exports, require, module) {
+module.exports = "<label>\n\tRows: <input cv-bind = \"rows\" type = \"number\" min = \"0\"/>\n</label>\n<label>\n\tRow Height ([[rowHeight|leftPad]]):\n\t<input cv-bind = \"rowHeight\" type = \"range\" max = \"100\" />\n</label>\n\n[[list]]\n\n<!-- <div data-tag = \"container\" class = \"infinite-scroll demo\" cv-on = \"scroll:containerScrolled(event):p\" style = \"--rowHeight:[[rowHeight]]px;--shimHeight: [[shimHeight]]px; overflow-y: scroll; position: relative;\">\n\t<div cv-each  = \"visible:row:r\">\n\t\t[[row]]\n\t</div>\n</div>\n -->\n"
+});
+
+;require.register("Experiments/Php/View.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.View = void 0;
+
+var _View = require("curvature/base/View");
+
+var _PhpEditor = require("../../Editor/PhpEditor");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var View = /*#__PURE__*/function (_BaseView) {
+  _inherits(View, _BaseView);
+
+  var _super = _createSuper(View);
+
+  function View() {
+    var _this;
+
+    _classCallCheck(this, View);
+
+    _this = _super.call(this);
+    _this.template = require('./template');
+    var editor = _this.args.editor = new _PhpEditor.PhpEditor();
+    editor.args.tabs.php = {
+      title: 'php',
+      file: 'HelloWorld.php',
+      body: require('./phpinfo.php'),
+      mode: 'ace/mode/php'
+    };
+
+    _this.onNextFrame(function () {
+      return editor.refreshCode();
+    });
+
+    return _this;
+  }
+
+  return View;
+}(_View.View);
+
+exports.View = View;
+});
+
+;require.register("Experiments/Php/phpinfo.php", function(exports, require, module) {
+module.exports = "<?php\n\nphpinfo();\n"
+});
+
+;require.register("Experiments/Php/template.html", function(exports, require, module) {
+module.exports = "<h2>Basic PHP Integration</h2>\n\nPHP is running in-browser here. Open your dev tools and watch your network tab to verify that no server communication is happening here.\n\n[[editor]]\n"
+});
+
+;require.register("FormsDemo/FormEditor.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.FormEditor = void 0;
+
+var _View = require("../Editor/View");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var FormEditor = /*#__PURE__*/function (_Editor) {
+  _inherits(FormEditor, _Editor);
+
+  var _super = _createSuper(FormEditor);
+
+  function FormEditor(args) {
+    var _this;
+
+    _classCallCheck(this, FormEditor);
+
+    _this = _super.call(this, args);
+    _this.args.subframe = false;
+    _this.messageQueue = [];
+    _this.args.resultTabs.output = {
+      title: 'json',
+      file: 'Result JSON',
+      body: '{}',
+      mode: 'ace/mode/javascript',
+      readonly: true
+    };
+
+    var onMessage = function onMessage(event) {
+      return _this.onMessage(event);
+    };
+
+    window.addEventListener('message', onMessage);
+
+    _this.onRemove(function () {
+      return window.removeEventListener('message', onMessage);
+    });
+
+    return _this;
+  }
+
+  _createClass(FormEditor, [{
+    key: "frameLoaded",
+    value: function frameLoaded(event) {
+      this.args.subframe = event.target.contentWindow.frames[0];
+
+      while (event = this.messageQueue.shift()) {
+        this.onMessage(event);
+      }
+    }
+  }, {
+    key: "onMessage",
+    value: function onMessage(event) {
+      if (!this.args.subframe) {
+        this.messageQueue.push(event);
+        return;
+      }
+
+      if (event.source === this.args.subframe) {
+        this.args.resultTabs.output.body = event.data + "\n" || '';
+      }
+    }
+  }]);
+
+  return FormEditor;
+}(_View.View);
+
+exports.FormEditor = FormEditor;
+});
+
+;require.register("FormsDemo/Samples/Basic.jss", function(exports, require, module) {
+module.exports = "const View = require('curvature/base/View').View;\nconst Form = require('curvature/form/Form').Form;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tthis.args.form = new Form({\n\t\t\t_method: 'POST'\n\t\t\t, id: {type:'number', value: 1}\n\t\t\t, name: {}\n\t\t\t, submit: {type: 'submit', value: 'submit'}\n\t\t});\n\n\t\tthis.args.form.bindTo('json', v => {\n\n\t\t\twindow.parent.parent.postMessage(v, '*');\n\n\t\t});\n\t}\n}\n"
+});
+
+;require.register("FormsDemo/Samples/ButtonField.jss", function(exports, require, module) {
+module.exports = "const View = require('curvature/base/View').View;\nconst Form = require('curvature/form/Form').Form;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tconst field = {type: 'button', value: 'this is a button'};\n\n\t\tthis.args.form = new Form({field});\n\n\t\tthis.args.form.bindTo('json', v => {\n\n\t\t\twindow.parent.parent.postMessage(v, '*');\n\n\t\t});\n\t}\n}\n"
+});
+
+;require.register("FormsDemo/Samples/Checkbox.jss", function(exports, require, module) {
+module.exports = "const View = require('curvature/base/View').View;\nconst Form = require('curvature/form/Form').Form;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tconst field = {\n\t\t\ttitle:   'Checkbox Field'\n\t\t\t, type:  'checkbox'\n\t\t};\n\n\t\tthis.args.form = new Form({field});\n\n\t\tthis.args.form.bindTo('json', v => {\n\n\t\t\twindow.parent.parent.postMessage(v, '*');\n\n\t\t});\n\t}\n}\n"
+});
+
+;require.register("FormsDemo/Samples/FileField.jss", function(exports, require, module) {
+module.exports = "const View = require('curvature/base/View').View;\nconst Form = require('curvature/form/Form').Form;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tconst field = {\n\t\t\ttitle:   'File field'\n\t\t\t, type:  'file'\n\t\t};\n\n\t\tthis.args.form = new Form({field});\n\n\t\tthis.args.form.bindTo('json', v => {\n\n\t\t\twindow.parent.parent.postMessage(v, '*');\n\n\t\t});\n\t}\n}\n"
+});
+
+;require.register("FormsDemo/Samples/Form.html", function(exports, require, module) {
+module.exports = "<style>\nlabel,input:not([type=\"radio\"]),select,textarea{display: block; margin: 0.5em;}\n</style>\n\n[[form]]\n"
+});
+
+;require.register("FormsDemo/Samples/Form.jss", function(exports, require, module) {
+module.exports = "const View = require('curvature/base/View').View;\nconst Form = require('curvature/form/Form').Form;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tconst commentField = {\n\t\t\ttype: 'fieldset'\n\t\t\t, array: true\n\t\t\t, children: {\n\t\t\t\tid:        {type: 'number'}\n\t\t\t\t, content: {type: 'textarea'}\n\t\t\t}\n\t\t};\n\n\t\tconst formSkeleton = {\n\n\t\t\t_method: 'POST'\n\n\t\t\t, hidden: {type:'hidden', value: 'hidden value'}\n\n\t\t\t, id: {type:'number', value: 1000}\n\t\t\t, name: {}\n\n\t\t\t, access: {\n\t\t\t\ttype:    'radios'\n\t\t\t\t, options: {\n\n\t\t\t\t\t'private':  0\n\t\t\t\t\t, 'public': 1\n\n\t\t\t\t}\n\t\t\t}\n\n\t\t\t, image: {type: 'file'}\n\n\t\t\t, type: {\n\t\t\t\ttype:    'select'\n\t\t\t\t, value: 300\n\t\t\t\t, options: {\n\n\t\t\t\t\t'-select-': null\n\t\t\t\t\t, 'image':  100\n\t\t\t\t\t, 'text':   200\n\t\t\t\t\t, 'video':  300\n\n\t\t\t\t}\n\t\t\t}\n\n\t\t\t, comments: {\n\t\t\t\tname:   'comments'\n\t\t\t\t, type: 'fieldset'\n\t\t\t\t, array: true\n\t\t\t\t, children: [\n\n\t\t\t\t\tcommentField\n\t\t\t\t\t, commentField\n\n\t\t\t\t]\n\t\t\t}\n\n\t\t\t, submit: {\n\t\t\t\ttype: 'submit'\n\t\t\t}\n\t\t};\n\n\t\tconst form = new Form(formSkeleton);\n\n\t\tform.bindTo('json', v => {\n\t\t\tconst output = v;\n\n\t\t\tthis.args.output = output;\n\n\t\t\twindow.parent.parent.postMessage(output, 'http://localhost:3333');\n\t\t});\n\n\t\tthis.args.form = form;\n\t\tthis.args.formSkeleton = formSkeleton;\n\t}\n\n\ttoJson(input)\n\t{\n\t\treturn JSON.stringify(input, null, 2);\n\t}\n}\n"
+});
+
+;require.register("FormsDemo/Samples/Groups.jss", function(exports, require, module) {
+module.exports = "const View = require('curvature/base/View').View;\nconst Form = require('curvature/form/Form').Form;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tconst personField = {\n\t\t\ttype:    'fieldset'\n\t\t\t, title: 'Person'\n\t\t\t, array: true\n\t\t\t, children: {\n\t\t\t\tid: {type:'number'}\n\t\t\t\t, name:  {}\n\t\t\t}\n\t\t};\n\n\t\tconst peopleField = {\n\t\t\ttype:    'fieldset'\n\t\t\t, title: 'People'\n\t\t\t, array: true\n\t\t\t, children: [\n\t\t\t\tpersonField\n\t\t\t\t, personField\n\t\t\t\t, personField\n\t\t\t]\n\t\t};\n\n\t\tthis.args.form = new Form({\n\t\t\t_method:  'POST'\n\t\t\t, field:  peopleField\n\t\t\t, submit: {type: 'submit', value: 'submit'}\n\t\t});\n\n\t\tthis.args.form.bindTo('json', v => {\n\n\t\t\twindow.parent.parent.postMessage(v, '*');\n\n\t\t});\n\t}\n}\n"
+});
+
+;require.register("FormsDemo/Samples/HiddenField.jss", function(exports, require, module) {
+module.exports = "const View = require('curvature/base/View').View;\nconst Form = require('curvature/form/Form').Form;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tconst field = {\n\t\t\ttitle:   'Hidden field'\n\t\t\t, type:  'hidden'\n\t\t\t, value: 'You cant see me.'\n\t\t};\n\n\t\tthis.args.form = new Form({field});\n\n\t\tthis.args.form.bindTo('json', v => {\n\n\t\t\twindow.parent.parent.postMessage(v, '*');\n\n\t\t});\n\t}\n}\n"
+});
+
+;require.register("FormsDemo/Samples/Html5.jss", function(exports, require, module) {
+module.exports = "const View = require('curvature/base/View').View;\nconst Form = require('curvature/form/Form').Form;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tthis.args.form = new Form({\n\t\t\t_method: 'POST'\n\t\t\t, id:        {type:'number', value: 1}\n\t\t\t, name:      {}\n\t\t\t, phone:     {type:'tel',attrs:{pattern:'[0-9]{3}-[0-9]{2}-[0-9]{3}'}}\n\t\t\t, favColor:  {type:'color', title: 'Favorite Color'}\n\t\t\t, birthday:  {type:'date'}\n\t\t\t, available: {type:'time'}\n\t\t\t, week:      {type:'week'}\n\t\t\t, email:     {type:'email'}\n\t\t\t, homepage:  {type:'url'}\n\t\t\t, submit:    {type: 'submit', value: 'submit'}\n\t\t});\n\n\t\tthis.args.form.bindTo('json', v => {\n\n\t\t\twindow.parent.parent.postMessage(v, '*');\n\n\t\t});\n\t}\n}\n"
+});
+
+;require.register("FormsDemo/Samples/Html5Form.html", function(exports, require, module) {
+module.exports = "<style>\nlabel,input:not([type=\"radio\"]),select,textarea{display: block; margin: 0.5em;}\ninput:invalid { background-color: pink; }\n</style>\n\n[[form]]\n"
+});
+
+;require.register("FormsDemo/Samples/HtmlField.jss", function(exports, require, module) {
+module.exports = "const View = require('curvature/base/View').View;\nconst Form = require('curvature/form/Form').Form;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tconst staticHtml = {\n\t\t\ttitle:   'Static HTML Field'\n\t\t\t, type:  'html'\n\t\t\t, value: '<li><b><u>This is static HTML</u></b></li>'\n\t\t};\n\n\t\tconst editableHtml = {\n\t\t\ttitle:   'Editable HTML Field'\n\t\t\t, type:  'html'\n\t\t\t, attrs: { contenteditable: true }\n\t\t\t, value: `\n\t\t\t    <li><b>These</b></li>\n\t\t\t    <li><b>Items</b></li>\n\t\t\t    <li><b>Are</b></li>\n\t\t\t    <li><b>Editable</b></li>`\n\t\t};\n\n\t\tthis.args.form = new Form({staticHtml, editableHtml});\n\n\t\tthis.args.form.bindTo('json', v => {\n\n\t\t\twindow.parent.parent.postMessage(v, '*');\n\n\t\t});\n\t}\n}\n"
+});
+
+;require.register("FormsDemo/Samples/HtmlForm.html", function(exports, require, module) {
+module.exports = "<style>\nul div {display: content};\nlabel,input:not([type=\"radio\"]),select,textarea{display: block; margin: 0.5em;}\n</style>\n\n<ul>[[form]]</ul>\n\n<pre>\n<b>ctrl / ⌘ + b</b>\n<i>ctrl / ⌘ + i</i>\n<u>ctrl / ⌘ + u</u>\n</pre>\n"
+});
+
+;require.register("FormsDemo/Samples/RadioField.jss", function(exports, require, module) {
+module.exports = "const View = require('curvature/base/View').View;\nconst Form = require('curvature/form/Form').Form;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tconst field = {\n\t\t\ttitle:   'Radio Field'\n\t\t\t, type:  'radios'\n\t\t\t, options: {\n\t\t\t\t'Red':     1\n\t\t\t\t, 'Blue':  2\n\t\t\t\t, 'Green': 3\n\t\t\t}\n\t\t};\n\n\t\tthis.args.form = new Form({field});\n\n\t\tthis.args.form.bindTo('json', v => {\n\n\t\t\twindow.parent.parent.postMessage(v, '*');\n\n\t\t});\n\t}\n}\n"
+});
+
+;require.register("FormsDemo/Samples/SelectField.jss", function(exports, require, module) {
+module.exports = "const View = require('curvature/base/View').View;\nconst Form = require('curvature/form/Form').Form;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tconst field = {\n\t\t\ttitle:   'Select Field'\n\t\t\t, type:  'select'\n\t\t\t, options: {\n\t\t\t\t'Select One': null\n\t\t\t\t, 'Red':   1\n\t\t\t\t, 'Blue':  2\n\t\t\t\t, 'Green': 3\n\t\t\t}\n\t\t};\n\n\t\tthis.args.form = new Form({field});\n\n\t\tthis.args.form.bindTo('json', v => {\n\n\t\t\twindow.parent.parent.postMessage(v, '*');\n\n\t\t});\n\t}\n}\n"
+});
+
+;require.register("FormsDemo/Samples/SubmitField.jss", function(exports, require, module) {
+module.exports = "const View = require('curvature/base/View').View;\nconst Form = require('curvature/form/Form').Form;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tconst field = {type: 'submit', value: 'submit'};\n\n\t\tthis.args.form = new Form({field});\n\n\t\tthis.args.form.bindTo('json', v => {\n\n\t\t\twindow.parent.parent.postMessage(v, '*');\n\n\t\t});\n\t}\n}\n"
+});
+
+;require.register("FormsDemo/Samples/TextAreaField.jss", function(exports, require, module) {
+module.exports = "const View = require('curvature/base/View').View;\nconst Form = require('curvature/form/Form').Form;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tconst field = {\n\t\t\ttitle:  'TextArea Field'\n\t\t\t, type: 'textarea'\n\t\t};\n\n\t\tthis.args.form = new Form({field});\n\n\t\tthis.args.form.bindTo('json', v => {\n\n\t\t\twindow.parent.parent.postMessage(v, '*');\n\n\t\t});\n\t}\n}\n"
+});
+
+;require.register("FormsDemo/Samples/TextField.jss", function(exports, require, module) {
+module.exports = "const View = require('curvature/base/View').View;\nconst Form = require('curvature/form/Form').Form;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tconst field = {\n\t\t\ttitle:  'Text Field'\n\t\t\t, type: 'text'\n\t\t};\n\n\t\tthis.args.form = new Form({field});\n\n\t\tthis.args.form.bindTo('json', v => {\n\n\t\t\twindow.parent.parent.postMessage(v, '*');\n\n\t\t});\n\t}\n}\n"
+});
+
+;require.register("FormsDemo/View.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.View = void 0;
+
+var _View = require("curvature/base/View");
+
+var _FormEditor = require("./FormEditor");
+
+var ace = _interopRequireWildcard(require("brace"));
+
+require("brace/mode/html");
+
+require("brace/mode/javascript");
+
+require("brace/theme/monokai");
+
+var _Form = require("curvature/form/Form");
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var View = /*#__PURE__*/function (_BaseView) {
+  _inherits(View, _BaseView);
+
+  var _super = _createSuper(View);
+
+  function View() {
+    var _this;
+
+    _classCallCheck(this, View);
+
+    _this = _super.call(this);
+    _this.template = require('./template');
+    var basic = _this.args.basic = new _FormEditor.FormEditor();
+    basic.args.tabs.js = {
+      title: 'js',
+      file: 'DemoView.js',
+      body: require('./Samples/Basic.jss'),
+      mode: 'ace/mode/javascript'
+    };
+    basic.args.tabs.html = {
+      title: 'html',
+      file: 'template.html',
+      body: require('./Samples/Form.html'),
+      mode: 'ace/mode/html'
+    };
+    basic.refreshCode();
+    var group = _this.args.group = new _FormEditor.FormEditor();
+    group.args.tabs.js = {
+      title: 'js',
+      file: 'DemoView.js',
+      body: require('./Samples/Groups.jss'),
+      mode: 'ace/mode/javascript'
+    };
+    group.args.tabs.html = {
+      title: 'html',
+      file: 'template.html',
+      body: require('./Samples/Form.html'),
+      mode: 'ace/mode/html'
+    };
+    group.refreshCode();
+    var textField = _this.args.textField = new _FormEditor.FormEditor();
+    textField.args.tabs.js = {
+      title: 'js',
+      file: 'DemoView.js',
+      body: require('./Samples/TextField.jss'),
+      mode: 'ace/mode/javascript'
+    };
+    textField.args.tabs.html = {
+      title: 'html',
+      file: 'template.html',
+      body: require('./Samples/Form.html'),
+      mode: 'ace/mode/html'
+    };
+    textField.refreshCode();
+    var textareaField = _this.args.textareaField = new _FormEditor.FormEditor();
+    textareaField.args.tabs.js = {
+      title: 'js',
+      file: 'DemoView.js',
+      body: require('./Samples/TextAreaField.jss'),
+      mode: 'ace/mode/javascript'
+    };
+    textareaField.args.tabs.html = {
+      title: 'html',
+      file: 'template.html',
+      body: require('./Samples/Form.html'),
+      mode: 'ace/mode/html'
+    };
+    textareaField.refreshCode();
+    var fileField = _this.args.fileField = new _FormEditor.FormEditor();
+    fileField.args.tabs.js = {
+      title: 'js',
+      file: 'DemoView.js',
+      body: require('./Samples/FileField.jss'),
+      mode: 'ace/mode/javascript'
+    };
+    fileField.args.tabs.html = {
+      title: 'html',
+      file: 'template.html',
+      body: require('./Samples/Form.html'),
+      mode: 'ace/mode/html'
+    };
+    fileField.refreshCode();
+    var submitField = _this.args.submitField = new _FormEditor.FormEditor();
+    submitField.args.tabs.js = {
+      title: 'js',
+      file: 'DemoView.js',
+      body: require('./Samples/SubmitField.jss'),
+      mode: 'ace/mode/javascript'
+    };
+    submitField.args.tabs.html = {
+      title: 'html',
+      file: 'template.html',
+      body: require('./Samples/Form.html'),
+      mode: 'ace/mode/html'
+    };
+    submitField.refreshCode();
+    var buttonField = _this.args.buttonField = new _FormEditor.FormEditor();
+    buttonField.args.tabs.js = {
+      title: 'js',
+      file: 'DemoView.js',
+      body: require('./Samples/ButtonField.jss'),
+      mode: 'ace/mode/javascript'
+    };
+    buttonField.args.tabs.html = {
+      title: 'html',
+      file: 'template.html',
+      body: require('./Samples/Form.html'),
+      mode: 'ace/mode/html'
+    };
+    buttonField.refreshCode();
+    var checkboxField = _this.args.checkboxField = new _FormEditor.FormEditor();
+    checkboxField.args.tabs.js = {
+      title: 'js',
+      file: 'DemoView.js',
+      body: require('./Samples/Checkbox.jss'),
+      mode: 'ace/mode/javascript'
+    };
+    checkboxField.args.tabs.html = {
+      title: 'html',
+      file: 'template.html',
+      body: require('./Samples/Form.html'),
+      mode: 'ace/mode/html'
+    };
+    checkboxField.refreshCode();
+    var selectField = _this.args.selectField = new _FormEditor.FormEditor();
+    selectField.args.tabs.js = {
+      title: 'js',
+      file: 'DemoView.js',
+      body: require('./Samples/SelectField.jss'),
+      mode: 'ace/mode/javascript'
+    };
+    selectField.args.tabs.html = {
+      title: 'html',
+      file: 'template.html',
+      body: require('./Samples/Form.html'),
+      mode: 'ace/mode/html'
+    };
+    selectField.refreshCode();
+    var radioField = _this.args.radioField = new _FormEditor.FormEditor();
+    radioField.args.tabs.js = {
+      title: 'js',
+      file: 'DemoView.js',
+      body: require('./Samples/RadioField.jss'),
+      mode: 'ace/mode/javascript'
+    };
+    radioField.args.tabs.html = {
+      title: 'html',
+      file: 'template.html',
+      body: require('./Samples/Form.html'),
+      mode: 'ace/mode/html'
+    };
+    radioField.refreshCode();
+    var hiddenField = _this.args.hiddenField = new _FormEditor.FormEditor();
+    hiddenField.args.tabs.js = {
+      title: 'js',
+      file: 'DemoView.js',
+      body: require('./Samples/HiddenField.jss'),
+      mode: 'ace/mode/javascript'
+    };
+    hiddenField.args.tabs.html = {
+      title: 'html',
+      file: 'template.html',
+      body: require('./Samples/Form.html'),
+      mode: 'ace/mode/html'
+    };
+    hiddenField.refreshCode();
+    var htmlField = _this.args.htmlField = new _FormEditor.FormEditor();
+    htmlField.args.tabs.js = {
+      title: 'js',
+      file: 'DemoView.js',
+      body: require('./Samples/HtmlField.jss'),
+      mode: 'ace/mode/javascript'
+    };
+    htmlField.args.tabs.html = {
+      title: 'html',
+      file: 'template.html',
+      body: require('./Samples/HtmlForm.html'),
+      mode: 'ace/mode/html'
+    };
+    htmlField.refreshCode();
+    var html5Fields = _this.args.html5Fields = new _FormEditor.FormEditor();
+    html5Fields.args.tabs.js = {
+      title: 'js',
+      file: 'DemoView.js',
+      body: require('./Samples/Html5.jss'),
+      mode: 'ace/mode/javascript'
+    };
+    html5Fields.args.tabs.html = {
+      title: 'html',
+      file: 'template.html',
+      body: require('./Samples/Html5Form.html'),
+      mode: 'ace/mode/html'
+    };
+    html5Fields.refreshCode();
+    return _this;
+  }
+
+  _createClass(View, [{
+    key: "postRender",
+    value: function postRender() {}
+  }, {
+    key: "toJson",
+    value: function toJson(input) {
+      return JSON.stringify(input, null, 2);
+    }
+  }]);
+
+  return View;
+}(_View.View);
+
+exports.View = View;
+});
+
+;require.register("FormsDemo/template.html", function(exports, require, module) {
+module.exports = "<h2>Forms Demo</h2>\n\n<p>Forms can be generated by passing an object describing the desired fields & properties. Keys prefixed with \"_\" will affect the form itself rather than generating fields. Other keys will map to fields.</p>\n\n<ul>\n\t<li><b>_method</b> - The \"method\" attribute of the form element.</li>\n\t<li><b>_action</b> - The \"action\" attribute of the form element.</li>\n</ul>\n\n<p>Fields are object with 0 or more of the following keys</p>\n\n<ul>\n\t<li><b>name</b> - Field name attribute (key will be used if not provided.)</li>\n\t<li><b>title</b> - Field title (key will be used if not provided.)</li>\n\t<li><b>type</b> - Field Type</li>\n\t<li><b>attrs</b> - Additional attributes for field tag (k/v object)</li>\n</ul>\n\n<p><i>Note form submisions are disabled in the editor</i></p>\n\n[[basic]]\n\n<h3>Field Groupings</h3>\n\n<p>Fields may be grouped with the <b>fieldset</b> field type.</p>\n\n<p>Fieldset definitions may have the following keys in additions to the standard keys:</p>\n\n<ul>\n\t<li><b>children</b> - Array or object listing child field.</li>\n\t<li><b>array</b> - Boolean determining if field names should cascade.</li>\n</ul>\n\n<p>Array field names will appear normal in output JSON but will have their name attributs in the form fieldset[fieldname]. Nested fieldsets can cascade this property to produce names like fieldset[subset][fieldname].</p>\n\n[[group]]\n\n<h3>Traditional Field Types</h3>\n\n<h4>Text Field</h4>\n\n[[textField]]\n\n<h4>Textarea</h4>\n\n[[textareaField]]\n\n<h4>File Field</h4>\n\n[[fileField]]\n\n\n<h4>Submit</h4>\n\n[[submitField]]\n\n<h4>Button</h4>\n\n[[buttonField]]\n\n<h4>Checkbox Field</h4>\n\n[[checkboxField]]\n\n<h4>Select Field</h4>\n\n[[selectField]]\n\n<h4>Radio Button Field</h4>\n\n[[radioField]]\n\n<h4>Hidden Field</h4>\n\nHidden fields have no user-visible representation. Not even the title will render, but the field will be present.\n\n[[hiddenField]]\n\n<h4>HTML Field</h4>\n\n[[htmlField]]\n\n<h3>HTML5 Input Types</h3>\n\nIf the input type is not recognized, it will be passed through and treated like any other input. It is up to the browser at that point to do any specialized rendering and/or validation.\n\n[[html5Fields]]\n\n<h3>Custom Fields</h3>\n"
+});
+
+;require.register("Layout/View.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.View = void 0;
+
+var _View = require("curvature/base/View");
+
+var _View2 = require("../ViewDemo/View");
+
+var _View3 = require("../FormsDemo/View");
+
+var _View4 = require("../ThemeDemo/View");
+
+var _View5 = require("../ConfigDemo/View");
+
+var _View6 = require("../RulesDemo/View");
+
+var _View7 = require("../ScalarDemo/View");
+
+var _View8 = require("../ChainDemo/View");
+
+var _View9 = require("../ArrayDemo/View");
+
+var _View10 = require("../ObjectDemo/View");
+
+var _View11 = require("../Experiments/InfiniteScroll/View");
+
+var _View12 = require("../Experiments/Php/View");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var View = /*#__PURE__*/function (_BaseView) {
+  _inherits(View, _BaseView);
+
+  var _super = _createSuper(View);
+
+  function View() {
+    var _this;
+
+    _classCallCheck(this, View);
+
+    _this = _super.call(this);
+    _this.template = require('./template');
+    _this.routes = {
+      '': function _() {
+        return 'home';
+      },
+      views: function views() {
+        return new _View2.View();
+      },
+      forms: function forms() {
+        return new _View3.View();
+      },
+      config: function config() {
+        return new _View5.View();
+      },
+      rules: function rules() {
+        return new _View6.View();
+      },
+      themes: function themes() {
+        return new _View4.View();
+      },
+      scalars: function scalars() {
+        return new _View7.View();
+      },
+      chains: function chains() {
+        return new _View8.View();
+      },
+      arrays: function arrays() {
+        return new _View9.View();
+      },
+      objects: function objects() {
+        return new _View10.View();
+      },
+      'php': function php() {
+        return new _View12.View();
+      },
+      'infinite-scroll': function infiniteScroll() {
+        return new _View11.View();
+      }
+    };
+    return _this;
+  }
+
+  return View;
+}(_View.View);
+
+exports.View = View;
+});
+
+;require.register("Layout/template.html", function(exports, require, module) {
+module.exports = "<h1>curvature-2</h1>\n<div class = \"layout\">\n\t<div class = \"navigation\">\n\t\t<ul>\n\t\t\t<li>Components\n\t\t\t\t<ul>\n\t\t\t\t\t<li><a cv-link = \"/views\">Views</a></li>\n\t\t\t\t\t<li><a cv-link = \"/forms\">Forms</a></li>\n\t\t\t\t\t<li><a cv-link = \"/config\">Config</a></li>\n\t\t\t\t\t<li><a cv-link = \"/rules\">Rules</a></li>\n\t\t\t\t\t<li cv-link = \"/models\"><a>Models</a></li>\n\t\t\t\t\t<li cv-link = \"/routes\"><a>Routes</a></li>\n\t\t\t\t\t<li><a cv-link = \"/themes\">Themes</a></li>\n\t\t\t\t</ul>\n\t\t\t</li>\n\n\t\t\t<li>Binding:\n\t\t\t\t<ul>\n\t\t\t\t\t<li><a cv-link = \"/scalars\">Scalars</a></li>\n\t\t\t\t\t<li><a cv-link = \"/arrays\">Arrays</a></li>\n\t\t\t\t\t<li><a cv-link = \"/objects\">Objects</a></li>\n\t\t\t\t\t<li><a cv-link = \"/chains\">Chain Binding</a></li>\n\t\t\t\t</ul>\n\t\t\t</li>\n\n<!-- \t\t\t<li>Integrations:\n\t\t\t\t<ul>\n\t\t\t\t\t<li><a cv-link = \"/presskit\">PressKit</a></li>\n\t\t\t\t\t<li><a cv-link = \"/eventi\">Eventi</a></li>\n\t\t\t\t\t<li><a cv-link = \"/subspace\">Tigl-2d</a></li>\n\t\t\t\t\t<li><a cv-link = \"/subspace\">Subspace</a></li>\n\t\t\t\t\t<li><a cv-link = \"/cv-markdown\">cv-Markdown</a></li>\n\t\t\t\t</ul>\n\t\t\t</li> -->\n\n\t\t\t<li>Experiments:\n\t\t\t\t<ul>\n\t\t\t\t\t<li><a cv-link = \"/php\">PHP Integration</a></li>\n\t\t\t\t\t<li><a cv-link = \"/infinite-scroll\">Infinite Scroll</a></li>\n\t\t\t\t</ul>\n\t\t\t</li>\n\n\t\t</ul>\n\t</div>\n\n\t<div class = \"content\">[[content]]</div>\n\n\t<div></div>\n\n</div>\n"
+});
+
+;require.register("ObjectDemo/View.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.View = void 0;
+
+var _View = require("curvature/base/View");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var View = /*#__PURE__*/function (_BaseView) {
+  _inherits(View, _BaseView);
+
+  var _super = _createSuper(View);
+
+  function View() {
+    var _this;
+
+    _classCallCheck(this, View);
+
+    _this = _super.call(this);
+    _this.template = require('./template');
+    _this.z = 0;
+    _this.args.obj = {
+      a: 1,
+      b: 2,
+      c: 3
+    };
+    return _this;
+  }
+
+  _createClass(View, [{
+    key: "setKey",
+    value: function setKey(key, value) {
+      this.args.obj[key] = value;
+    }
+  }, {
+    key: "delKey",
+    value: function delKey(key) {
+      delete this.args.obj[key];
+    }
+  }]);
+
+  return View;
+}(_View.View);
+
+exports.View = View;
+});
+
+;require.register("ObjectDemo/template.html", function(exports, require, module) {
+module.exports = "<h2>Object Binding Demo</h2>\n\n<div class = \"row\">\n\t<fieldset>\n\t\t<label>set</label>\n\t\t<input cv-bind = \"setKey\" />\n\t\t<input cv-bind = \"seyValue\" />\n\t\t<button cv-on = \"click:setKey(setKey,seyValue)\">set</button>\n\t</fieldset>\n\n\t<fieldset>\n\t\t<label>delete</label>\n\t\t<input cv-bind  = \"delKey\" />\n\t\t<button cv-on = \"click:delKey(delKey)\">set</button>\n\t</fieldset>\n</div>\n\n<div cv-each = \"obj:item:i\">\n\t<p>[[i]] [[item]]</p>\n</div>\n"
+});
+
+;require.register("PHP.js", function(exports, require, module) {
+// const PhpWebBin = require('php-wasm/php-web');
+// // const PhpCliBin = require('php-wasm/php-shell');
+// export class PHP extends EventTarget
+// {
+// 	constructor()
+// 	{
+// 		super();
+// 		const FLAGS = {};
+// 		this.returnValue = -1;
+// 		this.onerror  = function () { console.log('READY!!!') };
+// 		this.onoutput = function () {};
+// 		this.onready  = function () {};
+// 		this.binary = PhpWebBin({
+// 			postRun:  () => {
+// 				const event = new CustomEvent('ready');
+// 				this.dispatchEvent(event);
+// 				this.onready(event)
+// 			},
+// 			print: (...chunks) =>{
+// 				const event = new CustomEvent('output', {detail: chunks});
+// 				this.dispatchEvent(event);
+// 				this.onoutput(event);
+// 			},
+// 			printErr: (...chunks) => {
+// 				const event = new CustomEvent('error', {detail: chunks});
+// 				// this.onerror(event);
+// 				this.dispatchEvent(event);
+// 			}
+// 		});
+// 	}
+// 	run(phpCode)
+// 	{
+// 		return new Promise(accept => this.binary.then(php => {
+// 			const retVal = php.ccall(
+// 				'pib_eval'
+// 				, 'number'
+// 				, ["string"]
+// 				, [`?>${phpCode}`]
+// 			);
+// 			php.ccall(
+// 				'pib_eval'
+// 				, 'number'
+// 				, ["string"]
+// 				, [`echo "\n"`]
+// 			);
+// 			console.log(phpCode, retVal);
+// 			accept(retVal);
+// 		}));
+// 	}
+// }
+"use strict";
+});
+
+;require.register("RulesDemo/Samples/BasicRule.html", function(exports, require, module) {
+module.exports = "<style>\ntextarea,input,progress { display: block; width: 100%; padding: 0.5em; margin-top: 0.5em;  margin-bottom: 0.25em; box-sizing: border-box;}\np { font-size: 0.5em; text-align: right; margin: 0.25em; }\n</style>\n\n<textarea maxlength = \"140\">Typing here will update the elements below.</textarea>\n\n<input maxlength = \"28\" value = \"It works for inputs as well.\" />\n"
+});
+
+;require.register("RulesDemo/Samples/BasicRule.jss", function(exports, require, module) {
+module.exports = "const View = require('curvature/base/View').View;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tthis.ruleSet.add('textarea,input[maxlength]', tag => {\n\n\t\t\tconst element = tag.element;\n\t\t\tconst parent  = element.parentNode;\n\n\t\t\tconst max = element.getAttribute('maxlength');\n\t\t\tconst bar = document.createElement('progress');\n\t\t\tconst ind = document.createElement('p');\n\n\t\t\tconst length = element.value.length;\n\n\t\t\tind.innerText = `${length} / ${max}`;\n\n\t\t\tbar.setAttribute('max', max);\n\t\t\tbar.setAttribute('value', length);\n\n\t\t\telement.addEventListener('input', event => {\n\n\t\t\t\tconst length = event.target.value.length;\n\n\t\t\t\tbar.setAttribute('value', length);\n\n\t\t\t\tind.innerText = `${length} / ${max}`;\n\n\t\t\t});\n\n\t\t\tconst next = element.nextSibling;\n\n\t\t\tparent.insertBefore(bar, next);\n\t\t\tparent.insertBefore(ind, next);\n\t\t});\n\t}\n}\n"
+});
+
+;require.register("RulesDemo/Samples/Mapper.html", function(exports, require, module) {
+module.exports = "<custom-tag>this maps to a div tag.</custom-tag>\n"
+});
+
+;require.register("RulesDemo/Samples/Mapper.jss", function(exports, require, module) {
+module.exports = "const View = require('curvature/base/View').View;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tthis.ruleSet.add('custom-tag', tag => {\n\n\t\t\tconst div = document.createElement('div');\n\t\t\tconst element = tag.element;\n\n\t\t\twhile(element.firstChild)\n\t\t\t{\n\t\t\t\tdiv.append('The tag that contained \"');\n\t\t\t\tdiv.append(element.firstChild);\n\t\t\t\tdiv.append('\" has been replaced with this div tag.');\n\t\t\t}\n\n\t\t\treturn div;\n\n\t\t});\n\t}\n}\n"
+});
+
+;require.register("RulesDemo/Samples/Preproc.html", function(exports, require, module) {
+module.exports = "<h1>Editable title</h1>\n\n<p>Editable body</p>\n"
+});
+
+;require.register("RulesDemo/Samples/Preproc.jss", function(exports, require, module) {
+module.exports = "const View = require('curvature/base/View').View;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tconst selector = 'h1,p';\n\n\t\tconst nodes = [];\n\t\tconst index = new WeakMap();\n\n\t\tconst nodeIndex = (node) => {\n\n\t\t\tif(index[node] !== undefined)\n\t\t\t{\n\t\t\t\treturn index[node];\n\t\t\t}\n\n\t\t\tindex[node] = nodes.length;\n\t\t\tnodes.push(node);\n\n\t\t\treturn index[node];\n\t\t};\n\n\t\tthis.preRuleSet.add(selector, tag => {\n\n\t\t\tconst element  = tag.element;\n\t\t\tconst view     = tag.parent;\n\t\t\tconst parent   = element.parentNode;\n\t\t\tconst tagIndex = nodeIndex(element);\n\t\t\tconst refName  = `node_${ tagIndex }`;\n\n\t\t\telement.setAttribute('tabindex', -1);\n\n\t\t\tconst input = document.createElement('input');\n\n\t\t\tinput.setAttribute('cv-bind', refName);\n\t\t\telement.setAttribute('cv-bind', refName);\n\n\t\t\tview.args[refName] = element.innerText;\n\n\t\t\telement.addEventListener('focus', () => {\n\t\t\t\tinput.style.display = '';\n\t\t\t\tinput.focus();\n\t\t\t\tinput.select();\n\t\t\t});\n\n\t\t\tinput.addEventListener('blur', () => {\n\t\t\t\tinput.style.display = 'none';\n\t\t\t});\n\n\t\t\tparent.insertBefore(input, element.nextSibling);\n\t\t\tinput.style.display = 'none';\n\t\t});\n\t}\n}\n"
+});
+
+;require.register("RulesDemo/Samples/Static.html", function(exports, require, module) {
+module.exports = "<p></p>\n"
+});
+
+;require.register("RulesDemo/Samples/Static.jss", function(exports, require, module) {
+module.exports = "const RuleSet = require('curvature/base/RuleSet').RuleSet;\nconst View    = require('curvature/base/View').View;\n\nRuleSet.add('p', tag => {\n\ttag.element.innerText = 'Global rule applied!';\n});\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\t}\n}\n"
+});
+
+;require.register("RulesDemo/Samples/ViewMapper.html", function(exports, require, module) {
+module.exports = "<p>Class:</p>\n<div data-class>this maps to a view class.</div>\n\n<p>Object:</p>\n<div data-object>this maps to a view object.</div>\n"
+});
+
+;require.register("RulesDemo/Samples/ViewMapper.jss", function(exports, require, module) {
+module.exports = "const View = require('curvature/base/View').View;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tthis.ruleSet.add('[data-class]', Clock);\n\n\t\tconst clock = new Clock();\n\n\t\tthis.ruleSet.add('[data-object]', clock);\n\t}\n}\n\nclass Clock extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = `\n\t\t\t<p><progress max = \"24\"   value = \"[[h]]\"></progress>[[h]]</p>\n\t\t\t<p><progress max = \"60\"   value = \"[[m]]\"></progress>[[m]]</p>\n\t\t\t<p><progress max = \"60\"   value = \"[[s]]\"></progress>[[s]]</p>\n\t\t\t<p><progress max = \"1000\" value = \"[[n]]\"></progress>[[n]]</p>\n\t\t`;\n\n\t\tthis.onFrame(() => {\n\n\t\t\tconst d = new Date();\n\n\t\t\tthis.args.h = d.getHours();\n\t\t\tthis.args.m = d.getMinutes();\n\t\t\tthis.args.s = d.getSeconds();\n\t\t\tthis.args.n = d.getMilliseconds();\n\n\t\t});\n\t}\n}\n"
+});
+
+;require.register("RulesDemo/View.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.View = void 0;
+
+var _View = require("curvature/base/View");
+
+var _View2 = require("../Editor/View");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var View = /*#__PURE__*/function (_BaseView) {
+  _inherits(View, _BaseView);
+
+  var _super = _createSuper(View);
+
+  function View() {
+    var _this;
+
+    _classCallCheck(this, View);
+
+    _this = _super.call(this);
+    _this.template = require('./template');
+    _this.args.list = [1, 2, 3];
+    var basic = new _View2.View();
+    basic.args.tabs.js = {
+      title: 'js',
+      file: 'DemoView.js',
+      body: require('./Samples/BasicRule.jss'),
+      mode: 'ace/mode/javascript'
+    };
+    basic.args.tabs.html = {
+      title: 'html',
+      file: 'template.html',
+      body: require('./Samples/BasicRule.html'),
+      mode: 'ace/mode/html'
+    };
+    basic.refreshCode();
+    _this.args.basic = basic;
+    var preproc = new _View2.View();
+    preproc.args.tabs.js = {
+      title: 'js',
+      file: 'DemoView.js',
+      body: require('./Samples/Preproc.jss'),
+      mode: 'ace/mode/javascript'
+    };
+    preproc.args.tabs.html = {
+      title: 'html',
+      file: 'template.html',
+      body: require('./Samples/Preproc.html'),
+      mode: 'ace/mode/html'
+    };
+    preproc.refreshCode();
+    _this.args.preproc = preproc;
+    var mapper = new _View2.View();
+    mapper.args.tabs.js = {
+      title: 'js',
+      file: 'DemoView.js',
+      body: require('./Samples/Mapper.jss'),
+      mode: 'ace/mode/javascript'
+    };
+    mapper.args.tabs.html = {
+      title: 'html',
+      file: 'template.html',
+      body: require('./Samples/Mapper.html'),
+      mode: 'ace/mode/html'
+    };
+    mapper.refreshCode();
+    _this.args.mapper = mapper;
+    var viewMapper = new _View2.View();
+    viewMapper.args.tabs.js = {
+      title: 'js',
+      file: 'DemoView.js',
+      body: require('./Samples/ViewMapper.jss'),
+      mode: 'ace/mode/javascript'
+    };
+    viewMapper.args.tabs.html = {
+      title: 'html',
+      file: 'template.html',
+      body: require('./Samples/ViewMapper.html'),
+      mode: 'ace/mode/html'
+    };
+    viewMapper.refreshCode();
+    _this.args.viewMapper = viewMapper;
+    var globalRules = new _View2.View();
+    globalRules.args.tabs.js = {
+      title: 'js',
+      file: 'DemoView.js',
+      body: require('./Samples/Static.jss'),
+      mode: 'ace/mode/javascript'
+    };
+    globalRules.args.tabs.html = {
+      title: 'html',
+      file: 'template.html',
+      body: require('./Samples/Static.html'),
+      mode: 'ace/mode/html'
+    };
+    globalRules.refreshCode();
+    _this.args.globalRules = globalRules;
+    return _this;
+  }
+
+  return View;
+}(_View.View);
+
+exports.View = View;
+});
+
+;require.register("RulesDemo/template.html", function(exports, require, module) {
+module.exports = "<h2>Rules</h2>\n\n<p>The most basic rules simply map CSS selectors to callbacks. Whenever a tag matching a rule is encountered, the callback is applied.</p>\n\n<p>Every View comes with a RuleSet, so you can add Rules by calling <code>this.ruleSet.add</code>.</p>\n\n[[basic]]\n\n<h3>Preprocessing</h3>\n\n<p>If <code>this.preRuleSet.add</code> is used rather than <code>this.ruleSet.add</code>, the rules will be appled BEFORE the template is processed, rather than after.</p>\n\n<p>This allows us <!-- to [[<span>interpolate</span>]] values and--> use cv-* attributes.</p>\n\n[[preproc]]\n\n<h3>Mapping tags to tags</h3>\n\n<p>If the callback returns an HTMLElement, the original tag will be replaced.</p>\n\n[[mapper]]\n\n<h3>Mapping tags to views</h3>\n\n<p>View classes, or instances of them may both be passed instead of a callback. In this case, the view will be rendered <b>inside</b> the existing tag.</p>\n\n[[viewMapper]]\n\n<h3>Global Rules</h3>\n\n<p>The <code>RuleSet.add</code> method may be called statically to add global rules.</p>\n\n[[globalRules]]\n\n<!-- <h3>The RuleSet class <i>per se</i></h3> -->\n"
+});
+
+;require.register("ScalarDemo/View.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.View = void 0;
+
+var _View = require("curvature/base/View");
+
+var _View2 = require("../ArrayDemo/View");
+
+var _View3 = require("../ObjectDemo/View");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var View = /*#__PURE__*/function (_BaseView) {
+  _inherits(View, _BaseView);
+
+  var _super = _createSuper(View);
+
+  function View() {
+    var _this;
+
+    _classCallCheck(this, View);
+
+    _this = _super.call(this);
+    _this.template = require('./template');
+    return _this;
+  }
+
+  _createClass(View, [{
+    key: "clear",
+    value: function clear(clearVar) {
+      this.args[clearVar] = '';
+    }
+  }]);
+
+  return View;
+}(_View.View);
+
+exports.View = View;
+});
+
+;require.register("ScalarDemo/template.html", function(exports, require, module) {
+module.exports = "<h2>Scalar Binding Demo</h2>\n\n<p>\n\ta:\n\t<input cv-bind = \"a\">\n\t<button cv-on = \"click:clear('a')\">x</button> : \"[[a]]\"\n</p>\n\n<p>\n\tb:\n\t<input cv-bind = \"b\">\n\t<button cv-on = \"click:clear('b')\">x</button> : \"[[b]]\"\n</p>\n\n<p>\n\tc:\n\t<input cv-bind = \"c\">\n\t<button cv-on = \"click:clear('c')\">x</button> : \"[[c]]\"\n</p>\n"
+});
+
+;require.register("ThemeDemo/Theme.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Theme = void 0;
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Theme = /*#__PURE__*/function () {
+  _createClass(Theme, null, [{
+    key: "get",
+    value: function get() {
+      var key = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+
+      if (!this.instances) {
+        this.instances = {};
+      }
+
+      if (!this.instances[key]) {
+        this.instances[key] = new this(key);
+      }
+
+      return this.instances[key];
+    }
+  }]);
+
+  function Theme(key) {
+    _classCallCheck(this, Theme);
+
+    this.key = key;
+    this.viewMap = new Map();
+    this.templateMap = new Map();
+    this.fallbacks = [];
+  }
+
+  _createClass(Theme, [{
+    key: "setFallback",
+    value: function setFallback() {
+      var _this$fallbacks;
+
+      (_this$fallbacks = this.fallbacks).push.apply(_this$fallbacks, arguments);
+
+      return this;
+    }
+  }, {
+    key: "setView",
+    value: function setView(type, viewType) {
+      this.viewMap.set(type, viewType);
+      return this;
+    }
+  }, {
+    key: "getView",
+    value: function getView(object) {
+      var type = this.resolve(object, 'viewMap');
+
+      if (!type) {
+        return null;
+      }
+
+      var view = new type(object);
+      return view;
+    }
+  }, {
+    key: "setTemplate",
+    value: function setTemplate(type, template) {
+      this.templateMap.set(type, template);
+      return this;
+    }
+  }, {
+    key: "getTemplate",
+    value: function getTemplate(object) {
+      return this.resolve(object, 'templateMap');
+    }
+  }, {
+    key: "resolve",
+    value: function resolve(object, whichMap) {
+      if (object.___object___ && object.isBound) {
+        object = object.___object___;
+      }
+
+      var type = object.constructor;
+      var map = this[whichMap];
+
+      if (map.has(type)) {
+        return map.get(type);
+      }
+
+      var result = null;
+
+      var _iterator = _createForOfIteratorHelper(map),
+          _step;
+
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var _step$value = _slicedToArray(_step.value, 2),
+              key = _step$value[0],
+              value = _step$value[1];
+
+          if (type.prototype instanceof key) {
+            result = value;
+          }
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+
+      if (!result) {
+        var _iterator2 = _createForOfIteratorHelper(this.fallbacks),
+            _step2;
+
+        try {
+          for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+            var theme = _step2.value;
+
+            if (result = theme.resolve(object, whichMap)) {
+              return result;
+            }
+          }
+        } catch (err) {
+          _iterator2.e(err);
+        } finally {
+          _iterator2.f();
+        }
+      }
+
+      if (result) {
+        map.set(type, result);
+      }
+
+      return result;
+    }
+  }]);
+
+  return Theme;
+}();
+
+exports.Theme = Theme;
+});
+
+;require.register("ThemeDemo/View.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.View = void 0;
+
+var _Theme = require("./Theme");
+
+var _View = require("curvature/base/View");
+
+var _TypeX = require("./types/TypeX");
+
+var _TypeY = require("./types/TypeY");
+
+var _TypeZ = require("./types/TypeZ");
+
+var _ViewX = require("./views/ViewX");
+
+var _ViewY = require("./views/ViewY");
+
+var _ViewZ = require("./views/ViewZ");
+
+var _TypeZAlpha = require("./types/TypeZAlpha");
+
+var _ViewZAlpha = require("./views/ViewZAlpha");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var View = /*#__PURE__*/function (_BaseView) {
+  _inherits(View, _BaseView);
+
+  var _super = _createSuper(View);
+
+  function View(args) {
+    var _this;
+
+    _classCallCheck(this, View);
+
+    _this = _super.call(this, args);
+    _this.template = require('./template');
+
+    var theme = _Theme.Theme.get();
+
+    var alpha = _Theme.Theme.get('alpha');
+
+    theme.setTemplate(_ViewX.ViewX, require('./views/templateX')).setTemplate(_ViewY.ViewY, require('./views/templateY')).setTemplate(_ViewZ.ViewZ, require('./views/templateZ')).setView(_TypeX.TypeX, _ViewX.ViewX).setView(_TypeY.TypeY, _ViewY.ViewY).setView(_TypeZ.TypeZ, _ViewZ.ViewZ);
+    alpha.setTemplate(_ViewZAlpha.ViewZAlpha, require('./views/templateZAlpha')).setFallback(_Theme.Theme.get()).setView(_TypeZAlpha.TypeZAlpha, _ViewZAlpha.ViewZAlpha);
+    var x = new _TypeX.TypeX(_assertThisInitialized(_this));
+    var y = new _TypeY.TypeY(_assertThisInitialized(_this));
+    var z = new _TypeZ.TypeZ(_assertThisInitialized(_this));
+    var z𝛼 = new _TypeZAlpha.TypeZAlpha(_assertThisInitialized(_this));
+    _this.args.views = [x, x, y, z, z𝛼].map(function (v) {
+      return alpha.getView(v);
+    });
+    return _this;
+  }
+
+  return View;
+}(_View.View);
+
+exports.View = View;
+});
+
+;require.register("ThemeDemo/template.html", function(exports, require, module) {
+module.exports = "<div cv-each = \"views:view:v\">[[view]]</div>\n"
+});
+
+;require.register("ThemeDemo/types/TypeX.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.TypeX = void 0;
+
+var _Bindable = require("curvature/base/Bindable");
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var TypeX = function TypeX(mainView) {
+  _classCallCheck(this, TypeX);
+
+  var _this = _Bindable.Bindable.makeBindable(this);
+
+  this.type = 'X';
+  this.value = 1 / Math.random();
+  this.interval = mainView.onInterval(100, function () {
+    _this.value = '0x' + Math.floor(Math.random() * 10000).toString(16).padStart(4, 0);
+  });
+};
+
+exports.TypeX = TypeX;
+});
+
+;require.register("ThemeDemo/types/TypeY.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.TypeY = void 0;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var TypeY = function TypeY() {
+  _classCallCheck(this, TypeY);
+
+  this.type = 'Y';
+  this.value = 1 / Math.random();
+};
+
+exports.TypeY = TypeY;
+});
+
+;require.register("ThemeDemo/types/TypeZ.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.TypeZ = void 0;
+
+var _Bindable = require("curvature/base/Bindable");
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var TypeZ = function TypeZ(mainView) {
+  _classCallCheck(this, TypeZ);
+
+  var _this = _Bindable.Bindable.makeBindable(this);
+
+  this.type = 'Z';
+  this.value = 0;
+  this.interval = mainView.onInterval(250, function () {
+    _this.value++;
+  });
+  return _this;
+};
+
+exports.TypeZ = TypeZ;
+});
+
+;require.register("ThemeDemo/types/TypeZAlpha.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.TypeZAlpha = void 0;
+
+var _TypeZ2 = require("./TypeZ");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var TypeZAlpha = /*#__PURE__*/function (_TypeZ) {
+  _inherits(TypeZAlpha, _TypeZ);
+
+  var _super = _createSuper(TypeZAlpha);
+
+  function TypeZAlpha(mainView) {
+    var _this;
+
+    _classCallCheck(this, TypeZAlpha);
+
+    _this = _super.call(this, mainView);
+    _this.type = 'Z𝛼';
+    clearInterval(_this.interval);
+    _this.interval = mainView.onInterval(20, function () {
+      _this.value++;
+    });
+    return _this;
+  }
+
+  return TypeZAlpha;
+}(_TypeZ2.TypeZ);
+
+exports.TypeZAlpha = TypeZAlpha;
+});
+
+;require.register("ThemeDemo/views/ViewX.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.ViewX = void 0;
+
+var _Theme = require("../Theme");
+
+var _Config = require("../../Config");
+
+var _View = require("curvature/base/View");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var ViewX = /*#__PURE__*/function (_BaseView) {
+  _inherits(ViewX, _BaseView);
+
+  var _super = _createSuper(ViewX);
+
+  function ViewX(args) {
+    var _this;
+
+    _classCallCheck(this, ViewX);
+
+    _this = _super.call(this, args);
+    _this.template = _Theme.Theme.get(_Config.Config.theme || '').getTemplate(_assertThisInitialized(_this));
+    return _this;
+  }
+
+  return ViewX;
+}(_View.View);
+
+exports.ViewX = ViewX;
+});
+
+;require.register("ThemeDemo/views/ViewY.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.ViewY = void 0;
+
+var _Theme = require("../Theme");
+
+var _Config = require("../../Config");
+
+var _View = require("curvature/base/View");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var ViewY = /*#__PURE__*/function (_BaseView) {
+  _inherits(ViewY, _BaseView);
+
+  var _super = _createSuper(ViewY);
+
+  function ViewY(args) {
+    var _this;
+
+    _classCallCheck(this, ViewY);
+
+    _this = _super.call(this, args);
+    _this.template = _Theme.Theme.get(_Config.Config.theme || '').getTemplate(_assertThisInitialized(_this));
+    return _this;
+  }
+
+  return ViewY;
+}(_View.View);
+
+exports.ViewY = ViewY;
+});
+
+;require.register("ThemeDemo/views/ViewZ.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.ViewZ = void 0;
+
+var _Theme = require("../Theme");
+
+var _Config = require("../../Config");
+
+var _View = require("curvature/base/View");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var ViewZ = /*#__PURE__*/function (_BaseView) {
+  _inherits(ViewZ, _BaseView);
+
+  var _super = _createSuper(ViewZ);
+
+  function ViewZ(args) {
+    var _this;
+
+    _classCallCheck(this, ViewZ);
+
+    _this = _super.call(this, args);
+    _this.template = _Theme.Theme.get(_Config.Config.theme || '').getTemplate(_assertThisInitialized(_this));
+    return _this;
+  }
+
+  return ViewZ;
+}(_View.View);
+
+exports.ViewZ = ViewZ;
+});
+
+;require.register("ThemeDemo/views/ViewZAlpha.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.ViewZAlpha = void 0;
+
+var _ViewZ2 = require("./ViewZ");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var ViewZAlpha = /*#__PURE__*/function (_ViewZ) {
+  _inherits(ViewZAlpha, _ViewZ);
+
+  var _super = _createSuper(ViewZAlpha);
+
+  function ViewZAlpha() {
+    _classCallCheck(this, ViewZAlpha);
+
+    return _super.apply(this, arguments);
+  }
+
+  return ViewZAlpha;
+}(_ViewZ2.ViewZ);
+
+exports.ViewZAlpha = ViewZAlpha;
+});
+
+;require.register("ThemeDemo/views/templateX.html", function(exports, require, module) {
+module.exports = "<div class = \"[[type]]\">X;[[type]]: [[value]]</div>\n"
+});
+
+;require.register("ThemeDemo/views/templateY.html", function(exports, require, module) {
+module.exports = "<div class = \"[[type]]\">Y;[[type]]: [[value]]</div>\n"
+});
+
+;require.register("ThemeDemo/views/templateZ.html", function(exports, require, module) {
+module.exports = "<div class = \"[[type]]\">Z;[[type]]: [[value]]</div>\n"
+});
+
+;require.register("ThemeDemo/views/templateZAlpha.html", function(exports, require, module) {
+module.exports = "<div class = \"[[type]]\">Z𝛼;[[type]]: [[value]]</div>\n"
+});
+
+;require.register("ViewDemo/Samples/Array.html", function(exports, require, module) {
+module.exports = "<p>List:</p>\n\n<ul cv-each = \"list:item:i\">\n\t<li>[[item]]</li>\n</ul>\n"
+});
+
+;require.register("ViewDemo/Samples/Array.jss", function(exports, require, module) {
+module.exports = "const View = require('curvature/base/View').View;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tthis.args.list = ['Milk','Eggs','Bread'];\n\t}\n\n\ttoJson(input)\n\t{\n\t\treturn JSON.stringify(input);\n\t}\n}\n"
+});
+
+;require.register("ViewDemo/Samples/ArrayJson.html", function(exports, require, module) {
+module.exports = "<p>Json:</p>\n<pre>[[list|toJson]]</pre>\n"
+});
+
+;require.register("ViewDemo/Samples/Escape.html", function(exports, require, module) {
+module.exports = "<p>[[time|addItalicTags]]</p>\n<p>[[$time|addItalicTags]]</p>\n"
+});
+
+;require.register("ViewDemo/Samples/HelloWorld.php", function(exports, require, module) {
+module.exports = "<?php\n\necho \"???\\n\";\n"
+});
+
+;require.register("ViewDemo/Samples/Reuse.html", function(exports, require, module) {
+module.exports = "<template cv-template = \"item\">\n\t<li><label><input type = \"checkbox\">[[item]]</label></li>\n</template>\n\n<ol cv-each = \"list:item:i\" cv-slot = \"item\"></ol>\n<ul cv-each = \"list:item:i\" cv-slot = \"item\"></ul>\n"
+});
+
+;require.register("ViewDemo/Samples/Reverse.html", function(exports, require, module) {
+module.exports = "<p>[[time|reverseString]]</p>\n"
+});
+
+;require.register("ViewDemo/Samples/Scalar.html", function(exports, require, module) {
+module.exports = "<p>[[time]]</p>\n"
+});
+
+;require.register("ViewDemo/Samples/Scalar.jss", function(exports, require, module) {
+module.exports = "const View = require('curvature/base/View').View;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tthis.args.time = (new Date()).toISOString();\n\n\t\tthis.onFrame(() => {\n\n\t\t\tthis.args.time = (new Date()).toISOString();\n\n\t\t});\n\t}\n\n\taddItalicTags(input)\n\t{\n\t\treturn `<i>${input}</i>`;\n\t}\n\n\treverseString(input = '')\n\t{\n\t\treturn input.split('').reverse().join('');\n\t}\n}\n"
+});
+
+;require.register("ViewDemo/Samples/TwoWay.html", function(exports, require, module) {
+module.exports = "<input cv-bind = \"val\" placeholder = \"type here...\">\n\n<button cv-on = \"click:random('val')\">random</button>\n\n<button cv-on = \"click:clear('val')\">clear</button>\n\n<p>[[val]]</p>\n"
+});
+
+;require.register("ViewDemo/Samples/TwoWay.jss", function(exports, require, module) {
+module.exports = "const View = require('curvature/base/View').View;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\t\tthis.template = require('template');\n\t\tthis.args.val = '';\n\t}\n\n\trandom()\n\t{\n\t\tthis.args.val = (0xFFFFFF * Math.random()).toString(36);\n\t}\n\n\tclear()\n\t{\n\t\tthis.args.val = '';\n\t}\n}\n"
+});
+
+;require.register("ViewDemo/Samples/document.html", function(exports, require, module) {
+module.exports = "<!DOCTYPE HTML>\n<head>\n\t<style>\n\t\tbody { font-family: courier-new, monospace; line-height: 1.5em; }\n\t</style>\n\t<script src = \"[ORIGIN]/vendor.js\"></script>\n\t<script>require.register('Config', function(exports, require, module) { return module.exports = {}});</script>\n\t<script>require.register('template.html', function(exports, require, module) { return module.exports = `[TEMPLATE]`});</script>\n\t<script src = \"[ORIGIN]/curvature.js\"></script>\n\t<script>document.addEventListener('DOMContentLoaded', () => {\n\t\tconst View = require('curvature/base/View').View;\n\n\t\t[SCRIPT]\n\n\t\tif(typeof DemoView !== 'undefined')\n\t\t{\n\t\t\tconst view = new DemoView;\n\n\t\t\tview.render(document.body);\n\t\t}\n\n\t});</script>\n</head>\n<body>\n</body>\n"
+});
+
+;require.register("ViewDemo/View.js", function(exports, require, module) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.View = void 0;
+
+var _View = require("curvature/base/View");
+
+var _View2 = require("../ArrayDemo/View");
+
+var _View3 = require("../ObjectDemo/View");
+
+var _View4 = require("../Editor/View");
+
+var ace = _interopRequireWildcard(require("brace"));
+
+require("brace/mode/html");
+
+require("brace/mode/php");
+
+require("brace/mode/javascript");
+
+require("brace/theme/monokai");
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var Module = {
+  onRuntimeInitialized: function onRuntimeInitialized() {
+    console.log('WASM Loaded');
+  }
+};
+
+var View = /*#__PURE__*/function (_BaseView) {
+  _inherits(View, _BaseView);
+
+  var _super = _createSuper(View);
+
+  function View() {
+    var _this;
+
+    _classCallCheck(this, View);
+
+    _this = _super.call(this);
+    _this.template = require('./template');
+    window.addEventListener('message', onMessage);
+
+    _this.onRemove(function () {
+      window.removeEventListener('message', onMessage);
+    });
+
+    var editor = _this.args.editor = new _View4.View();
+    editor.args.tabs.js = {
+      title: 'js',
+      file: 'DemoView.js',
+      body: require('./Samples/Scalar.jss'),
+      mode: 'ace/mode/javascript'
+    };
+    editor.args.tabs.html = {
+      title: 'html',
+      file: 'template.html',
+      body: require('./Samples/Scalar.html'),
+      mode: 'ace/mode/html'
+    };
+    editor.refreshCode();
+    var editorTwoWay = _this.args.editorTwoWay = new _View4.View();
+    editorTwoWay.args.tabs.js = {
+      title: 'js',
+      file: 'DemoView.js',
+      body: require('./Samples/TwoWay.jss'),
+      mode: 'ace/mode/javascript'
+    };
+    editorTwoWay.args.tabs.html = {
+      title: 'html',
+      file: 'template.html',
+      body: require('./Samples/TwoWay.html'),
+      mode: 'ace/mode/html'
+    };
+    editorTwoWay.refreshCode();
+
+    var onMessage = function onMessage(event) {
+      console.log(event);
+    };
+
+    var editorReverse = _this.args.editorReverse = new _View4.View();
+    editorReverse.args.tabs.js = {
+      title: 'js',
+      file: 'DemoView.js',
+      body: require('./Samples/Scalar.jss'),
+      mode: 'ace/mode/javascript'
+    };
+    editorReverse.args.tabs.html = {
+      title: 'html',
+      file: 'template.html',
+      body: require('./Samples/Reverse.html'),
+      mode: 'ace/mode/html'
+    };
+    editorReverse.refreshCode();
+    var editorEscape = _this.args.editorEscape = new _View4.View();
+    editorEscape.args.tabs.js = {
+      title: 'js',
+      file: 'DemoView.js',
+      body: require('./Samples/Scalar.jss'),
+      mode: 'ace/mode/javascript'
+    };
+    editorEscape.args.tabs.html = {
+      title: 'html',
+      file: 'template.html',
+      body: require('./Samples/Escape.html'),
+      mode: 'ace/mode/html'
+    };
+    editorEscape.refreshCode();
+    var editorArray = _this.args.editorArray = new _View4.View();
+    editorArray.args.orientation = 'vertical';
+    editorArray.args.tabs.js = {
+      title: 'js',
+      file: 'DemoView.js',
+      body: require('./Samples/Array.jss'),
+      mode: 'ace/mode/javascript'
+    };
+    editorArray.args.tabs.html = {
+      title: 'html',
+      file: 'template.html',
+      body: require('./Samples/Array.html'),
+      mode: 'ace/mode/html'
+    };
+    editorArray.refreshCode();
+    var editorJson = _this.args.editorJson = new _View4.View();
+    editorJson.args.tabs.js = {
+      title: 'js',
+      file: 'DemoView.js',
+      body: require('./Samples/Array.jss'),
+      mode: 'ace/mode/javascript'
+    };
+    editorJson.args.tabs.html = {
+      title: 'html',
+      file: 'template.html',
+      body: require('./Samples/ArrayJson.html'),
+      mode: 'ace/mode/html'
+    };
+    editorJson.refreshCode();
+    var editorReuse = _this.args.editorReuse = new _View4.View();
+    editorReuse.args.tabs.js = {
+      title: 'js',
+      file: 'DemoView.js',
+      body: require('./Samples/Array.jss'),
+      mode: 'ace/mode/javascript'
+    };
+    editorReuse.args.tabs.html = {
+      title: 'html',
+      file: 'template.html',
+      body: require('./Samples/Reuse.html'),
+      mode: 'ace/mode/html'
+    };
+    editorReuse.refreshCode();
+    return _this;
+  }
+
+  _createClass(View, [{
+    key: "addItalicTags",
+    value: function addItalicTags(input) {
+      return "<i>".concat(input, "</i>");
+    }
+  }, {
+    key: "reverseString",
+    value: function reverseString() {
+      var input = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+      return input.split('').reverse().join('');
+    }
+  }, {
+    key: "clear",
+    value: function clear(clearVar) {
+      this.args[clearVar] = '';
+    }
+  }]);
+
+  return View;
+}(_View.View);
+
+exports.View = View;
+});
+
+;require.register("ViewDemo/template.html", function(exports, require, module) {
+module.exports = "<h2>Views Demo</h2>\n<!--\n<h3>PHP</h3>\n\n[[editorPhp]]\n -->\n<h3>Scalar Binding</h3>\n\n<p>Scalars can be bound with double square brackets:</p>\n\n[[editor]]\n\n<h3>Two way binding, Events & Methods</h3>\n\n<p>Two way binding is also supported.</p>\n\n<p>Methods can be bound to events with cv-on.</p>\n\n[[editorTwoWay]]\n\n<h3>Transformations</h3>\n\n<p>Values can also be transformed with methods:</p>\n\n[[editorReverse]]\n\n<h3>Escaping</h3>\n\n<p>HTML is automatically escaped unless \"$\" is used:</p>\n\n[[editorEscape]]\n\n<h3>Arrays & Objects</h3>\n\n<p>Arrays and objects may be looped over with the cv-each attribute:</p>\n\n[[editorArray]]\n\n<h3>Methods</h3>\n\n<p>Values of any type may be transformed by methods:</p>\n\n[[editorJson]]\n\n<h3>Templates</h3>\n\n<p>Reusable templates can be created with the cv-template attribute.</p>\n\n<p>Templates may be reused within the same view with the cv-slot attribute.</p>\n\n[[editorReuse]]\n\n<h2>Lifecycle</h2>\n\n<h4>Construct</h3>\n<h4>On Render</h3>\n<h4>On Attachment</h3>\n<h4>On Detachment</h3>\n<h4>On Final Removal</h3>\n"
+});
+
+;require.register("initialize.js", function(exports, require, module) {
+"use strict";
+
+var _Router = require("curvature/base/Router");
+
+var _RuleSet = require("curvature/base/RuleSet");
+
+var _View = require("./Layout/View");
+
+document.addEventListener('DOMContentLoaded', function () {
+  var view = new _View.View();
+
+  _RuleSet.RuleSet.add('body', view);
+
+  _RuleSet.RuleSet.apply();
+
+  _Router.Router.listen(view);
+});
+});
+
+require.alias("buffer/index.js", "buffer");
+require.alias("process/browser.js", "process");process = require('process');require.register("___globals___", function(exports, require, module) {
+  
+});})();require('___globals___');
+
+
+//# sourceMappingURL=app.js.map

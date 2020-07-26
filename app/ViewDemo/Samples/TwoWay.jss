@@ -11,7 +11,7 @@ class DemoView extends View
 
 	random()
 	{
-		this.args.val = (0xFFFF * Math.random()).toString(36);
+		this.args.val = (0xFFFFFF * Math.random()).toString(36);
 	}
 
 	clear()

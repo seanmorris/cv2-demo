@@ -70,5 +70,7 @@ export class View extends BaseView
 				return new InfiniteView;
 			}
 		};
+
+		this.routes[false] = '404';
 	}
 }

@@ -27,9 +27,4 @@ class DemoView extends View
 		this.args.configQuz = Config.get('quz');
 		this.args.topLvlQuz = TopLvl.quz;
 	}
-
-	toJson(input = '')
-	{
-		return JSON.stringify(input);
-	}
 }
