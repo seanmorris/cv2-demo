@@ -10,16 +10,20 @@ class DemoView extends View
 		this.template = require('template');
 
 		const staticHtml = {
-			title:   'Radio Field'
+			title:   'Static HTML Field'
 			, type:  'html'
 			, value: '<li><b><u>This is static HTML</u></b></li>'
 		};
 
 		const editableHtml = {
-			title:   'Radio Field'
+			title:   'Editable HTML Field'
 			, type:  'html'
-			, value: '<li><b>These</b></li><li><b>Items</b></li><li><b>Are</b></li><li><b>Editable</b></li>'
 			, attrs: { contenteditable: true }
+			, value: `
+			    <li><b>These</b></li>
+			    <li><b>Items</b></li>
+			    <li><b>Are</b></li>
+			    <li><b>Editable</b></li>`
 		};
 
 		this.args.form = new Form({staticHtml, editableHtml});

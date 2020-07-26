@@ -10,11 +10,12 @@
   "license": "Apache-2.0",
   "dependencies": {
     "curvature": "^0.0.53",
-    "php-wasm": "^0.0.1b"
+    "php-wasm": "^0.0.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.8.7",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
     "@babel/preset-env": "^7.0.0",
     "auto-reload-brunch": "^2",
     "babel-brunch": "^7.0.1",

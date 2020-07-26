@@ -1,4 +1,4 @@
-import { View as BaseView   } from 'curvature/base/View';
+import { View as BaseView } from 'curvature/base/View';
 
 import { FormEditor as EditorView } from './FormEditor';
 
@@ -233,6 +233,24 @@ export class View extends BaseView
 		};
 
 		htmlField.refreshCode();
+
+		const html5Fields = this.args.html5Fields = new EditorView;
+
+		html5Fields.args.tabs.js   = {
+			title:  'js'
+			, file: 'DemoView.js'
+			, body: require('./Samples/Html5.jss')
+			, mode: 'ace/mode/javascript'
+		};
+
+		html5Fields.args.tabs.html = {
+			title:  'html'
+			, file: 'template.html'
+			, body: require('./Samples/Html5Form.html')
+			, mode: 'ace/mode/html'
+		};
+
+		html5Fields.refreshCode();
 	}
 
 	postRender()

@@ -19,7 +19,10 @@ exports.paths = {
 };
 
 exports.plugins = {
-  babel: {presets: ['@babel/preset-env']},
+  babel: {
+  	presets: ['@babel/preset-env'],
+  	// plugins:   ["@babel/plugin-proposal-class-properties"]
+  },
   raw: {
 	pattern: /\.(jss|html|php|tmp\.+?)$/,
 	wrapper: content => `module.exports = ${JSON.stringify(content)}`
