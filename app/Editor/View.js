@@ -18,7 +18,7 @@ export class View extends BaseView
 
 		this.multi = false;
 
-		Keyboard.get().keys.bindTo('Control', v => {
+		const kbDebind = Keyboard.get().keys.bindTo('Control', v => {
 
 			this.multi = v > 0;
 
@@ -27,6 +27,8 @@ export class View extends BaseView
 				: 'select';
 
 		});
+
+		this.onRemove(kbDebind);
 
 		this.template = require('./template');
 
@@ -44,10 +46,6 @@ export class View extends BaseView
 		this.args.tabs.bindTo((v,k) => v.name = k);
 		this.args.resultTabs.bindTo((v,k) => v.name = k);
 
-		this.args.twoWay = 'Two way binding!';
-
-		this.refreshCode();
-
 		this.args.time = (new Date).toISOString();
 
 		this.onFrame(() => {
@@ -57,6 +55,8 @@ export class View extends BaseView
 		this.args.showClasses = ['showSplit'];
 
 		this.args.showSplit = 'active';
+
+		this.args.frameSource = '...';
 	}
 
 	postRender(x)
@@ -66,28 +66,8 @@ export class View extends BaseView
 
 		const frame = this.tags.result.element;
 
-		// console.log(x);
-		// console.log(frame.getRootNode());
-		// console.log(frame.contentWindow);
-
-		// console.log(frame.contentWindow.frames[0]);
-
-		// this.onInterval(1000, () => {
-		// 	if(!this.tags.result)
-		// 	{
-		// 		return;
-		// 	}
-
-		// 	const frame = this.tags.result.element;
-
-		// 	frame.contentWindow.frames[0].postMessage(
-		// 		(new Date()).toISOString()
-		// 		, '*'
-		// 	);
-		// });
-
 		this.tags.edit.bindTo((tag, prop) => {
-			if(!tag)
+			if(!tag || this.editors[prop])
 			{
 				return;
 			}
@@ -109,7 +89,7 @@ export class View extends BaseView
 				, scrollbarWidth: 6
 			});
 
-			editor.session.on('change', (newValue) => {
+			const aceChanged = (newValue) => {
 
 				if(tab.readonly)
 				{
@@ -120,7 +100,14 @@ export class View extends BaseView
 
 				this.args.editorStatus  = `Code updated at ${(new Date).toISOString()}`
 				this.args.editorRefresh = 'refresh-enabled';
+			};
 
+			editor.session.on('change', aceChanged);
+
+			this.onRemove(()=>{
+				editor.session.off('change', aceChanged);
+				editor.destroy();
+				delete this.editors[prop];
 			});
 
 			tab.bindTo('body', v => {
@@ -436,6 +423,6 @@ export class View extends BaseView
 
 	escapeQuotes(input)
 	{
-		return String(input).replace(/"/g, '&quot;')
+		return String(input).replace(/"/g, '&quot;');
 	}
 }

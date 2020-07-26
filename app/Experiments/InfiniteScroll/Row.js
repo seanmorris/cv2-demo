@@ -17,7 +17,7 @@ export class Row extends BaseView
 		this.preserve = true;
 	}
 
-	postRender()
+	attached()
 	{
 		const containerTag = this.container.containerTag;
 		const rowTag       = this.findTag('div[data-tag="row"]');

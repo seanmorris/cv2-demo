@@ -4,16 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": [
-      "cp node_modules/php-wasm/php-web.* public/",
-      "cp node_modules/php-wasm/php-web.data public/"
-    ]
+    "postinstall": "cp node_modules/php-wasm/php-web.* docs/"
   },
-  "author": "",
+  "author": "Sean Morris",
   "license": "Apache-2.0",
   "dependencies": {
     "curvature": "^0.0.53",
-    "php-wasm": "^0.0.1"
+    "php-wasm": "^0.0.1b"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
@@ -28,6 +25,6 @@
     "clean-css-brunch": "^3.0.0",
     "codemirror": "^5.54",
     "raw-brunch": "^1.0.2",
-    "uglify-js-brunch": "^2.10.0"
+    "uglify-es-brunch": "^1.0.5"
   }
 }

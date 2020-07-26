@@ -11,7 +11,7 @@ export class View extends BaseView
 
 		this.template = require('./template');
 
-		this.args.rows      = 1000;
+		this.args.rows      = 100000;
 		this.args.rowHeight = 32;
 
 		const list = new List;

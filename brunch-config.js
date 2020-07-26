@@ -1,13 +1,22 @@
 exports.files = {
-  javascripts: {joinTo: {
-  	'app.js': /app\/*/
-  	, 'curvature.js': /node_modules\/curvature\/.+/
-  	, 'vendor.js': /node_modules\/((?!curvature).)+\/.+?/
-  }},
-  stylesheets: {joinTo: 'app.css'}
+
+	javascripts: {
+		joinTo: {
+			'app.js': /app\/*/
+			, 'curvature.js': /node_modules\/curvature\/.+/
+			, 'vendor.js': /node_modules\/((?!curvature).)+\/.+?/
+		}
+	},
+
+	stylesheets: {
+		joinTo: 'app.css'
+	}
+
 };
 
-exports.hooks  = {};
+exports.paths = {
+	public: './docs'
+};
 
 exports.plugins = {
   babel: {presets: ['@babel/preset-env']},

@@ -15,27 +15,15 @@ export class List extends BaseView
 		this.first = null;
 		this.last  = null;
 
+		this.args.max = 666;
+
 		this.changing = false;
-	}
-
-	postRender()
-	{
-		const container = this.container = this.findTag('div[data-tag="container"]');
-
-		container.addEventListener('cvDomAttached', event => {
-
-			if(event.target !== container)
-			{
-				return;
-			}
-
-			this.attached()
-
-		});
 	}
 
 	attached()
 	{
+		this.container = this.findTag('div[data-tag="container"]');
+
 		const container = this.container;
 
 		const shim = document.createElement('div');
@@ -79,7 +67,8 @@ export class List extends BaseView
 
 		this.args.rowHeight = this.args.rowHeight || 32;
 
-		this.updateViewport();
+		this.onNextFrame( ()=>this.updateViewport() );
+
 	}
 
 	updateViewport(event)
@@ -171,7 +160,9 @@ export class List extends BaseView
 				continue;
 			}
 
-			this.args.visible[i] = new Row(this.args.content[i], i, this);
+			const row = new Row(this.args.content[i], i, this);
+
+			this.args.visible[i] = row;
 
 			this.args.visible[i].args.bindTo('content', v => {
 

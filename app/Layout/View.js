@@ -10,6 +10,7 @@ import { View as ChainView } from '../ChainDemo/View';
 import { View as ArrayView } from '../ArrayDemo/View';
 import { View as ObjectView } from '../ObjectDemo/View';
 
+import { View as PhpView } from '../Experiments/Php/View';
 import { View as InfiniteView } from '../Experiments/InfiniteScroll/View';
 
 export class View extends BaseView
@@ -54,6 +55,10 @@ export class View extends BaseView
 
 			, objects: () => {
 				return new ObjectView;
+			}
+
+			, 'php': () => {
+				return new PhpView;
 			}
 
 			, 'infinite-scroll': () => {

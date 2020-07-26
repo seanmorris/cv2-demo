@@ -4,8 +4,6 @@ import { View as ObjectView } from '../ObjectDemo/View';
 
 import { View as EditorView } from '../Editor/View';
 
-import { PhpEditor } from '../FormsDemo/PhpEditor';
-
 const Module = {
 	onRuntimeInitialized: () => {
 		console.log('WASM Loaded');
@@ -26,8 +24,6 @@ export class View extends BaseView
 		super();
 
 		this.template = require('./template');
-
-		this.editors  = {};
 
 		window.addEventListener('message', onMessage);
 
@@ -168,17 +164,6 @@ export class View extends BaseView
 		};
 
 		editorReuse.refreshCode();
-
-		const editorPhp = this.args.editorPhp = new PhpEditor;
-
-		editorPhp.args.tabs.php = {
-			title:  'php'
-			, file: 'HelloWorld.php'
-			, body: require('./Samples/HelloWorld.php')
-			, mode: 'ace/mode/php'
-		};
-
-		editorPhp.refreshCode();
 	}
 
 	addItalicTags(input)

@@ -3,6 +3,11 @@ body {
 	display:        flex;
 }
 
+.navigation {
+	flex-shrink: 0;
+	min-width: 10rem;
+}
+
 .layout {
 	flex-direction: row;
 	flex-grow:      1;
