@@ -210,7 +210,7 @@ export class View extends BaseView
 		hiddenField.args.tabs.html = {
 			title:  'html'
 			, file: 'template.html'
-			, body: require('./Samples/Form.html')
+			, body: require('./Samples/HiddenField.html')
 			, mode: 'ace/mode/html'
 		};
 

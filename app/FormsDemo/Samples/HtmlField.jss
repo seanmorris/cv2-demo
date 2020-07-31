@@ -19,11 +19,11 @@ class DemoView extends View
 			title:   'Editable HTML Field'
 			, type:  'html'
 			, attrs: { contenteditable: true }
-			, value: `
-			    <li><b>These</b></li>
-			    <li><b>Items</b></li>
-			    <li><b>Are</b></li>
-			    <li><b>Editable</b></li>`
+			, value: `<li><b>These</b></li>
+<li><b>Items</b></li>
+<li><b>Are</b></li>
+<li><b>Editable</b></li>
+<li onclick = "this.remove()"><b>This one removes on click!</b></li>`
 		};
 
 		this.args.form = new Form({staticHtml, editableHtml});

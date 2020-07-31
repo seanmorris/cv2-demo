@@ -1,9 +1,16 @@
 <style>
 ul div {display: content};
-label,input:not([type="radio"]),select,textarea{display: block; margin: 0.5em;}
+label,input,textarea {display: block; margin: 0.5em;}
+textarea {width: 100%;}
 </style>
 
-<ul>[[form]]</ul>
+<small>HTML</small>
+<ul>
+    [[form]]
+</ul>
+
+<small>Source</small>
+<textarea rows = "7" cv-bind = "form.fields.editableHtml.args.value"></textarea>
 
 <pre>
 <b>ctrl / ⌘ + b</b>

@@ -92,7 +92,7 @@
 	resize: vertical;
 	overflow: auto;
 	width: 44em;
-	min-height: 26em;
+	min-height: 30em;
 }
 
 .editor-window {
