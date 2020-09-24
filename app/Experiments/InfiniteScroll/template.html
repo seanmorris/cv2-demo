@@ -1,16 +1,69 @@
-<label>
-	Rows: <input cv-bind = "rows" type = "number" min = "0"/>
-</label>
-<label>
-	Row Height ([[rowHeight|leftPad]]):
-	<input cv-bind = "rowHeight" type = "range" max = "100" />
-</label>
+<h2>Experimental Scrollers</h2>
 
-[[list]]
+<p>These scroll boxes automatically remove any DOM elements that are no longer visible to the user. This allows us to make large scrollable boxes without wasting large amounts of computing power on DOM calculations for records that may never become visible.</p>
 
-<!-- <div data-tag = "container" class = "infinite-scroll demo" cv-on = "scroll:containerScrolled(event):p" style = "--rowHeight:[[rowHeight]]px;--shimHeight: [[shimHeight]]px; overflow-y: scroll; position: relative;">
-	<div cv-each  = "visible:row:r">
-		[[row]]
+<div class = "row wide line-up">
+
+	<div class = "wide">
+		<h3>Simple Scroller</h3>
+
+		<p>This scroller uses an array of 1,000,000 integers.</p>
+		<p>Arrays and Record Sources are interchangeable here.</p>
+
+		<div class = "views scroller">
+			[[arrayScroller]]
+		</div>
+
 	</div>
+
+	<div class = "wide">
+
+		<h3>String Scroller</h3>
+
+		<p>This scroller uses a Record Source that returns strings.</p>
+		<p>An array of strings could easily have been used instead of a Record Source.</p>
+
+		<div class = "views scroller">
+			[[stringScroller]]
+		</div>
+
+	</div>
+
+	<div class = "wide">
+
+		<h3>View Scroller</h3>
+
+		<p>This scroller uses a Record Source that returns curvature View objects.</p>
+		<p>There is a 750ms simulated load time when the view is first accessed.</p>
+
+		<div class = "views scroller">
+			[[viewScroller]]
+		</div>
+
+	</div>
+
 </div>
- -->
+
+<h3>Grid Scroller</h3>
+
+<p>This scroller uses CSS grid, and a custom template to simulate a table. Its RecordSource returns plain objects.</p>
+
+<p>The number of records and row height can be altered on the fly as well, this is common to all Scrollers.</p>
+
+<p>Counting both the texboxes & sliders, there are 2,000,002 input fields avaiable below, each mapped to an object in memory.</p>
+
+<div class = "row">
+	<label class = "row">
+		Rows:&nbsp;<input cv-bind = "rows" type = "number" min = "0"/>
+	</label>
+	<span>&nbsp;</span>
+	<label class = "row wide">
+		Row Height [[rowHeight|leftPad]]px:
+		<input cv-bind = "rowHeight" type = "range" max = "100" />
+	</label>
+</div>
+
+<div class = "grid scroller">
+	[[gridScroller]]
+</div>
+

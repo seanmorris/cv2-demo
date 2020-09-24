@@ -12,6 +12,8 @@ import { ViewZ } from './views/ViewZ';
 import { TypeZAlpha } from './types/TypeZAlpha';
 import { ViewZAlpha } from './views/ViewZAlpha';
 
+import { Config } from 'curvature/base/Config';
+
 export class View extends BaseView
 {
 	constructor(args)
@@ -43,6 +45,11 @@ export class View extends BaseView
 		const z = new TypeZ(this);
 		const z𝛼 = new TypeZAlpha(this);
 
-		this.args.views = [x,x,y,z,z𝛼].map(v => alpha.getView(v));
+		this.args.views = [x,y,z,z𝛼].map(v => {
+			const view = alpha.getView(v)
+
+			return view;
+		});
+
 	}
 }

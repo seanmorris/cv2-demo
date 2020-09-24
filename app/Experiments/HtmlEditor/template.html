@@ -1,0 +1,16 @@
+<h2>html editor</h2>
+
+<div
+	class   = "editable"
+	cv-on   = "blur(event)"
+	cv-bind = "$source"
+	cv-ref  = "html"
+	contenteditable = "true"
+></div>
+
+<textarea
+	class   = "editable"
+	cv-on   = "blur(event)"
+	cv-bind = "source"
+	cv-ref  = "source"
+></textarea>

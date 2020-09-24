@@ -3,10 +3,41 @@
 }
 
 h1 {
+	font-weight: normal;
+	font-size: 1.25rem;
+}
+
+.navigation ul li {
+	list-style: none;
+}
+
+.navigation ul {
+	padding: 0;
+	margin-left: 1em;
+	margin-bottom: 1em;
+}
+
+.header {
 	padding: 1rem;
 	margin: 0px;
 	background-color: black;
 	color: white;
+}
+
+.right-bar {
+	background-color: #AAA;
+	min-width: 1em;
+}
+
+.footer {
+	display: flex;
+	background-color: black;
+	color: white;
+	min-height: 8em;
+	align-items: flex-end;
+	padding: 1em;
+	box-sizing: border-box;
+	font-size: 8pt;
 }
 
 .content {

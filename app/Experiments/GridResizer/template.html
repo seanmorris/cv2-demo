@@ -1,0 +1,46 @@
+<h2>grid-resize</h2>
+
+<p>[[rowTemplate]]</p>
+<p>[[colTemplate]]</p>
+
+<p class = "row"><b>--tracksize:</b> <input type = "range" min = "0" max = "100" cv-bind = "trackSize"/></p>
+
+<div
+	class = "grid-resize"
+	style = "
+		--xsize:       calc([[xsize]] * 2);
+		--ysize:       calc([[ysize]] * 2);
+		--tracksize:   [[trackSize]]px;
+		--colTemplate: [[colTemplate]];
+		--rowTemplate: [[rowTemplate]];
+	">
+
+	<span class = "contents">
+		<div class = "box"><img src = "/player-head-180.png" /></div>
+		<div class = "box">2</div>
+		<div class = "box">3</div>
+		<div class = "box">4</div>
+		<div class = "box">5</div>
+		<div class = "box">6</div>
+		<div class = "box">7</div>
+		<div class = "box">8</div>
+		<div class = "box">9</div>
+		<div class = "box">10</div>
+		<div class = "box">11</div>
+		<div class = "box">12</div>
+		<div class = "box">13</div>
+		<div class = "box">14</div>
+		<div class = "box">15</div>
+		<div class = "box">16</div>
+	</span>
+
+	<span class = "contents" cv-on = "mousedown(event)">
+		<div style = "--track:2" data-resize = "h" class = "resizer resizer-h"></div>
+		<div style = "--track:4" data-resize = "h" class = "resizer resizer-h"></div>
+		<div style = "--track:6" data-resize = "h" class = "resizer resizer-h"></div>
+		<div style = "--track:2" data-resize = "v" class = "resizer resizer-v"></div>
+		<div style = "--track:4" data-resize = "v" class = "resizer resizer-v"></div>
+		<div style = "--track:6" data-resize = "v" class = "resizer resizer-v"></div>
+	</span>
+
+</div>

@@ -1,11 +1,44 @@
 body {
 	flex-direction: column;
 	display:        flex;
+	overflow-y:     scroll;
 }
 
 .navigation {
 	flex-shrink: 0;
 	min-width: 10rem;
+	font-size: 10pt;
+	line-height: 13pt;
+	font-weight: bold;
+}
+
+.content {
+	font-size: 10pt;
+}
+
+.header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.header a {
+	color: white;
+	text-decoration: none;
+}
+
+
+.header ul {
+	display: flex;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.header ul li{
+	margin-left: 1em;
+	white-space: nowrap;
 }
 
 .layout {
@@ -18,11 +51,19 @@ body {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
+	margin-right: 4em;
+	margin-bottom: 4em;
 }
 
 .row {
 	display: flex;
 	flex-direction: row;
+	justify-content: space-between;
+}
+
+.col {
+	display: flex;
+	flex-direction: column;
 	justify-content: space-between;
 }
 

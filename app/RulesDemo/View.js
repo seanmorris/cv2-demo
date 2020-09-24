@@ -10,7 +10,25 @@ export class View extends BaseView
 
 		this.template = require('./template');
 
-		this.args.list = [1,2,3];
+		const globalRules = new Editor;
+
+		globalRules.args.tabs.js   = {
+			title:  'js'
+			, file: 'DemoView.js'
+			, body: require('./Samples/Static.jss')
+			, mode: 'ace/mode/javascript'
+		};
+
+		globalRules.args.tabs.html = {
+			title:  'html'
+			, file: 'template.html'
+			, body: require('./Samples/Static.html')
+			, mode: 'ace/mode/html'
+		};
+
+		globalRules.refreshCode();
+
+		this.args.globalRules = globalRules;
 
 		const basic = new Editor;
 
@@ -91,25 +109,5 @@ export class View extends BaseView
 		viewMapper.refreshCode();
 
 		this.args.viewMapper = viewMapper;
-
-		const globalRules = new Editor;
-
-		globalRules.args.tabs.js   = {
-			title:  'js'
-			, file: 'DemoView.js'
-			, body: require('./Samples/Static.jss')
-			, mode: 'ace/mode/javascript'
-		};
-
-		globalRules.args.tabs.html = {
-			title:  'html'
-			, file: 'template.html'
-			, body: require('./Samples/Static.html')
-			, mode: 'ace/mode/html'
-		};
-
-		globalRules.refreshCode();
-
-		this.args.globalRules = globalRules;
 	}
 }

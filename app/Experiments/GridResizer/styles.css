@@ -1,0 +1,45 @@
+.grid-resize {
+	width:  100%;
+	height: 600px;
+	--first-col: 1em;
+	display:     grid;
+	user-select: none;
+	grid-template-rows:    var(--rowTemplate);
+	grid-template-columns: var(--colTemplate);
+	border: 1px solid #888;
+}
+
+.grid-resize .box {
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: bold;
+}
+
+.grid-resize .resizer{
+	background-color: #888;
+
+}
+
+.grid-resize .resizer-h{
+	cursor: col-resize;
+	grid-column-start: var(--track);
+	grid-column-end:   var(--track);
+	grid-row-start:    1;
+	grid-row-end:      var(--ysize);
+	max-height:        100%;
+}
+
+.grid-resize .resizer-v{
+	cursor: row-resize;
+	grid-row-start:    var(--track);
+	grid-row-end:      var(--track);
+	grid-column-start: 1;
+	grid-column-end:   var(--xsize);
+	max-width:         100%;
+}
+
+.contents {
+	display: contents;
+}

@@ -21,7 +21,7 @@ exports.paths = {
 exports.plugins = {
   babel: {
   	presets: ['@babel/preset-env'],
-  	// plugins:   ["@babel/plugin-proposal-class-properties"]
+  	plugins:   ["@babel/plugin-proposal-class-properties"]
   },
   raw: {
 	pattern: /\.(jss|html|php|tmp\.+?)$/,
@@ -29,7 +29,4 @@ exports.plugins = {
   }
 };
 
-exports.watcher = {
-	awaitWriteFinish: true,
-	usePolling: true
-};
+exports.watcher = { awaitWriteFinish: true };

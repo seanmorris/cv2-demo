@@ -2,29 +2,27 @@ import { View as BaseView } from 'curvature/base/View';
 
 export class Row extends BaseView
 {
-	constructor(content, index, container)
+	constructor(args, parent)
 	{
-		super({content, index});
+		super(args, parent);
 
-		this.container = container;
-
-		this.template = require('./row');
-
-		this.visible = true;
-
-		this.args.x = Math.random();
-
+		this.visible  = true;
 		this.preserve = true;
 	}
 
 	attached()
 	{
-		const containerTag = this.container.containerTag;
-		const rowTag       = this.findTag('div[data-tag="row"]');
+		const rowTag = this.tags.row;
+
+		rowTag.style.setProperty('--index', this.args.r);
+
+		rowTag.style.position = 'absolute';
+		rowTag.style.height   = 'var(--rowHeight)';
+		rowTag.style.top      = 'calc(var(--rowHeight) * var(--index))';
 
 		const observer = new IntersectionObserver(
 			(e,o) => this.scrollObserved(e,o)
-			, {root: containerTag}
+			, {root: this.parent.container}
 		);
 
 		observer.observe(rowTag);

@@ -1,18 +1,65 @@
+class ThemeList
+{
+	themes = [];
+
+	constructor(themes)
+	{
+		this.themes.push(...themes);
+	}
+
+	getTemplate(object)
+	{
+		for(const i in this.themes)
+		{
+			const theme = this.themes[i].getTemplate(object);
+
+			if(theme)
+			{
+				return theme;
+			}
+		}
+	}
+
+	getView(object)
+	{
+		for(const i in this.themes)
+		{
+			const theme = this.themes[i].getView(object);
+
+			if(theme)
+			{
+				return theme;
+			}
+		}
+	}
+}
+
 export class Theme
 {
-	static get(key = '')
+	static instances = {};
+
+	static get(...keys)
 	{
-		if(!this.instances)
+		if(keys.length <= 1)
 		{
-			this.instances = {};
+			const key = String(keys[0] || '');
+
+			if(!this.instances[key])
+			{
+				this.instances[key] = new this(key);
+			}
+
+			return this.instances[key];
 		}
 
-		if(!this.instances[key])
+		const themes = [];
+
+		for(const i in keys)
 		{
-			this.instances[key] = new this(key);
+			themes.push( this.get(keys[i]) );
 		}
 
-		return this.instances[key];
+		return new ThemeList(themes);
 	}
 
 	constructor(key)
@@ -82,7 +129,7 @@ export class Theme
 
 		for(const [key, value] of map)
 		{
-			if(type.prototype instanceof key)
+			if(object instanceof key)
 			{
 				result = value;
 			}

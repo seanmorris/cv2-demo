@@ -1,0 +1,16 @@
+[contenteditable=true].editable > * {
+	/*border: 1px solid #888;*/
+}
+
+textarea.editable {
+	resize: vertical;
+}
+
+.editable {
+	width: 100%;
+	border: 1px solid #888;
+	min-height: 16em;
+	padding: 1em;
+	box-sizing: border-box;
+	tab-size: 4;
+}

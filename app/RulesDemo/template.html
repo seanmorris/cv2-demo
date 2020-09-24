@@ -1,4 +1,4 @@
-<h2>Rules</h2>
+<h2>rules</h2>
 
 <p>The most basic rules simply map CSS selectors to callbacks. Whenever a tag matching a rule is encountered, the callback is applied.</p>
 
@@ -6,11 +6,17 @@
 
 [[basic]]
 
+<h3>Global Rules</h3>
+
+<p>The <code>RuleSet.add</code> method may be called statically to add global rules.</p>
+
+[[globalRules]]
+
 <h3>Preprocessing</h3>
 
 <p>If <code>this.preRuleSet.add</code> is used rather than <code>this.ruleSet.add</code>, the rules will be appled BEFORE the template is processed, rather than after.</p>
 
-<p>This allows us <!-- to [[<span>interpolate</span>]] values and--> use cv-* attributes.</p>
+<p>This allows the use of cv-* attributes.</p>
 
 [[preproc]]
 
@@ -25,11 +31,5 @@
 <p>View classes, or instances of them may both be passed instead of a callback. In this case, the view will be rendered <b>inside</b> the existing tag.</p>
 
 [[viewMapper]]
-
-<h3>Global Rules</h3>
-
-<p>The <code>RuleSet.add</code> method may be called statically to add global rules.</p>
-
-[[globalRules]]
 
 <!-- <h3>The RuleSet class <i>per se</i></h3> -->

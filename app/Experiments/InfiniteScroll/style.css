@@ -1,10 +1,101 @@
-.infinite-scroll.main {
-	display: flex;
-	flex-direction: row;
-	margin: auto;
+.scroller {
+	width: 100%;
+	height: 400px;
+	margin-right: auto;
+	border: 1px solid #888;
 }
 
-.infinite-scroll.demo {
-	flex: 1;
-	width: 100%;
+.views.scroller > div > div:not([data-tag=shim]) {
+	padding: 1em;
+	white-space: nowrap;
 }
+
+.wide {
+	flex-grow: 1;
+	width: 100%;
+	box-sizing: border-box;
+	padding: 0em;
+}
+
+.wide > .wide:not(:last-child) {
+	padding-right: 1em;
+}
+
+.grid.scroller > div {
+}
+
+.scroller .table .table-row {
+	width: 100%;
+	display: grid;
+	grid-template-columns: auto repeat(4, 5fr);
+}
+
+.grid.scroller .table .table-row div:first-child {
+	justify-content: center;
+}
+
+.grid.scroller .table .table-row div:nth-child(2) {
+	font-family: monospace;
+}
+
+.grid.scroller .table .table-row div:nth-child(n+3) {
+	justify-content: flex-end;
+}
+
+.grid.scroller .table .table-row div span {
+	display: contents;
+}
+
+.scroller .table .table-row div input {
+	display: block;
+	width: 100%;
+	height: 100%;
+	margin: 0.5em;
+	flex-grow: 1;
+	box-sizing: border-box;
+	border: 1px solid #666;
+}
+
+.scroller input {
+	border: 1px solid #666;
+}
+
+.scroller input:focus {
+	outline: none;
+	border: 1px solid black;
+}
+
+.grid.scroller .table .table-row div:not(:last-child) {
+	border-right: 1px solid #888;
+}
+
+.grid.scroller .table .table-row:not(:last-child) {
+	border-bottom: 1px solid #BBB;
+}
+
+.grid.scroller .table .table-row div {
+	font-size: 12pt;
+	display: flex;
+	align-items: center;
+	padding: 0.25em;
+	min-width: 5em;
+	overflow: hidden;
+}
+
+.grid.scroller .table .table-row.is-header {
+	background-color: #AAA;
+	position: sticky !important;
+	z-index: 1;
+	top: 0;
+}
+
+.line-up > div {
+	display: flex;
+	flex-direction: column;
+}
+
+.line-up > div > :last-child {
+	margin-top: auto;
+}
+
+

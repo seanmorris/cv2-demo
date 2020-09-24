@@ -1,0 +1,35 @@
+<div cv-ref = "list" class = "table">
+
+	<div
+		cv-ref  = "row"
+		cv-with = "row"
+		class   = "table-row [[row.___header]]">
+
+		<div>[[index]]</div>
+
+		<div>[[id]]</div>
+
+		<div>
+			<span cv-if = "___header">
+				title
+			</span>
+			<span cv-if = "!___header">
+				<input type = "text" cv-bind = "title">
+			</span>
+		</div>
+
+		<div>[[value]]</div>
+
+		<div cv-if = "!___header">
+
+			<input
+				type    = "range"
+				min     = "0"
+				max     = "1000000"
+				cv-bind = "value">
+
+		</div>
+
+	</div>
+
+</div>

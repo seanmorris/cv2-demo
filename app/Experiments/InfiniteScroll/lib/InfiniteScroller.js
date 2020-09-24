@@ -1,13 +1,22 @@
 import { View as BaseView } from 'curvature/base/View';
+import { Mixin } from 'curvature/base/Mixin';
 
 import { Row } from './Row';
-export class List extends BaseView
-{
-	constructor()
-	{
-		super();
 
-		this.template = require('./list');
+export class InfiniteScroller extends Mixin.from(BaseView)
+{
+	constructor(args, parent)
+	{
+		super(args, parent);
+
+		this.template = require('./infinite-scroller');
+
+		this.preRuleSet.add('[cv-ref="list"]', ({element}) => {
+
+			element.setAttribute('cv-each', 'visible:row:r');
+			element.setAttribute('cv-view', 'Experiments/InfiniteScroll/lib/Row');
+
+		});
 
 		this.args.visible = [];
 		this.args.content = undefined;
@@ -15,16 +24,41 @@ export class List extends BaseView
 		this.first = null;
 		this.last  = null;
 
-		this.args.max = 666;
-
 		this.changing = false;
+
+		this.args.width  = '100%';
+		this.args.height = '100%';
 	}
 
 	attached()
 	{
-		this.container = this.findTag('div[data-tag="container"]');
+		const container  = this.container = this.tags.list.element;
+		const setHeights = (v,k) => container.style.setProperty(
+			`--${k}`, `${v}px`
+		);
 
-		const container = this.container;
+		this.observer = new IntersectionObserver(
+			(e,o) => this.scrollObserved(e,o)
+			, {root: container}
+		);
+
+		this.args.bindTo('height', v => container.style.height = v);
+		this.args.bindTo('width', v => container.style.height = v);
+
+		container.style.position  = 'relative';
+		container.style.overflowY = 'scroll';
+		container.style.display   = 'block';
+		container.style.width     = '100%';
+
+		this.args.bindTo('rowHeight', setHeights);
+		this.args.bindTo('shimHeight', setHeights);
+
+		this.listen(
+			container
+			, 'scroll'
+			, event => this.updateViewport(event)
+			, {passive: true}
+		);
 
 		const shim = document.createElement('div');
 
@@ -32,6 +66,8 @@ export class List extends BaseView
 		shim.setAttribute('style', `position: absolute;width: 1px;height: var(--shimHeight);pointer-events: none;opacity: 0;`);
 
 		container.append(shim);
+
+		let scrollSnapType = container.style.scrollSnapType;
 
 		this.args.bindTo('rowHeight', (v,k,t) => {
 
@@ -41,7 +77,7 @@ export class List extends BaseView
 
 			if(rows && this.args.rowHeight)
 			{
-				this.args.shimHeight = rows * this.args.rowHeight;
+				this.args.shimHeight = (rows * this.args.rowHeight).toFixed(2);
 			}
 
 			if(this.container)
@@ -52,6 +88,8 @@ export class List extends BaseView
 
 		this.contentDebind = this.args.bindTo('content', (v,k,t) => {
 
+			t[k] = v;
+
 			const rows = v.length ?? 0;
 
 			if(this.args.rowHeight)
@@ -59,11 +97,24 @@ export class List extends BaseView
 				this.args.shimHeight = rows * this.args.rowHeight;
 			}
 
-			t[k] = v;
-
 			this.updateViewport();
 
 		});
+
+		this.args.content.bindTo('length', (v,k,t) => {
+
+			t[k] = v;
+
+			const rows = v ?? 0;
+
+			if(this.args.rowHeight)
+			{
+				this.args.shimHeight = rows * this.args.rowHeight;
+			}
+
+			this.updateViewport();
+
+		}, {wait: 0});
 
 		this.args.rowHeight = this.args.rowHeight || 32;
 
@@ -113,12 +164,14 @@ export class List extends BaseView
 
 		this.changing = true;
 
+		const visible = this.viewLists.visible.views;
+
 		const del = [];
 
-		for(const i in this.args.visible)
+		for(const i in visible)
 		{
 			const index = parseInt(i);
-			const entry = this.args.visible[index];
+			const entry = visible[index];
 
 			if(first === last && last === 0)
 			{
@@ -132,7 +185,7 @@ export class List extends BaseView
 				continue;
 			}
 
-			if(entry && !entry.visible)
+			if(entry && (!entry.visible || entry.removed))
 			{
 				del.unshift(index);
 				continue;
@@ -141,16 +194,23 @@ export class List extends BaseView
 
 		for(const d of del)
 		{
-			this.args.visible[d].remove();
+			if(d === 0)
+			{
+				continue;
+			}
+
+			visible[d].remove();
+
+			delete visible[d];
 			delete this.args.visible[d];
 		}
 
 		for(let i = first; i <= last; i++)
 		{
-			if(this.args.visible[i]
-				&& !this.args.visible[i].removed
-				&&  this.args.visible[i].firstNode
-				&&  this.args.visible[i].firstNode.getRootNode() === document
+			if(visible[i]
+				&& !visible[i].removed
+				&&  visible[i].firstNode
+				&&  visible[i].firstNode.getRootNode() === document
 			){
 				continue;
 			}
@@ -160,16 +220,7 @@ export class List extends BaseView
 				continue;
 			}
 
-			const row = new Row(this.args.content[i], i, this);
-
-			this.args.visible[i] = row;
-
-			this.args.visible[i].args.bindTo('content', v => {
-
-				this.args.content[i] = v;
-
-			});
-
+			this.args.visible[i] = this.args.content[i];
 		};
 
 		this.first = first;

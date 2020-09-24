@@ -1,4 +1,4 @@
-export class Config {
-	// static title = 'cv-playground'
-	static get theme() { return 'alpha' }
+export const Config = {
+	title: 'cv-playground'
+	, theme: 'alpha'
 }

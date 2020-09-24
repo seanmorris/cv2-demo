@@ -1,5 +1,5 @@
 import { Theme } from '../Theme';
-import { Config } from '../../Config';
+import { Config } from 'curvature/base/Config';
 import { View as BaseView } from 'curvature/base/View';
 
 export class ViewY extends BaseView
@@ -8,6 +8,9 @@ export class ViewY extends BaseView
 	{
 		super(args);
 
-		this.template = Theme.get(Config.theme || '').getTemplate(this);
+		const themeName = Config.get('theme') || '';
+		const theme     = Theme.get(theme)
+
+		this.template = theme.getTemplate(this);
 	}
 }
