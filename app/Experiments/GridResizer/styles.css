@@ -9,21 +9,63 @@
 	border: 1px solid #888;
 }
 
+.drag-drop-frame,
 .grid-resize .box {
 	overflow: hidden;
 	display: flex;
+	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 	font-weight: bold;
 }
 
+.grid-resize:not(.dragging) .box > * {
+	cursor: grab;
+}
+
+.grid-resize .box.box-15,
+.grid-resize .box.box-16,
+.grid-resize .box.box-17,
+.grid-resize .box.box-18{
+	background-color: #999;
+}
+
+.grid-resize .box.box-15 > *,
+.grid-resize .box.box-16 > *,
+.grid-resize .box.box-17 > *,
+.grid-resize .box.box-18 > *{
+	cursor: not-allowed;
+	opacity: 0.55;
+}
+
+.drag-drop-frame > div:not(:empty),
+.grid-resize div.box > div:not(:empty) {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color:#600;
+	font-size: 18pt;
+	min-width: 2em;
+	min-height: 2em;
+	color: white;
+	white-space: nowrap;
+	text-shadow: 0.0em 0.15em 4px rgba(0,0,0,1);
+	box-shadow: 0.0em 0.25em 4px rgba(0,0,0,0.5);
+}
+
+.drag-drop-frame,
+.grid-resize .box {
+	/*cursor: grab;*/
+	text-align: center;
+	font-size: 10pt;
+}
+
 .grid-resize .resizer{
 	background-color: #888;
-
 }
 
 .grid-resize .resizer-h{
-	cursor: col-resize;
+	background-color:  rgba(0,0,0,0.45);
 	grid-column-start: var(--track);
 	grid-column-end:   var(--track);
 	grid-row-start:    1;
@@ -31,8 +73,16 @@
 	max-height:        100%;
 }
 
+.grid-resize:not(.dragging) .resizer-h{
+	background-color:  rgba(25,0,0,0.45);
+	cursor:            col-resize;
+}
+
 .grid-resize .resizer-v{
-	cursor: row-resize;
+	display: grid;
+	grid-template-columns: var(--colTemplate);
+	grid-template-rows:    1fr;
+	background-color:  rgba(0,0,0,0.45);
 	grid-row-start:    var(--track);
 	grid-row-end:      var(--track);
 	grid-column-start: 1;
@@ -40,6 +90,66 @@
 	max-width:         100%;
 }
 
+.grid-resize.dragging .resizer-vh{
+	background-color:  rgba(0,0,0,0.15);
+}
+
+.grid-resize:not(.dragging) .resizer-v{
+	background-color:  rgba(0,0,25,0.45);
+	cursor:            row-resize;
+}
+
+.grid-resize .resizer-vh{
+	grid-row-start:    1;
+	grid-row-end:      1;
+	grid-column-start: var(--track);
+	grid-column-end:   var(--track);
+	max-width:         100%;
+}
+
+.grid-resize:not(.dragging) .resizer-vh{
+	border:            1px solid #888;
+	box-shadow:        0px 0px 4px #FFF;
+	cursor:            move;
+	background:        red;
+}
+
+.grid-resize:not(.dragging) .resizer-v:last-of-type .resizer-vh,
+.grid-resize:not(.dragging) :not(.resizer-v) + .resizer-v .resizer-vh{
+	cursor: ns-resize;
+	background: #393;
+}
+
+.grid-resize:not(.dragging) .resizer-v .resizer-vh:last-of-type,
+.grid-resize:not(.dragging) .resizer-v .resizer-vh:first-of-type{
+	cursor: ew-resize;
+	background: #33F;
+}
+
+.grid-resize:not(.dragging) .resizer-v:last-of-type .resizer-vh:last-child,
+.grid-resize:not(.dragging) :not(.resizer-v) + .resizer-v .resizer-vh:first-child{
+	background: #FFF;
+	cursor: nwse-resize;
+}
+
+.grid-resize:not(.dragging) .resizer-v:last-of-type .resizer-vh:first-child,
+.grid-resize:not(.dragging) :not(.resizer-v) + .resizer-v .resizer-vh:last-child{
+	background: #000;
+	cursor: nesw-resize;
+}
+
 .contents {
 	display: contents;
+}
+
+.drag-drop-frame:empty {
+	display: none;
+}
+
+.drag-drop-frame:hover {
+	opacity: 0.5;
+}
+
+.list-preview {
+	font-size: 14pt;
 }

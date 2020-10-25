@@ -1,16 +1,59 @@
 <h2>html editor</h2>
 
-<div
-	class   = "editable"
-	cv-on   = "blur(event)"
-	cv-bind = "$source"
-	cv-ref  = "html"
-	contenteditable = "true"
-></div>
+<div class = "html-editor">
+	<textarea
+		class   = "editable"
+		cv-on   = "blur(event)"
+		cv-bind = "source"
+		cv-ref  = "source"
+	></textarea>
 
-<textarea
-	class   = "editable"
-	cv-on   = "blur(event)"
-	cv-bind = "source"
-	cv-ref  = "source"
-></textarea>
+	<div class = "selections" cv-each = "selections:selection:s">
+		<div style = "
+			position: absolute;
+			left: [[selection.left]]px;
+			top: [[selection.top]]px;
+			width: [[selection.width]]px;
+			height: [[selection.height]]px;
+			background-color: rgba(255,0,0,0.25);
+			pointer-events: none;
+		"></div>
+	</div>
+
+	<div
+		class   = "editable"
+		cv-on   = "blur(event);click(event)"
+		cv-bind = "$source"
+		cv-ref  = "html"
+		contenteditable = "true"
+	></div>
+
+	<div class = "html-editor-live editable">
+		[[vv]]
+	</div>
+
+	<div class = "properties" cv-if = "selected">
+		<h3>Tag Name</h3>
+		[[tagName]]<br />
+		<h3>Attributes</h3>
+		<ul>
+			<span class = "contents" cv-each = "attributes:attribute:a">
+				<li>
+					[[attribute.name]]: <input cv-bind = "attribute.value">
+					<button cv-on = "click:removeAttr(attribute)">✘</button>
+				</li>
+			</span>
+			<li>
+				<span cv-if = "!adding">
+					<button cv-on = "click:newAttribute()">+</button>
+				</span>
+				<span cv-if = "adding">
+					<input cv-bind = "newAttrName" placeholder="new attribute name...">
+					<input cv-bind = "newAttrValue" placeholder="new attribute name...">
+					<button cv-on = "click:addAttribute()">✔</button>
+				</span>
+			</li>
+		</ul>
+
+	</div>
+</div>

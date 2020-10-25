@@ -1,0 +1,61 @@
+.models-demo [contenteditable] {
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	background-color: #BBB;
+}
+
+.models-demo pre{
+	line-height: 1.5em;
+}
+
+.models-demo [contenteditable]:focus {
+	outline: none;
+}
+
+.prop-remove {
+	cursor: pointer;
+}
+
+.remove-id, .remove-class {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.model-editor {
+	border: 1px solid black;
+	display: inline-block;
+}
+
+.model-editor .new-property {
+	display: flex;
+	border-bottom: 1px solid black;
+}
+
+.model-editor input {
+	flex: 1;
+}
+
+.model-editor button {
+	cursor: pointer;
+	background-color: #BBB;
+}
+
+.model-editor input,
+.model-editor button {
+	margin: 0px;
+	border: none;
+}
+
+.model-editor pre {
+	display: flex;
+	flex-direction: column;
+	margin: 1em;
+}
+
+.models-demo .row {
+	justify-content: flex-start;
+}
+
+.models-demo .row > * {
+	margin-right: 1em;
+}

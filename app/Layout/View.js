@@ -1,4 +1,4 @@
-import { View as BaseView   } from 'curvature/base/View';
+import { View as BaseView } from 'curvature/base/View';
 
 export class View extends BaseView
 {

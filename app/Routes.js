@@ -12,6 +12,7 @@ import { View as ScalarView } from 'ScalarDemo/View';
 import { View as ChainView  } from 'ChainDemo/View';
 import { View as ArrayView  } from 'ArrayDemo/View';
 import { View as ObjectView } from 'ObjectDemo/View';
+import { View as ModelsView } from 'ModelsDemo/View';
 
 import { View as InfiniteView } from 'Experiments/InfiniteScroll/View';
 import { View as HtmlEditor   } from 'Experiments/HtmlEditor/View';
@@ -65,6 +66,10 @@ export const Routes = {
 
 	, objects: () => {
 		return new ObjectView;
+	}
+
+	, models: () => {
+		return new ModelsView;
 	}
 
 	, 'php': () => {

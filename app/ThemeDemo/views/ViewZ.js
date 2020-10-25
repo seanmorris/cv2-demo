@@ -9,7 +9,9 @@ export class ViewZ extends BaseView
 		super(args);
 
 		const themeName = Config.get('theme') || '';
-		const theme     = Theme.get(theme)
+		const theme     = Theme.get(theme);
+
+		this.args.vName = 'Z';
 
 		this.template = theme.getTemplate(this);
 	}

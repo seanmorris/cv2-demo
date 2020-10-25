@@ -1,16 +1,45 @@
+.html-editor {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
 [contenteditable=true].editable > * {
 	/*border: 1px solid #888;*/
 }
 
 textarea.editable {
 	resize: vertical;
+	display: block;
 }
 
 .editable {
 	width: 100%;
 	border: 1px solid #888;
-	min-height: 16em;
+	min-height: 12em;
 	padding: 1em;
 	box-sizing: border-box;
 	tab-size: 4;
+}
+
+
+.editable :focus {
+	background-color: red;
+}
+
+.html-editor > * {
+	margin-bottom: 0.25em;
+}
+
+.selections {
+	overflow: visible;
+	height: 0;
+	width: 0;
+	margin: 0;
+	padding: 0;
+}
+
+.html-editor-live {
+	border: 1px solid #888;
+	padding: 1em;
 }

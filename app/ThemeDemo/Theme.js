@@ -117,10 +117,10 @@ export class Theme
 			object = object.___object___;
 		}
 
-		const type = object.constructor;
+		const type = object.__proto__.constructor;
 		const map  = this[whichMap];
 
-		if(map.has(type))
+		if(map.has(type, object))
 		{
 			return map.get(type);
 		}

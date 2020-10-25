@@ -5,15 +5,15 @@ body {
 }
 
 .navigation {
+	font-size: 11pt;
 	flex-shrink: 0;
 	min-width: 10rem;
-	font-size: 10pt;
 	line-height: 13pt;
 	font-weight: bold;
 }
 
 .content {
-	font-size: 10pt;
+	font-size: 13pt;
 }
 
 .header {
@@ -59,6 +59,14 @@ body {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
+}
+
+.start {
+	justify-content: flex-start;
+}
+
+.end {
+	justify-content: flex-end;
 }
 
 .col {

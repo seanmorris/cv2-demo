@@ -12,10 +12,8 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 		this.template = require('./infinite-scroller');
 
 		this.preRuleSet.add('[cv-ref="list"]', ({element}) => {
-
 			element.setAttribute('cv-each', 'visible:row:r');
 			element.setAttribute('cv-view', 'Experiments/InfiniteScroll/lib/Row');
-
 		});
 
 		this.args.visible = [];

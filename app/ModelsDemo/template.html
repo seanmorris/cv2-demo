@@ -1,0 +1,38 @@
+<div class="models-demo">
+
+	<h2>models</h2>
+
+	<p>Models are simple objects, with some light tooling to make them simple to populate. They will also use the <b>class</b> and <b>id</b> properties to ensure that each model only gets a single reference.</p>
+
+	<div class = "row">
+
+
+		<div class = "model-editor">
+			<div class = "new-property">
+				<button cv-on = "click:loadModel">Click here to load this model.</button>
+			</div>
+<pre>model = Model.from({
+<span>  id: <span cv-bind = "newId" contenteditable="true"></span>,</span>
+<span>  class: <span cv-bind = "newClass" contenteditable="true"></span>,</span>});</pre>
+		</div>
+		<span cv-if = "model">
+			<div class = "model-editor">
+				<div class = "new-property">
+					<input cv-bind = "newField" placeholder="new property">
+					<button cv-on = "click:addKey(newField)">+</button>
+				</div>
+
+<pre>{
+<span cv-each = "model:value:property">  <span class = "prop-remove remove-[[property]]" cv-on = "click:removeKey(property)">✕</span> [[property]]: <span cv-bind = "value" contenteditable="true"></span>,
+</span>};</pre>
+
+
+			</div>
+		</span>
+	</div>
+
+	<h3>Database Objects</h3>
+
+	<h3>Record Set Objects</h3>
+
+</div>

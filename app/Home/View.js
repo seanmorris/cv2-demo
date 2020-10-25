@@ -1,4 +1,6 @@
-import { View as BaseView   } from 'curvature/base/View';
+import { Database } from 'curvature/model/Database';
+import { View as BaseView } from 'curvature/base/View';
+
 export class View extends BaseView
 {
 	constructor()
