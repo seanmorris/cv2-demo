@@ -21,6 +21,9 @@ import { QuintInOut } from 'curvature/animate/ease/QuintInOut';
 
 import { ElasticOut } from 'curvature/animate/ease/ElasticOut';
 
+import { SineIn  } from 'curvature/animate/ease/SineIn';
+import { SineOut } from 'curvature/animate/ease/SineOut';
+
 import { Row } from './Row';
 
 export class InfiniteScroller extends Mixin.from(BaseView)
@@ -43,7 +46,12 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 		this.first = null;
 		this.last  = null;
 
-		this.changing = false;
+		this.changing   = false;
+		this.lastScroll = false;
+		this.speed      = 0;
+		this.topSpeed   = 0;
+
+		this.args.topSpeed = 0;
 
 		this.args.width  = '100%';
 		this.args.height = '100%';
@@ -69,9 +77,9 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 	attached()
 	{
 		const container  = this.container = this.tags.list.element;
-		const setHeights = (v,k) => container.style.setProperty(
-			`--${k}`, `${v}px`
-		);
+		const setHeights = (v,k) => {
+			container.style.setProperty(`--${k}`, `${v}px`)
+		};
 
 		this.args.bindTo('height', v => container.style.height = v);
 		this.args.bindTo('width', v => container.style.height = v);
@@ -167,11 +175,26 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 		let first   = Math.floor(start / this.args.rowHeight);
 		let last    = Math.ceil(fold / this.args.rowHeight);
 
-		if(this.ease && !this.ease.done)
+		const lastScroll = {time: Date.now(), pos: start};
+		
+		this.onTimeout(100, ()=>{
+			const timeDiff = Date.now() - lastScroll.time
+			const posDiff  = container.scrollTop - start;
+
+			this.speed = posDiff / (timeDiff / 100);
+			this.args.speed = this.speed.toFixed(2);
+		});
+		
+		if(this.snapper && !this.snapper.done)
 		{
-			this.ease.cancel();
-			this.framesDone && this.framesDone();
-			this.framesDone = false;
+			this.snapper.cancel();
+			this.snapperDone && this.snapperDone();
+			this.snapperDone = false;
+			
+			if(this.scrollFrame)
+			{
+				cancelAnimationFrame(this.scrollFrame);
+			}
 		}
 
 		this.args.scrollTop = start;
@@ -188,14 +211,9 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 
 		this.setVisible(first, last);
 
-		if(this.scrollFrame)
-		{
-			cancelAnimationFrame(this.scrollFrame);
-		}
-
 		if(start === 0)
 		{
-			container.style.setProperty('--scrollOffset', `0px`);
+			container.style.setProperty('--snapperOffset', `0px`);
 			return;
 		}
 
@@ -215,37 +233,36 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 			return;
 		}
 
-		if(Math.abs(diff) > 8)
+		if(Math.abs(diff) > 5)
 		{
-			this.ease = new ElasticOut(duration * 8, {repeat: 1, friction: 0.25});
+			this.snapper = new ElasticOut(duration * 8, {repeat: 1, friction: 0.25});
 		}
 		else
 		{
-			this.ease = new QuadOut(duration * 0.5, {repeat: 1});
+			this.snapper = new Linear(duration * 0.5, {repeat: 1});
 		}
 
-		this.framesDone = this.onFrame(()=>{
-			const offset = Math.round(this.ease.current() * diff);
-			container.style.setProperty('--scrollOffset', `${-1*offset}px`);
+		this.snapperDone = this.onFrame(()=>{
+			const offset = Math.round(this.snapper.current() * diff);
+			container.style.setProperty('--snapperOffset', `${-1*offset}px`);
 		});
 
-		this.ease.then(elapsed => {
-			container.style.setProperty('--scrollOffset', `0px`);
+		this.snapper.then(elapsed => {
+			container.style.setProperty('--snapperOffset', `0px`);
 			container.scrollTop = groove;
-			this.framesDone && this.framesDone();
-			this.framesDone = false;
+			this.snapperDone && this.snapperDone();
+			this.snapperDone = false;
 		}).catch(elapsed => {
-			if(elapsed > 0.5)
+			if(Math.abs(this.topSpeed) <= 100 && elapsed > 0.5)
 			{
-				const offset = Math.round(this.ease.current() * diff);
-				container.style.setProperty('--scrollOffset', `${-1*offset}px`);
+				const offset = Math.round(this.snapper.current() * diff);
+				container.style.setProperty('--snapperOffset', `${-1*offset}px`);
 				container.scrollTop = groove;
 			}
-		}).finally(() => {
 		});
 
 		this.scrollFrame = requestAnimationFrame(()=>{
-			this.ease.start();
+			this.snapper.start();
 		});
 	}
 
@@ -261,9 +278,17 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 			return;
 		}
 
+		if(!this.tags.list)
+		{
+			return;
+		}
+
+		const listTag     = this.tags.list;
+		const visibleList = this.viewLists.get(listTag.element);
+
 		this.changing = true;
 
-		const visible = this.viewLists.visible.views;
+		const visible = visibleList.views;
 
 		const del = [];
 

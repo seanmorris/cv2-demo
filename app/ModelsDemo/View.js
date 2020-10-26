@@ -93,7 +93,7 @@ export class View extends BaseView
 	loadModel()
 	{
 		this.args.model = Model.from({
-			id: this.args.newId
+			id: String(this.args.newId).trim()
 			, class: this.args.newClass
 		});
 	}

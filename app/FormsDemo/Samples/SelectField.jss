@@ -12,6 +12,7 @@ class DemoView extends View
 		const field = {
 			title:   'Select Field'
 			, type:  'select'
+			, value: 3
 			, options: {
 				'Select One': null
 				, 'Red':   1

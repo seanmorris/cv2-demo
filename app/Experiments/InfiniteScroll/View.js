@@ -11,6 +11,14 @@ import { SliderRecords } from './sliders/SliderRecords';
 import { Ease    } from 'curvature/animate/Ease';
 import { Linear  } from 'curvature/animate/ease/Linear';
 
+import { GeoIn  }   from 'curvature/animate/ease/GeoIn';
+import { GeoOut }   from 'curvature/animate/ease/GeoOut';
+// import { GeoInOut } from 'curvature/animate/ease/GeoInOut';
+
+import { SineIn  }   from 'curvature/animate/ease/SineIn';
+import { SineOut }   from 'curvature/animate/ease/SineOut';
+import { SineInOut } from 'curvature/animate/ease/SineInOut';
+
 import { QuadIn  } from 'curvature/animate/ease/QuadIn';
 import { QuadOut } from 'curvature/animate/ease/QuadOut';
 import { QuadInOut } from 'curvature/animate/ease/QuadInOut';
@@ -73,14 +81,16 @@ export class View extends BaseView
 
 		const friction = 0.1;
 
-		const easeIn = new ElasticOut(750, {
+		const easeIn = new SineOut(750, {
 			friction:  0.35
+			, power:   5
 			, reverse: 0
 			, repeat:  1
 		});
 
-		const easeOut = new CubicInOut(750, {
+		const easeOut = new SineIn(750, {
 			reverse:  1
+			, power:  1
 			, repeat: 1
 		});
 

@@ -48,3 +48,9 @@ h1 {
 html {
 	font-family: 'Inconsolata', monospace;
 }
+
+pre, code {
+	font-family: 'Courier Prime', monospace;
+	font-weight: bold;
+	font-size: 11pt;
+}

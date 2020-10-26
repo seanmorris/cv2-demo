@@ -36,7 +36,7 @@
 		<h3>View Scroller</h3>
 
 		<p>This scroller uses a RecordSet that returns curvature View objects.</p>
-		<p>There is a 750ms simulated load time when the view is first accessed.</p>
+		<p>There is a 250ms simulated load time when the view is first accessed.</p>
 
 		<div class = "views scroller">
 			[[viewScroller]]
@@ -54,23 +54,32 @@
 
 <p>Counting both the texboxes & sliders, there are 2,000,002 input fields avaiable below, each mapped to an object in memory.</p>
 
-<div class = "row">
-	<label class = "row">
-		Rows:&nbsp;<input cv-bind = "rows" type = "number" min = "0"/>
-	</label>
-	<span>&nbsp;</span>
-	<label class = "row wide">
-		<div>
-			Row Height [[rowHeight|leftPad]]px:
-			<input cv-bind = "rowHeight" type = "range" max = "100" />
-		</div>
-			Pos: [[gridScroller.args.scrollTop]]
-		<div>
-		</div>
-	</label>
+<div class = "row wide">
+	<div class = "row wide">
+		<label>
+			<p>Rows:&nbsp;<input cv-bind = "rows" type = "number" min = "0"/></p>
+		</label>
+	</div>
+	<div class = "row wide">
+		<label>
+			<p>
+				Row Height [[rowHeight|leftPad]]px
+				<input cv-bind = "rowHeight" type = "range" max = "100" />
+			</p>
+		</label>
+	</div>
 </div>
 
 <div class = "grid scroller">
 	[[gridScroller]]
+</div>
+
+<div class = "row wide">
+	<div class = "row wide">
+		Position: [[gridScroller.args.scrollTop]]
+	</div>
+	<div class = "row wide">
+		Speed: [[gridScroller.args.speed]] px/s
+	</div>
 </div>
 

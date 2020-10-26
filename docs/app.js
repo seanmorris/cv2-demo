@@ -2041,7 +2041,7 @@ module.exports = "<div class = \"drag-drop-stage\" cv-ref = \"stage\">\n\t<div c
 });
 
 ;require.register("Experiments/GridResizer/template.html", function(exports, require, module) {
-module.exports = "<h2>grid-tools</h2>\n\n<p>Grid tools implements one dimensional resize on tracks and two-dimensional on intersections. It also re-sorts its source array on drag & drop.</p>\n\n<p cv-view = \"curvature/base/View\" class = \"list-preview\">\n<span class = \"contents\" cv-each = \"list:item:index\">\n\t<u>'[[item]]'</u>\n</span>\n</p>\n\n<p class = \"row\">track width: <input type = \"range\" min = \"0\" max = \"100\" cv-bind = \"trackSize\"/> [[trackSize]]px</p>\n\n<div\n\tclass = \"grid-resize [[dragging]]\"\n\tstyle = \"\n\t\t--xsize:       calc([[xsize]] * 2);\n\t\t--ysize:       calc([[ysize]] * 2);\n\t\t--tracksize:   [[trackSize]]px;\n\t\t--colTemplate: [[colTemplate]];\n\t\t--rowTemplate: [[rowTemplate]];\n\t\">\n\n\t<span class = \"contents\" cv-each = \"list:item:index\">\n\t\t<div\n\t\t\tclass = \"box box-[[index]]\"\n\t\t\tcv-on = \"\n\t\t\t\tcvDragDrop:stopdrop(event, $tag, index)c;\n\t\t\t\tcvDragGrab:stopdrop(event, $tag, index);\n\t\t\t\tcvDragHover:hover(event, $tag, index);\n\t\t\t\tcvDragUnhover:unhover(event, $tag, index);\n\t\t\t\tmousedown:drag(event, $tag, index)c;\n\t\t\t\tmouseup:drop(event, $tag, index)c;\n\t\t\t\"\n\t\t><div style = \"--index:[[index]]\">[[item]]</div></div>\n\t</span>\n\n\t<span class = \"contents\" cv-on = \"mousedown(event);mousemove(event)c;\">\n\t\t<div style = \"--track:2\" data-resize = \"h\" class = \"resizer resizer-h\"></div>\n\t\t<div style = \"--track:4\" data-resize = \"h\" class = \"resizer resizer-h\"></div>\n\t\t<div style = \"--track:6\" data-resize = \"h\" class = \"resizer resizer-h\"></div>\n\t\t<div style = \"--track:8\" data-resize = \"h\" class = \"resizer resizer-h\"></div>\n\t\t<div style = \"--track:2\" data-resize = \"v\" class = \"resizer resizer-v\">\n\t\t\t<div style = \"--track:2\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:4\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:6\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:8\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t</div>\n\t\t<div style = \"--track:4\" data-resize = \"v\" class = \"resizer resizer-v\">\n\t\t\t<div style = \"--track:2\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:4\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:6\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:8\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t</div>\n\t\t<div style = \"--track:6\" data-resize = \"v\" class = \"resizer resizer-v\">\n\t\t\t<div style = \"--track:2\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:4\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:6\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:8\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t</div>\n\t\t<div style = \"--track:8\" data-resize = \"v\" class = \"resizer resizer-v\">\n\t\t\t<div style = \"--track:2\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:4\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:6\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:8\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t</div>\n\t</span>\n\n</div>\n\n<p>[[rowTemplate]]</p>\n<p>[[colTemplate]]</p>\n"
+module.exports = "<h2>grid-tools</h2>\n\n<p>Grid tools implements one dimensional resize on tracks and two-dimensional on intersections. It also re-sorts its source array on drag & drop.</p>\n\n<p class = \"list-preview\">\n\t<span class = \"contents\" cv-each = \"list:item:index\">\n\t\t<u>'[[item]]'</u>\n\t</span>\n</p>\n\n<p class = \"row\">track width: <input type = \"range\" min = \"0\" max = \"100\" cv-bind = \"trackSize\"/> [[trackSize]]px</p>\n\n<div\n\tclass = \"grid-resize [[dragging]]\"\n\tstyle = \"\n\t\t--xsize:       calc([[xsize]] * 2);\n\t\t--ysize:       calc([[ysize]] * 2);\n\t\t--tracksize:   [[trackSize]]px;\n\t\t--colTemplate: [[colTemplate]];\n\t\t--rowTemplate: [[rowTemplate]];\n\t\">\n\n\t<span class = \"contents\" cv-each = \"list:item:index\">\n\t\t<div\n\t\t\tclass = \"box box-[[index]]\"\n\t\t\tcv-on = \"\n\t\t\t\tcvDragDrop:stopdrop(event, $tag, index)c;\n\t\t\t\tcvDragGrab:stopdrop(event, $tag, index);\n\t\t\t\tcvDragHover:hover(event, $tag, index);\n\t\t\t\tcvDragUnhover:unhover(event, $tag, index);\n\t\t\t\tmousedown:drag(event, $tag, index)c;\n\t\t\t\tmouseup:drop(event, $tag, index)c;\n\t\t\t\"\n\t\t><div style = \"--index:[[index]]\">[[item]]</div></div>\n\t</span>\n\n\t<span class = \"contents\" cv-on = \"mousedown(event);mousemove(event)c;\">\n\t\t<div style = \"--track:2\" data-resize = \"h\" class = \"resizer resizer-h\"></div>\n\t\t<div style = \"--track:4\" data-resize = \"h\" class = \"resizer resizer-h\"></div>\n\t\t<div style = \"--track:6\" data-resize = \"h\" class = \"resizer resizer-h\"></div>\n\t\t<div style = \"--track:8\" data-resize = \"h\" class = \"resizer resizer-h\"></div>\n\t\t<div style = \"--track:2\" data-resize = \"v\" class = \"resizer resizer-v\">\n\t\t\t<div style = \"--track:2\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:4\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:6\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:8\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t</div>\n\t\t<div style = \"--track:4\" data-resize = \"v\" class = \"resizer resizer-v\">\n\t\t\t<div style = \"--track:2\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:4\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:6\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:8\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t</div>\n\t\t<div style = \"--track:6\" data-resize = \"v\" class = \"resizer resizer-v\">\n\t\t\t<div style = \"--track:2\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:4\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:6\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:8\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t</div>\n\t\t<div style = \"--track:8\" data-resize = \"v\" class = \"resizer resizer-v\">\n\t\t\t<div style = \"--track:2\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:4\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:6\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:8\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t</div>\n\t</span>\n\n</div>\n\n<p>[[rowTemplate]]</p>\n<p>[[colTemplate]]</p>\n"
 });
 
 ;require.register("Experiments/HtmlEditor/View.js", function(exports, require, module) {
@@ -2273,6 +2273,16 @@ var _Ease = require("curvature/animate/Ease");
 
 var _Linear = require("curvature/animate/ease/Linear");
 
+var _GeoIn = require("curvature/animate/ease/GeoIn");
+
+var _GeoOut = require("curvature/animate/ease/GeoOut");
+
+var _SineIn = require("curvature/animate/ease/SineIn");
+
+var _SineOut = require("curvature/animate/ease/SineOut");
+
+var _SineInOut = require("curvature/animate/ease/SineInOut");
+
 var _QuadIn = require("curvature/animate/ease/QuadIn");
 
 var _QuadOut = require("curvature/animate/ease/QuadOut");
@@ -2362,13 +2372,15 @@ var View = /*#__PURE__*/function (_BaseView) {
     _this.args.viewScroller = new _InfiniteScroller.InfiniteScroller();
     _this.args.viewScroller.args.content = new _Records.Records();
     var friction = 0.1;
-    var easeIn = new _ElasticOut.ElasticOut(750, {
+    var easeIn = new _SineOut.SineOut(750, {
       friction: 0.35,
+      power: 5,
       reverse: 0,
       repeat: 1
     });
-    var easeOut = new _CubicInOut.CubicInOut(750, {
+    var easeOut = new _SineIn.SineIn(750, {
       reverse: 1,
+      power: 1,
       repeat: 1
     });
 
@@ -2453,6 +2465,10 @@ var _QuintInOut = require("curvature/animate/ease/QuintInOut");
 
 var _ElasticOut = require("curvature/animate/ease/ElasticOut");
 
+var _SineIn = require("curvature/animate/ease/SineIn");
+
+var _SineOut = require("curvature/animate/ease/SineOut");
+
 var _Row = require("./Row");
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -2502,6 +2518,10 @@ var InfiniteScroller = /*#__PURE__*/function (_Mixin$from) {
     _this.first = null;
     _this.last = null;
     _this.changing = false;
+    _this.lastScroll = false;
+    _this.speed = 0;
+    _this.topSpeed = 0;
+    _this.args.topSpeed = 0;
     _this.args.width = '100%';
     _this.args.height = '100%';
     _this.args.scrollTop = 0;
@@ -2529,7 +2549,7 @@ var InfiniteScroller = /*#__PURE__*/function (_Mixin$from) {
       var container = this.container = this.tags.list.element;
 
       var setHeights = function setHeights(v, k) {
-        return container.style.setProperty("--".concat(k), "".concat(v, "px"));
+        container.style.setProperty("--".concat(k), "".concat(v, "px"));
       };
 
       this.args.bindTo('height', function (v) {
@@ -2610,11 +2630,25 @@ var InfiniteScroller = /*#__PURE__*/function (_Mixin$from) {
       var fold = start + space;
       var first = Math.floor(start / this.args.rowHeight);
       var last = Math.ceil(fold / this.args.rowHeight);
+      var lastScroll = {
+        time: Date.now(),
+        pos: start
+      };
+      this.onTimeout(100, function () {
+        var timeDiff = Date.now() - lastScroll.time;
+        var posDiff = container.scrollTop - start;
+        _this3.speed = posDiff / (timeDiff / 100);
+        _this3.args.speed = _this3.speed.toFixed(2);
+      });
 
-      if (this.ease && !this.ease.done) {
-        this.ease.cancel();
-        this.framesDone && this.framesDone();
-        this.framesDone = false;
+      if (this.snapper && !this.snapper.done) {
+        this.snapper.cancel();
+        this.snapperDone && this.snapperDone();
+        this.snapperDone = false;
+
+        if (this.scrollFrame) {
+          cancelAnimationFrame(this.scrollFrame);
+        }
       }
 
       this.args.scrollTop = start;
@@ -2629,12 +2663,8 @@ var InfiniteScroller = /*#__PURE__*/function (_Mixin$from) {
 
       this.setVisible(first, last);
 
-      if (this.scrollFrame) {
-        cancelAnimationFrame(this.scrollFrame);
-      }
-
       if (start === 0) {
-        container.style.setProperty('--scrollOffset', "0px");
+        container.style.setProperty('--snapperOffset', "0px");
         return;
       }
 
@@ -2651,35 +2681,35 @@ var InfiniteScroller = /*#__PURE__*/function (_Mixin$from) {
         return;
       }
 
-      if (Math.abs(diff) > 8) {
-        this.ease = new _ElasticOut.ElasticOut(duration * 8, {
+      if (Math.abs(diff) > 5) {
+        this.snapper = new _ElasticOut.ElasticOut(duration * 8, {
           repeat: 1,
           friction: 0.25
         });
       } else {
-        this.ease = new _QuadOut.QuadOut(duration * 0.5, {
+        this.snapper = new _Linear.Linear(duration * 0.5, {
           repeat: 1
         });
       }
 
-      this.framesDone = this.onFrame(function () {
-        var offset = Math.round(_this3.ease.current() * diff);
-        container.style.setProperty('--scrollOffset', "".concat(-1 * offset, "px"));
+      this.snapperDone = this.onFrame(function () {
+        var offset = Math.round(_this3.snapper.current() * diff);
+        container.style.setProperty('--snapperOffset', "".concat(-1 * offset, "px"));
       });
-      this.ease.then(function (elapsed) {
-        container.style.setProperty('--scrollOffset', "0px");
+      this.snapper.then(function (elapsed) {
+        container.style.setProperty('--snapperOffset', "0px");
         container.scrollTop = groove;
-        _this3.framesDone && _this3.framesDone();
-        _this3.framesDone = false;
+        _this3.snapperDone && _this3.snapperDone();
+        _this3.snapperDone = false;
       })["catch"](function (elapsed) {
-        if (elapsed > 0.5) {
-          var offset = Math.round(_this3.ease.current() * diff);
-          container.style.setProperty('--scrollOffset', "".concat(-1 * offset, "px"));
+        if (Math.abs(_this3.topSpeed) <= 100 && elapsed > 0.5) {
+          var offset = Math.round(_this3.snapper.current() * diff);
+          container.style.setProperty('--snapperOffset', "".concat(-1 * offset, "px"));
           container.scrollTop = groove;
         }
-      })["finally"](function () {});
+      });
       this.scrollFrame = requestAnimationFrame(function () {
-        _this3.ease.start();
+        _this3.snapper.start();
       });
     }
   }, {
@@ -2693,8 +2723,14 @@ var InfiniteScroller = /*#__PURE__*/function (_Mixin$from) {
         return;
       }
 
+      if (!this.tags.list) {
+        return;
+      }
+
+      var listTag = this.tags.list;
+      var visibleList = this.viewLists.get(listTag.element);
       this.changing = true;
-      var visible = this.viewLists.visible.views;
+      var visible = visibleList.views;
       var del = [];
 
       for (var i in visible) {
@@ -2931,7 +2967,7 @@ var Row = /*#__PURE__*/function (_BaseView) {
       rowTag.style.setProperty('--index', this.args.r);
       rowTag.style.position = 'absolute';
       rowTag.style.height = 'var(--rowHeight)';
-      rowTag.style.transform = "translateY(var(--scrollOffset))";
+      rowTag.style.transform = "translateY(calc( var(--snapperOffset) ))";
       rowTag.style.top = 'calc( var(--rowHeight) * var(--index)';
       var observer = new IntersectionObserver(function (e, o) {
         return _this2.scrollObserved(e, o);
@@ -3177,7 +3213,7 @@ exports.Records = Records;
 });
 
 ;require.register("Experiments/InfiniteScroll/template.html", function(exports, require, module) {
-module.exports = "<h2>Experimental Scrollers</h2>\n\n<p>These scroll boxes automatically remove any DOM elements that are no longer visible to the user. This allows us to make large scrollable boxes without wasting large amounts of computing power on DOM calculations for records that may never become visible.</p>\n\n<span style = \"font-weight:bold; position:relative; left:[[xx]]px\">X</span>\n\n<div class = \"row wide line-up\">\n\n\t<div class = \"wide\">\n\t\t<h3>Simple Scroller</h3>\n\n\t\t<p>This scroller uses an array of 1,000,000 integers.</p>\n\t\t<p>Arrays and RecordSets are interchangeable here.</p>\n\n\t\t<div class = \"views scroller\">\n\t\t\t[[arrayScroller]]\n\t\t</div>\n\n\t</div>\n\n\t<div class = \"wide\">\n\n\t\t<h3>String Scroller</h3>\n\n\t\t<p>This scroller uses a RecordSet that returns strings.</p>\n\t\t<p>An array of strings could easily have been used instead of a RecordSet.</p>\n\n\t\t<div class = \"views scroller\">\n\t\t\t[[stringScroller]]\n\t\t</div>\n\n\t</div>\n\n\t<div class = \"wide\">\n\n\t\t<h3>View Scroller</h3>\n\n\t\t<p>This scroller uses a RecordSet that returns curvature View objects.</p>\n\t\t<p>There is a 750ms simulated load time when the view is first accessed.</p>\n\n\t\t<div class = \"views scroller\">\n\t\t\t[[viewScroller]]\n\t\t</div>\n\n\t</div>\n\n</div>\n\n<h3>Grid Scroller</h3>\n\n<p>This scroller uses CSS grid, and a custom template to simulate a table. Its RecordSet returns plain objects.</p>\n\n<p>The number of records and row height can be altered on the fly as well, this is common to all Scrollers.</p>\n\n<p>Counting both the texboxes & sliders, there are 2,000,002 input fields avaiable below, each mapped to an object in memory.</p>\n\n<div class = \"row\">\n\t<label class = \"row\">\n\t\tRows:&nbsp;<input cv-bind = \"rows\" type = \"number\" min = \"0\"/>\n\t</label>\n\t<span>&nbsp;</span>\n\t<label class = \"row wide\">\n\t\t<div>\n\t\t\tRow Height [[rowHeight|leftPad]]px:\n\t\t\t<input cv-bind = \"rowHeight\" type = \"range\" max = \"100\" />\n\t\t</div>\n\t\t\tPos: [[gridScroller.args.scrollTop]]\n\t\t<div>\n\t\t</div>\n\t</label>\n</div>\n\n<div class = \"grid scroller\">\n\t[[gridScroller]]\n</div>\n\n"
+module.exports = "<h2>Experimental Scrollers</h2>\n\n<p>These scroll boxes automatically remove any DOM elements that are no longer visible to the user. This allows us to make large scrollable boxes without wasting large amounts of computing power on DOM calculations for records that may never become visible.</p>\n\n<span style = \"font-weight:bold; position:relative; left:[[xx]]px\">X</span>\n\n<div class = \"row wide line-up\">\n\n\t<div class = \"wide\">\n\t\t<h3>Simple Scroller</h3>\n\n\t\t<p>This scroller uses an array of 1,000,000 integers.</p>\n\t\t<p>Arrays and RecordSets are interchangeable here.</p>\n\n\t\t<div class = \"views scroller\">\n\t\t\t[[arrayScroller]]\n\t\t</div>\n\n\t</div>\n\n\t<div class = \"wide\">\n\n\t\t<h3>String Scroller</h3>\n\n\t\t<p>This scroller uses a RecordSet that returns strings.</p>\n\t\t<p>An array of strings could easily have been used instead of a RecordSet.</p>\n\n\t\t<div class = \"views scroller\">\n\t\t\t[[stringScroller]]\n\t\t</div>\n\n\t</div>\n\n\t<div class = \"wide\">\n\n\t\t<h3>View Scroller</h3>\n\n\t\t<p>This scroller uses a RecordSet that returns curvature View objects.</p>\n\t\t<p>There is a 250ms simulated load time when the view is first accessed.</p>\n\n\t\t<div class = \"views scroller\">\n\t\t\t[[viewScroller]]\n\t\t</div>\n\n\t</div>\n\n</div>\n\n<h3>Grid Scroller</h3>\n\n<p>This scroller uses CSS grid, and a custom template to simulate a table. Its RecordSet returns plain objects.</p>\n\n<p>The number of records and row height can be altered on the fly as well, this is common to all Scrollers.</p>\n\n<p>Counting both the texboxes & sliders, there are 2,000,002 input fields avaiable below, each mapped to an object in memory.</p>\n\n<div class = \"row wide\">\n\t<div class = \"row wide\">\n\t\t<label>\n\t\t\t<p>Rows:&nbsp;<input cv-bind = \"rows\" type = \"number\" min = \"0\"/></p>\n\t\t</label>\n\t</div>\n\t<div class = \"row wide\">\n\t\t<label>\n\t\t\t<p>\n\t\t\t\tRow Height [[rowHeight|leftPad]]px\n\t\t\t\t<input cv-bind = \"rowHeight\" type = \"range\" max = \"100\" />\n\t\t\t</p>\n\t\t</label>\n\t</div>\n</div>\n\n<div class = \"grid scroller\">\n\t[[gridScroller]]\n</div>\n\n<div class = \"row wide\">\n\t<div class = \"row wide\">\n\t\tPosition: [[gridScroller.args.scrollTop]]\n\t</div>\n\t<div class = \"row wide\">\n\t\tSpeed: [[gridScroller.args.speed]] px/s\n\t</div>\n</div>\n\n"
 });
 
 ;require.register("Experiments/InfiniteScroll/views/Records.js", function(exports, require, module) {
@@ -3476,11 +3512,11 @@ module.exports = "<style>\nul div {display: content};\nlabel,input,textarea {dis
 });
 
 ;require.register("FormsDemo/Samples/RadioField.jss", function(exports, require, module) {
-module.exports = "const View = require('curvature/base/View').View;\nconst Form = require('curvature/form/Form').Form;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tconst field = {\n\t\t\ttitle:   'Radio Field'\n\t\t\t, type:  'radios'\n\t\t\t, options: {\n\t\t\t\t'Red':     1\n\t\t\t\t, 'Blue':  2\n\t\t\t\t, 'Green': 3\n\t\t\t}\n\t\t};\n\n\t\tthis.args.form = new Form({field});\n\n\t\tthis.args.form.bindTo('json', v => {\n\n\t\t\twindow.parent.parent.postMessage(v, '*');\n\n\t\t});\n\t}\n}\n"
+module.exports = "const View = require('curvature/base/View').View;\nconst Form = require('curvature/form/Form').Form;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tconst field = {\n\t\t\ttitle:   'Radio Field'\n\t\t\t, type:  'radios'\n\t\t\t, value: 2\n\t\t\t, options: {\n\t\t\t\t'Red':     1\n\t\t\t\t, 'Blue':  2\n\t\t\t\t, 'Green': 3\n\t\t\t}\n\t\t};\n\n\t\tthis.args.form = new Form({field});\n\n\t\tthis.args.form.bindTo('json', v => {\n\n\t\t\twindow.parent.parent.postMessage(v, '*');\n\n\t\t});\n\t}\n}\n"
 });
 
 ;require.register("FormsDemo/Samples/SelectField.jss", function(exports, require, module) {
-module.exports = "const View = require('curvature/base/View').View;\nconst Form = require('curvature/form/Form').Form;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tconst field = {\n\t\t\ttitle:   'Select Field'\n\t\t\t, type:  'select'\n\t\t\t, options: {\n\t\t\t\t'Select One': null\n\t\t\t\t, 'Red':   1\n\t\t\t\t, 'Blue':  2\n\t\t\t\t, 'Green': 3\n\t\t\t}\n\t\t};\n\n\t\tthis.args.form = new Form({field});\n\n\t\tthis.args.form.bindTo('json', v => {\n\n\t\t\twindow.parent.parent.postMessage(v, '*');\n\n\t\t});\n\t}\n}\n"
+module.exports = "const View = require('curvature/base/View').View;\nconst Form = require('curvature/form/Form').Form;\n\nclass DemoView extends View\n{\n\tconstructor()\n\t{\n\t\tsuper();\n\n\t\tthis.template = require('template');\n\n\t\tconst field = {\n\t\t\ttitle:   'Select Field'\n\t\t\t, type:  'select'\n\t\t\t, value: 3\n\t\t\t, options: {\n\t\t\t\t'Select One': null\n\t\t\t\t, 'Red':   1\n\t\t\t\t, 'Blue':  2\n\t\t\t\t, 'Green': 3\n\t\t\t}\n\t\t};\n\n\t\tthis.args.form = new Form({field});\n\n\t\tthis.args.form.bindTo('json', v => {\n\n\t\t\twindow.parent.parent.postMessage(v, '*');\n\n\t\t});\n\t}\n}\n"
 });
 
 ;require.register("FormsDemo/Samples/SubmitField.jss", function(exports, require, module) {
@@ -4011,7 +4047,7 @@ var View = /*#__PURE__*/function (_BaseView) {
     key: "loadModel",
     value: function loadModel() {
       this.args.model = _Model.Model.from({
-        id: this.args.newId,
+        id: String(this.args.newId).trim(),
         "class": this.args.newClass
       });
     }
@@ -4024,7 +4060,7 @@ exports.View = View;
 });
 
 ;require.register("ModelsDemo/template.html", function(exports, require, module) {
-module.exports = "<div class=\"models-demo\">\n\n\t<h2>models</h2>\n\n\t<p>Models are simple objects, with some light tooling to make them simple to populate. They will also use the <b>class</b> and <b>id</b> properties to ensure that each model only gets a single reference.</p>\n\n\t<div class = \"row\">\n\n\n\t\t<div class = \"model-editor\">\n\t\t\t<div class = \"new-property\">\n\t\t\t\t<button cv-on = \"click:loadModel\">Click here to load this model.</button>\n\t\t\t</div>\n<pre>model = Model.from({\n<span>  id: <span cv-bind = \"newId\" contenteditable=\"true\"></span>,</span>\n<span>  class: <span cv-bind = \"newClass\" contenteditable=\"true\"></span>,</span>});</pre>\n\t\t</div>\n\t\t<span cv-if = \"model\">\n\t\t\t<div class = \"model-editor\">\n\t\t\t\t<div class = \"new-property\">\n\t\t\t\t\t<input cv-bind = \"newField\" placeholder=\"new property\">\n\t\t\t\t\t<button cv-on = \"click:addKey(newField)\">+</button>\n\t\t\t\t</div>\n\n<pre>{\n<span cv-each = \"model:value:property\">  <span class = \"prop-remove remove-[[property]]\" cv-on = \"click:removeKey(property)\">✕</span> [[property]]: <span cv-bind = \"value\" contenteditable=\"true\"></span>,\n</span>};</pre>\n\n\n\t\t\t</div>\n\t\t</span>\n\t</div>\n\n\t<h3>Database Objects</h3>\n\n\t<h3>Record Set Objects</h3>\n\n</div>\n"
+module.exports = "<div class=\"models-demo\">\n\n\t<h2>models</h2>\n\n\t<p>Models are simple objects, with some light tooling to make them simple to populate. They will also use the <b>class</b> and <b>id</b> properties to ensure that each model only gets a single reference.</p>\n\n\t<div class = \"row\">\n\n\n\t\t<div class = \"model-editor\">\n\n\t\t\t<div class = \"model-editor-title\">Model Loader</div>\n\t\t\t\n<pre>model = Model.from({\n<div class = \"property-edit\"><span>  id: </span><input cv-bind = \"newId\" />,</div>\n<div class = \"property-edit\"><span>  class: </span><input cv-bind = \"newClass\" />,</div>});</pre>\n\n\t\t\t<div class = \"model-editor-eyebrow\">Press \"load\" to grab an instance of a record with the given ID and type. If no record is found, one will be created.</div>\n\t\t\t\n\t\t\t<div class = \"new-property\">\n\t\t\t\t<button cv-on = \"click:loadModel\">Load</button>\n\t\t\t</div>\n\t\t\n\t\t</div>\n\t\t<div cv-if = \"model\">\n\t\t\t<div class = \"model-editor\">\n\t\t\t\t\n\t\t\t\t<div class = \"model-editor-title\">Model Editor</div>\n\n<pre>model = {\n<div cv-each = \"model:value:property\"><div class = \"property-edit\"><span class = \"prop-remove remove-[[property]]\" cv-on = \"click:removeKey(property)\">  ✕ </span> [[property]]: <input cv-bind = \"value\" />,\n</div></div>};</pre>\n\n\t\t\t\t<div class = \"model-editor-eyebrow\">Modify the properties below. The in-memory values will be updated as you type.</div>\n\n\t\t\t\t<div class = \"model-editor-eyebrow\">Add a new property to the model:</div>\n\t\t\t\t\n\t\t\t\t<div class = \"new-property\">\n\t\t\t\t\t<input cv-bind = \"newField\" placeholder=\"new property\">\n\t\t\t\t\t<button cv-on = \"click:addKey(newField)\" class = \"tight\">+</button>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\n\t</div>\n\n\t<h3>Database Objects</h3>\n\n\t<h3>Record Set Objects</h3>\n\n</div>\n"
 });
 
 ;require.register("ObjectDemo/View.js", function(exports, require, module) {

@@ -8,27 +8,40 @@
 
 
 		<div class = "model-editor">
-			<div class = "new-property">
-				<button cv-on = "click:loadModel">Click here to load this model.</button>
-			</div>
+
+			<div class = "model-editor-title">Model Loader</div>
+			
 <pre>model = Model.from({
-<span>  id: <span cv-bind = "newId" contenteditable="true"></span>,</span>
-<span>  class: <span cv-bind = "newClass" contenteditable="true"></span>,</span>});</pre>
+<div class = "property-edit"><span>  id: </span><input cv-bind = "newId" />,</div>
+<div class = "property-edit"><span>  class: </span><input cv-bind = "newClass" />,</div>});</pre>
+
+			<div class = "model-editor-eyebrow">Press "load" to grab an instance of a record with the given ID and type. If no record is found, one will be created.</div>
+			
+			<div class = "new-property">
+				<button cv-on = "click:loadModel">Load</button>
+			</div>
+		
 		</div>
-		<span cv-if = "model">
+		<div cv-if = "model">
 			<div class = "model-editor">
+				
+				<div class = "model-editor-title">Model Editor</div>
+
+<pre>model = {
+<div cv-each = "model:value:property"><div class = "property-edit"><span class = "prop-remove remove-[[property]]" cv-on = "click:removeKey(property)">  ✕ </span> [[property]]: <input cv-bind = "value" />,
+</div></div>};</pre>
+
+				<div class = "model-editor-eyebrow">Modify the properties below. The in-memory values will be updated as you type.</div>
+
+				<div class = "model-editor-eyebrow">Add a new property to the model:</div>
+				
 				<div class = "new-property">
 					<input cv-bind = "newField" placeholder="new property">
-					<button cv-on = "click:addKey(newField)">+</button>
+					<button cv-on = "click:addKey(newField)" class = "tight">+</button>
 				</div>
-
-<pre>{
-<span cv-each = "model:value:property">  <span class = "prop-remove remove-[[property]]" cv-on = "click:removeKey(property)">✕</span> [[property]]: <span cv-bind = "value" contenteditable="true"></span>,
-</span>};</pre>
-
-
 			</div>
-		</span>
+		</div>
+
 	</div>
 
 	<h3>Database Objects</h3>

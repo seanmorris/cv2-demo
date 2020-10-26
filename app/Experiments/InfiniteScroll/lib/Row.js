@@ -18,7 +18,7 @@ export class Row extends BaseView
 
 		rowTag.style.position = 'absolute';
 		rowTag.style.height   = 'var(--rowHeight)';
-		rowTag.style.transform = `translateY(var(--scrollOffset))`;
+		rowTag.style.transform = `translateY(calc( var(--snapperOffset) ))`;
 		rowTag.style.top      = 'calc( var(--rowHeight) * var(--index)';
 
 		

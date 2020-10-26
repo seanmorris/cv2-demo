@@ -12,6 +12,7 @@ class DemoView extends View
 		const field = {
 			title:   'Radio Field'
 			, type:  'radios'
+			, value: 2
 			, options: {
 				'Red':     1
 				, 'Blue':  2
