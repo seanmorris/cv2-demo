@@ -1,6 +1,11 @@
 import { View as BaseView } from 'curvature/base/View';
 import { Mixin } from 'curvature/base/Mixin';
 
+import { Linear  } from 'curvature/animate/ease/Linear';
+import { QuintIn } from 'curvature/animate/ease/QuintIn';
+import { QuintInOut } from 'curvature/animate/ease/QuintInOut';
+import { ElasticOut } from 'curvature/animate/ease/ElasticOut';
+
 import { Row } from './Row';
 
 export class InfiniteScroller extends Mixin.from(BaseView)
@@ -12,6 +17,7 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 		this.template = require('./infinite-scroller');
 
 		this.preRuleSet.add('[cv-ref="list"]', ({element}) => {
+			element.setAttribute('tabindex', -1);
 			element.setAttribute('cv-each', 'visible:row:r');
 			element.setAttribute('cv-view', 'Experiments/InfiniteScroll/lib/Row');
 		});
@@ -26,6 +32,23 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 
 		this.args.width  = '100%';
 		this.args.height = '100%';
+		this.args.scrollTop = 0;
+		this.args.scrollDir = 0;
+
+		this.autoScrolling = false;
+
+		this.args.bindTo('scrollTop', (v,k,t) => {
+			this.args.scrollDir = 0;
+
+			if(v > t[k])
+			{
+				this.args.scrollDir = 1;
+			}
+			else if(v < t[k])
+			{
+				this.args.scrollDir = -1;
+			}
+		});
 	}
 
 	attached()
@@ -33,11 +56,6 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 		const container  = this.container = this.tags.list.element;
 		const setHeights = (v,k) => container.style.setProperty(
 			`--${k}`, `${v}px`
-		);
-
-		this.observer = new IntersectionObserver(
-			(e,o) => this.scrollObserved(e,o)
-			, {root: container}
 		);
 
 		this.args.bindTo('height', v => container.style.height = v);
@@ -64,8 +82,6 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 		shim.setAttribute('style', `position: absolute;width: 1px;height: var(--shimHeight);pointer-events: none;opacity: 0;`);
 
 		container.append(shim);
-
-		let scrollSnapType = container.style.scrollSnapType;
 
 		this.args.bindTo('rowHeight', (v,k,t) => {
 
@@ -117,7 +133,6 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 		this.args.rowHeight = this.args.rowHeight || 32;
 
 		this.onNextFrame( ()=>this.updateViewport() );
-
 	}
 
 	updateViewport(event)
@@ -135,6 +150,8 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 		let first   = Math.floor(open / this.args.rowHeight);
 		let last    = Math.ceil((open+space) / this.args.rowHeight);
 
+		this.args.scrollTop = open;
+
 		if(first > this.args.content.length)
 		{
 			first = this.args.content.length - 1;
@@ -146,6 +163,67 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 		}
 
 		this.setVisible(first, last);
+
+		if(this.ease)
+		{
+			this.ease.cancel();
+		}
+		
+		if(this.scrollTimeout)
+		{
+			clearTimeout(this.scrollTimeout);
+		}
+
+		const start    = container.scrollTop;
+		const closeRow = Math.round(start / this.args.rowHeight);
+		const groove   = closeRow * this.args.rowHeight;
+		const diff     = groove - start;
+
+		let duration = Math.abs(diff * 12);
+
+		// if(duration < 95)
+		// {
+		// 	duration = 95;
+		// }
+		
+		if(duration > 500)
+		{
+			duration = 500;
+		}
+
+		if(this.ease)
+		{
+			this.ease.cancel();
+		}
+
+		this.ease = new ElasticOut(duration * 8, {repeat: 1, friction: 0.2});
+		// this.ease = new QuintInOut(duration * 4, {repeat: 1});
+
+		this.ease
+			.then(() => this.onFrame(() => container.style.setProperty('--scrollOffset', '0px')))
+			.catch(()=>{})
+			.finally(()=>{});
+
+		this.framesDone = this.onFrame(()=>{
+			const offset = Math.round(this.ease.current() * diff);
+			this.onNextFrame(()=>{
+				container.style.setProperty('--scrollOffset', `${-1*offset}px`);
+			});
+		});
+
+		this.ease.then(() => {
+			const offset = Math.round(this.ease.current() * diff);
+			
+			this.onNextFrame(()=>{
+				container.scrollTop = groove;
+				// container.style.setProperty('--scrollOffset', `${offset}px`);					
+				this.framesDone && this.framesDone();
+				this.framesDone = false;
+			});
+			
+		}).catch(()=>{});
+
+		this.ease.start();
 	}
 
 	setVisible(first, last)
@@ -224,7 +302,7 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 		this.first = first;
 		this.last  = last;
 
-		this.changing = false
+		this.changing = false;
 	}
 
 	leftPad(x)

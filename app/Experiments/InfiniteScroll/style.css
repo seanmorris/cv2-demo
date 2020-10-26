@@ -5,6 +5,10 @@
 	border: 1px solid #888;
 }
 
+.grid.scroller {
+	height: 600px;	
+}
+
 .views.scroller > div > div:not([data-tag=shim]) {
 	padding: 1em;
 	white-space: nowrap;
@@ -21,13 +25,14 @@
 	padding-right: 1em;
 }
 
-.grid.scroller > div {
-}
-
 .scroller .table .table-row {
 	width: 100%;
 	display: grid;
 	grid-template-columns: auto repeat(4, 5fr);
+}
+
+.grid.scroller .table .table-row {
+	box-sizing: border-box;
 }
 
 .grid.scroller .table .table-row div:first-child {
@@ -82,11 +87,17 @@
 	overflow: hidden;
 }
 
+.scroller > div:focus {
+	outline: 1px dotted black;
+	outline-offset: 1px;
+}
+
 .grid.scroller .table .table-row.is-header {
 	background-color: #AAA;
-	position: sticky !important;
 	z-index: 1;
+	position: sticky !important;
 	top: 0;
+	transform: none !important;
 }
 
 .line-up > div {

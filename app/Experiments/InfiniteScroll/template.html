@@ -2,6 +2,8 @@
 
 <p>These scroll boxes automatically remove any DOM elements that are no longer visible to the user. This allows us to make large scrollable boxes without wasting large amounts of computing power on DOM calculations for records that may never become visible.</p>
 
+<span style = "font-weight:bold; position:relative; left:[[xx]]px">X</span>
+
 <div class = "row wide line-up">
 
 	<div class = "wide">
@@ -58,8 +60,13 @@
 	</label>
 	<span>&nbsp;</span>
 	<label class = "row wide">
-		Row Height [[rowHeight|leftPad]]px:
-		<input cv-bind = "rowHeight" type = "range" max = "100" />
+		<div>
+			Row Height [[rowHeight|leftPad]]px:
+			<input cv-bind = "rowHeight" type = "range" max = "100" />
+		</div>
+			Pos: [[gridScroller.args.scrollTop]]
+		<div>
+		</div>
 	</label>
 </div>
 

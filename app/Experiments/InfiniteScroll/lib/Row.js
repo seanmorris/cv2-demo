@@ -18,8 +18,10 @@ export class Row extends BaseView
 
 		rowTag.style.position = 'absolute';
 		rowTag.style.height   = 'var(--rowHeight)';
-		rowTag.style.top      = 'calc(var(--rowHeight) * var(--index))';
+		rowTag.style.transform = `translateY(var(--scrollOffset))`;
+		rowTag.style.top      = 'calc( var(--rowHeight) * var(--index)';
 
+		
 		const observer = new IntersectionObserver(
 			(e,o) => this.scrollObserved(e,o)
 			, {root: this.parent.container}
