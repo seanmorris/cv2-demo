@@ -1767,14 +1767,18 @@ var View = /*#__PURE__*/function (_BaseView) {
   function View() {
     var _this;
 
+    var args = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    var parent = arguments.length > 1 ? arguments[1] : undefined;
+
     _classCallCheck(this, View);
 
-    _this = _super.call(this);
+    _this = _super.call(this, args, parent);
     _this.template = require('./template.html');
     _this.dragger = new _DragDrop.DragDrop({}, _assertThisInitialized(_this), function (start, finish) {
       var list = _this.args.list;
       var a = _this.args.list[start];
       var b = _this.args.list[finish];
+      console.log(a, b);
       var _ref = [a, b];
       list[finish] = _ref[0];
       list[start] = _ref[1];
@@ -1787,8 +1791,10 @@ var View = /*#__PURE__*/function (_BaseView) {
     _this.dragger.render(document.body);
 
     _this.args.trackSize = 16;
-    _this.args.xsize = 5;
-    _this.args.ysize = 5;
+    _this.args.xsize = _this.args.xsize || 9;
+    _this.args.ysize = _this.args.ysize || 9;
+    _this.args.hGrab = Array(-1 + _this.args.xsize).fill(0);
+    _this.args.vGrab = Array(-1 + _this.args.ysize).fill(0);
     _this.args.cols = [];
     _this.args.rows = [];
     _this.args.colTemplate = '';
@@ -1808,29 +1814,32 @@ var View = /*#__PURE__*/function (_BaseView) {
           return isNaN(c) ? c : "".concat(c, "px");
         }).join(' var(--tracksize) ');
       });
-    });
+    }); // this.args.auto = {x: 1, y: 0}
 
-    var autoX = 1;
-    var autoY = 1;
+
+    _this.args.auto = _this.args.auto || {
+      x: Math.floor(_this.args.xsize / 2),
+      y: Math.floor(_this.args.ysize / 2)
+    };
 
     for (var x = 0; x < _this.args.xsize; x++) {
-      if (x === autoX) {
+      if (x === args.auto.x) {
         _this.args.cols.push('auto');
 
         continue;
       }
 
-      _this.args.cols.push(100);
+      _this.args.cols.push(30);
     }
 
     for (var y = 0; y < _this.args.ysize; y++) {
-      if (y === autoY) {
+      if (y === args.auto.y) {
         _this.args.rows.push('auto');
 
         continue;
       }
 
-      _this.args.rows.push(100);
+      _this.args.rows.push(30);
     }
 
     _this.resizing = false;
@@ -1846,16 +1855,14 @@ var View = /*#__PURE__*/function (_BaseView) {
     var face = _View.View.from('<img src = "/player-head-180.png" />');
 
     face.preserve = true;
-    _this.args.list = [, 1, 2 //timer
+    _this.args.list = [1, 2 //timer
     , 3, 4, 5, 6 //face
-    , 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, null, null, null, null, null, null, null, null, null].map(function (x) {
-      return x && String.fromCharCode(96 + x);
-    });
-    _this.args._list = [];
-
-    _this.args.list.bindTo(function (v, k) {
-      _this.args._list[k] = v;
-    });
+    , 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, null, null, null, null, null, null, null, null, null].map(function (v, k) {
+      return {
+        label: v ? String.fromCharCode(96 + v) : '',
+        index: k
+      };
+    }); // .map(x=> x && String.fromCharCode(96 + x));
 
     return _this;
   }
@@ -1895,7 +1902,7 @@ var View = /*#__PURE__*/function (_BaseView) {
         return;
       }
 
-      max -= this.args.trackSize * trackCount + 5;
+      max -= this.args.trackSize * trackCount;
       var prevOld = this.args[trackType][track - 1];
       var nextOld = this.args[trackType][track + 0];
       var stopMoveListener = this.listen(document, 'mousemove', function (moveEvent) {
@@ -1907,7 +1914,7 @@ var View = /*#__PURE__*/function (_BaseView) {
         if (!isNaN(prevOld)) {
           prevNew = prevOld + sweep;
 
-          if (prevNew < 0) {
+          if (prevNew <= 0) {
             prevOver = prevNew;
             prevNew = 0;
           }
@@ -1918,7 +1925,7 @@ var View = /*#__PURE__*/function (_BaseView) {
         if (!isNaN(nextOld)) {
           nextNew = nextOld - sweep;
 
-          if (nextNew < 0) {
+          if (nextNew <= 0) {
             nextOver = nextNew;
             nextNew = 0;
           }
@@ -2028,6 +2035,11 @@ var View = /*#__PURE__*/function (_BaseView) {
         event.preventDefault();
       }
     }
+  }, {
+    key: "trackNumber",
+    value: function trackNumber(x) {
+      return 2 + parseInt(x) * 2;
+    }
   }]);
 
   return View;
@@ -2041,7 +2053,7 @@ module.exports = "<div class = \"drag-drop-stage\" cv-ref = \"stage\">\n\t<div c
 });
 
 ;require.register("Experiments/GridResizer/template.html", function(exports, require, module) {
-module.exports = "<h2>grid-tools</h2>\n\n<p>Grid tools implements one dimensional resize on tracks and two-dimensional on intersections. It also re-sorts its source array on drag & drop.</p>\n\n<p class = \"list-preview\">\n\t<span class = \"contents\" cv-each = \"list:item:index\">\n\t\t<u>'[[item]]'</u>\n\t</span>\n</p>\n\n<p class = \"row\">track width: <input type = \"range\" min = \"0\" max = \"100\" cv-bind = \"trackSize\"/> [[trackSize]]px</p>\n\n<div\n\tclass = \"grid-resize [[dragging]]\"\n\tstyle = \"\n\t\t--xsize:       calc([[xsize]] * 2);\n\t\t--ysize:       calc([[ysize]] * 2);\n\t\t--tracksize:   [[trackSize]]px;\n\t\t--colTemplate: [[colTemplate]];\n\t\t--rowTemplate: [[rowTemplate]];\n\t\">\n\n\t<span class = \"contents\" cv-each = \"list:item:index\">\n\t\t<div\n\t\t\tclass = \"box box-[[index]]\"\n\t\t\tcv-on = \"\n\t\t\t\tcvDragDrop:stopdrop(event, $tag, index)c;\n\t\t\t\tcvDragGrab:stopdrop(event, $tag, index);\n\t\t\t\tcvDragHover:hover(event, $tag, index);\n\t\t\t\tcvDragUnhover:unhover(event, $tag, index);\n\t\t\t\tmousedown:drag(event, $tag, index)c;\n\t\t\t\tmouseup:drop(event, $tag, index)c;\n\t\t\t\"\n\t\t><div style = \"--index:[[index]]\">[[item]]</div></div>\n\t</span>\n\n\t<span class = \"contents\" cv-on = \"mousedown(event);mousemove(event)c;\">\n\t\t<div style = \"--track:2\" data-resize = \"h\" class = \"resizer resizer-h\"></div>\n\t\t<div style = \"--track:4\" data-resize = \"h\" class = \"resizer resizer-h\"></div>\n\t\t<div style = \"--track:6\" data-resize = \"h\" class = \"resizer resizer-h\"></div>\n\t\t<div style = \"--track:8\" data-resize = \"h\" class = \"resizer resizer-h\"></div>\n\t\t<div style = \"--track:2\" data-resize = \"v\" class = \"resizer resizer-v\">\n\t\t\t<div style = \"--track:2\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:4\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:6\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:8\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t</div>\n\t\t<div style = \"--track:4\" data-resize = \"v\" class = \"resizer resizer-v\">\n\t\t\t<div style = \"--track:2\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:4\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:6\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:8\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t</div>\n\t\t<div style = \"--track:6\" data-resize = \"v\" class = \"resizer resizer-v\">\n\t\t\t<div style = \"--track:2\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:4\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:6\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:8\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t</div>\n\t\t<div style = \"--track:8\" data-resize = \"v\" class = \"resizer resizer-v\">\n\t\t\t<div style = \"--track:2\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:4\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:6\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t<div style = \"--track:8\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t</div>\n\t</span>\n\n</div>\n\n<p>[[rowTemplate]]</p>\n<p>[[colTemplate]]</p>\n"
+module.exports = "<h2>grid-tools</h2>\n\n<p>Grid tools implements one dimensional resize on tracks and two-dimensional on intersections. It also re-sorts its source array on drag & drop.</p>\n\n<p>The order of these black squares will change as you drag & drop the items in the grid below.\n\n<p class = \"list-preview\">\n\t<span class = \"contents\" cv-each = \"list:item:index\">\n\t\t<span class = \"invert\" cv-with = \"item\">\n\t\t\t[[label]]\n\t\t\t<span cv-if = \"!label\">×</span>\n\t\t</span>\n\t</span>\n</p>\n\n<p class = \"row\">track width: <input type = \"range\" min = \"0\" max = \"100\" cv-bind = \"trackSize\"/> [[trackSize]]px</p>\n\n<div\n\tclass = \"grid-resize [[dragging]]\"\n\tstyle = \"\n\t\t--xsize:       calc([[xsize]] * 2);\n\t\t--ysize:       calc([[ysize]] * 2);\n\t\t--tracksize:   [[trackSize]]px;\n\t\t--colTemplate: [[colTemplate]];\n\t\t--rowTemplate: [[rowTemplate]];\n\t\">\n\n\t<span class = \"contents\" cv-each = \"list:item:index\">\n\t\t<div\n\t\t\tclass = \"box box-[[index]]\"\n\t\t\tcv-on = \"\n\t\t\t\tcvDragDrop:stopdrop(event, $tag, index)c;\n\t\t\t\tcvDragGrab:stopdrop(event, $tag, index);\n\t\t\t\tcvDragHover:hover(event, $tag, index);\n\t\t\t\tcvDragUnhover:unhover(event, $tag, index);\n\t\t\t\tmousedown:drag(event, $tag, index)c;\n\t\t\t\tmouseup:drop(event, $tag, index)c;\n\t\t\t\"\n\t\t>\n\t\t\t<div style = \"--index:[[index]]\" cv-with = \"item\">[[label]]</div>\n\t\t</div>\n\t</span>\n\n\t<span class = \"contents\" cv-each = \"hGrab::h\" cv-on = \"mousedown(event);mousemove(event)c;\">\n\t\t<div style = \"--track:[[h|trackNumber]]\" data-resize = \"h\" class = \"resizer resizer-h\"></div>\n\t</span>\n\n\t<span class = \"contents\" cv-each = \"vGrab::v\" cv-on = \"mousedown(event);mousemove(event)c;\">\n\t\t<div style = \"--track:[[v|trackNumber]]\" data-resize = \"v\" class = \"resizer resizer-v\">\n\t\t\t<span class = \"contents\" cv-each = \"hGrab::vh\">\n\t\t\t\t<div style = \"--track:[[vh|trackNumber]]\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t</span>\n\t\t</div>\n\t</span>\n\n\n</div>\n\n<p>[[rowTemplate]]</p>\n<p>[[colTemplate]]</p>\n"
 });
 
 ;require.register("Experiments/HtmlEditor/View.js", function(exports, require, module) {

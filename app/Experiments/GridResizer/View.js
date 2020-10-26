@@ -3,9 +3,9 @@ import { DragDrop } from './DragDrop';
 
 export class View extends BaseView
 {
-	constructor()
+	constructor(args = {}, parent)
 	{
-		super();
+		super(args, parent);
 
 		this.template = require('./template.html');
 
@@ -14,6 +14,8 @@ export class View extends BaseView
 
 			const a = this.args.list[start];
 			const b = this.args.list[finish];
+
+			console.log(a, b);
 
 			[list[finish], list[start]] = [a, b];
 		});
@@ -26,8 +28,11 @@ export class View extends BaseView
 
 		this.args.trackSize = 16;
 
-		this.args.xsize = 5;
-		this.args.ysize = 5;
+		this.args.xsize = this.args.xsize || 9;
+		this.args.ysize = this.args.ysize || 9;
+
+		this.args.hGrab = Array(-1 + this.args.xsize).fill(0);
+		this.args.vGrab = Array(-1 + this.args.ysize).fill(0);
 
 		this.args.cols = [];
 		this.args.rows = [];
@@ -47,28 +52,32 @@ export class View extends BaseView
 				.join(' var(--tracksize) ');
 		}));
 
-		const autoX = 1;
-		const autoY = 1;
+		// this.args.auto = {x: 1, y: 0}
+
+		this.args.auto = this.args.auto || {
+			x:   Math.floor(this.args.xsize / 2)
+			, y: Math.floor(this.args.ysize / 2)
+		};
 
 		for(let x = 0; x < this.args.xsize; x++)
 		{
-			if(x === autoX)
+			if(x === args.auto.x)
 			{
 				this.args.cols.push('auto');
 				continue;
 			}
-			this.args.cols.push(100);
+			this.args.cols.push(30);
 		}
 
 		for(let y = 0; y < this.args.ysize; y++)
 		{
-			if(y === autoY)
+			if(y === args.auto.y)
 			{
 				this.args.rows.push('auto');
 				continue;
 			}
 
-			this.args.rows.push(100);
+			this.args.rows.push(30);
 		}
 
 		this.resizing = false;
@@ -85,7 +94,7 @@ export class View extends BaseView
 		face.preserve = true;
 
 		this.args.list = [
-			, 1
+			1
 			, 2 //timer
 			, 3
 			, 4
@@ -93,13 +102,13 @@ export class View extends BaseView
 			, 6 //face
 			, 7, 8, 9, 10 , 11, 12, 13, 14, 15, 16
 			, null, null, null, null, null, null, null, null, null
-		].map(x=>x && String.fromCharCode(96 + x));
+		].map((v,k)=>({
+			label: v ? String.fromCharCode(96 + v) : ''
+			, index: k
+		}));
 
-		this.args._list = [];
+		// .map(x=> x && String.fromCharCode(96 + x));
 
-		this.args.list.bindTo((v,k) => {
-			this.args._list[k] = v;
-		});
 	}
 
 	mousedown(startEvent)
@@ -146,7 +155,7 @@ export class View extends BaseView
 			return;
 		}
 
-		max -= ((this.args.trackSize) * trackCount) + 5;
+		max -= this.args.trackSize * trackCount;
 
 		const prevOld = this.args[trackType][track - 1];
 		const nextOld = this.args[trackType][track + 0];
@@ -164,7 +173,7 @@ export class View extends BaseView
 			{
 				prevNew = prevOld + sweep;
 
-				if(prevNew < 0)
+				if(prevNew <= 0)
 				{
 					prevOver = prevNew;
 					prevNew = 0;
@@ -177,7 +186,7 @@ export class View extends BaseView
 			{
 				nextNew = nextOld - sweep;
 
-				if(nextNew < 0)
+				if(nextNew <= 0)
 				{
 					nextOver = nextNew;
 					nextNew = 0;
@@ -312,5 +321,10 @@ export class View extends BaseView
 		{
 			event.preventDefault();
 		}
+	}
+
+	trackNumber(x)
+	{
+		return 2 + parseInt(x) * 2;
 	}
 }

@@ -2,9 +2,14 @@
 
 <p>Grid tools implements one dimensional resize on tracks and two-dimensional on intersections. It also re-sorts its source array on drag & drop.</p>
 
+<p>The order of these black squares will change as you drag & drop the items in the grid below.
+
 <p class = "list-preview">
 	<span class = "contents" cv-each = "list:item:index">
-		<u>'[[item]]'</u>
+		<span class = "invert" cv-with = "item">
+			[[label]]
+			<span cv-if = "!label">×</span>
+		</span>
 	</span>
 </p>
 
@@ -31,39 +36,23 @@
 				mousedown:drag(event, $tag, index)c;
 				mouseup:drop(event, $tag, index)c;
 			"
-		><div style = "--index:[[index]]">[[item]]</div></div>
+		>
+			<div style = "--index:[[index]]" cv-with = "item">[[label]]</div>
+		</div>
 	</span>
 
-	<span class = "contents" cv-on = "mousedown(event);mousemove(event)c;">
-		<div style = "--track:2" data-resize = "h" class = "resizer resizer-h"></div>
-		<div style = "--track:4" data-resize = "h" class = "resizer resizer-h"></div>
-		<div style = "--track:6" data-resize = "h" class = "resizer resizer-h"></div>
-		<div style = "--track:8" data-resize = "h" class = "resizer resizer-h"></div>
-		<div style = "--track:2" data-resize = "v" class = "resizer resizer-v">
-			<div style = "--track:2" data-resize = "vh" class = "resizer resizer-vh"></div>
-			<div style = "--track:4" data-resize = "vh" class = "resizer resizer-vh"></div>
-			<div style = "--track:6" data-resize = "vh" class = "resizer resizer-vh"></div>
-			<div style = "--track:8" data-resize = "vh" class = "resizer resizer-vh"></div>
-		</div>
-		<div style = "--track:4" data-resize = "v" class = "resizer resizer-v">
-			<div style = "--track:2" data-resize = "vh" class = "resizer resizer-vh"></div>
-			<div style = "--track:4" data-resize = "vh" class = "resizer resizer-vh"></div>
-			<div style = "--track:6" data-resize = "vh" class = "resizer resizer-vh"></div>
-			<div style = "--track:8" data-resize = "vh" class = "resizer resizer-vh"></div>
-		</div>
-		<div style = "--track:6" data-resize = "v" class = "resizer resizer-v">
-			<div style = "--track:2" data-resize = "vh" class = "resizer resizer-vh"></div>
-			<div style = "--track:4" data-resize = "vh" class = "resizer resizer-vh"></div>
-			<div style = "--track:6" data-resize = "vh" class = "resizer resizer-vh"></div>
-			<div style = "--track:8" data-resize = "vh" class = "resizer resizer-vh"></div>
-		</div>
-		<div style = "--track:8" data-resize = "v" class = "resizer resizer-v">
-			<div style = "--track:2" data-resize = "vh" class = "resizer resizer-vh"></div>
-			<div style = "--track:4" data-resize = "vh" class = "resizer resizer-vh"></div>
-			<div style = "--track:6" data-resize = "vh" class = "resizer resizer-vh"></div>
-			<div style = "--track:8" data-resize = "vh" class = "resizer resizer-vh"></div>
+	<span class = "contents" cv-each = "hGrab::h" cv-on = "mousedown(event);mousemove(event)c;">
+		<div style = "--track:[[h|trackNumber]]" data-resize = "h" class = "resizer resizer-h"></div>
+	</span>
+
+	<span class = "contents" cv-each = "vGrab::v" cv-on = "mousedown(event);mousemove(event)c;">
+		<div style = "--track:[[v|trackNumber]]" data-resize = "v" class = "resizer resizer-v">
+			<span class = "contents" cv-each = "hGrab::vh">
+				<div style = "--track:[[vh|trackNumber]]" data-resize = "vh" class = "resizer resizer-vh"></div>
+			</span>
 		</div>
 	</span>
+
 
 </div>
 

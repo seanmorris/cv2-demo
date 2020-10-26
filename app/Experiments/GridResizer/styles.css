@@ -7,16 +7,21 @@
 	grid-template-rows:    var(--rowTemplate);
 	grid-template-columns: var(--colTemplate);
 	border: 1px solid #888;
+	background-color: #777;
+	box-sizing: border-box;
 }
 
 .drag-drop-frame,
 .grid-resize .box {
 	overflow: hidden;
+	/*height: 0;
+	width: 0;*/
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 	font-weight: bold;
+	background-color: #FFF;
 }
 
 .grid-resize:not(.dragging) .box > * {
@@ -27,7 +32,7 @@
 .grid-resize .box.box-16,
 .grid-resize .box.box-17,
 .grid-resize .box.box-18{
-	background-color: #999;
+	background-color: #888;
 }
 
 .grid-resize .box.box-15 > *,
@@ -61,7 +66,7 @@
 }
 
 .grid-resize .resizer{
-	background-color: #888;
+	background-color: #999;
 }
 
 .grid-resize .resizer-h{
@@ -74,7 +79,7 @@
 }
 
 .grid-resize:not(.dragging) .resizer-h{
-	background-color:  rgba(25,0,0,0.45);
+	background-color:  #caa;
 	cursor:            col-resize;
 }
 
@@ -91,11 +96,10 @@
 }
 
 .grid-resize.dragging .resizer-vh{
-	background-color:  rgba(0,0,0,0.15);
 }
 
 .grid-resize:not(.dragging) .resizer-v{
-	background-color:  rgba(0,0,25,0.45);
+	background-color:  #aac;
 	cursor:            row-resize;
 }
 
@@ -115,7 +119,7 @@
 }
 
 .grid-resize:not(.dragging) .resizer-v:last-of-type .resizer-vh,
-.grid-resize:not(.dragging) :not(.resizer-v) + .resizer-v .resizer-vh{
+.grid-resize:not(.dragging) .resizer-v:first-of-type .resizer-vh{
 	cursor: ns-resize;
 	background: #393;
 }
@@ -126,14 +130,14 @@
 	background: #33F;
 }
 
-.grid-resize:not(.dragging) .resizer-v:last-of-type .resizer-vh:last-child,
-.grid-resize:not(.dragging) :not(.resizer-v) + .resizer-v .resizer-vh:first-child{
+.grid-resize:not(.dragging) .resizer-v:last-of-type  .resizer-vh:last-child,
+.grid-resize:not(.dragging) .resizer-v:first-of-type .resizer-vh:first-child{
 	background: #FFF;
 	cursor: nwse-resize;
 }
 
-.grid-resize:not(.dragging) .resizer-v:last-of-type .resizer-vh:first-child,
-.grid-resize:not(.dragging) :not(.resizer-v) + .resizer-v .resizer-vh:last-child{
+.grid-resize:not(.dragging) .resizer-v:last-of-type  .resizer-vh:first-child,
+.grid-resize:not(.dragging) .resizer-v:first-of-type .resizer-vh:last-child{
 	background: #000;
 	cursor: nesw-resize;
 }
@@ -152,4 +156,17 @@
 
 .list-preview {
 	font-size: 14pt;
+}
+
+.invert {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0.25em;
+	font-weight: bold;
+	background: black;
+	color: white;
+	width: 2em;
+	height: 2em;
+	font-size: 12pt;
 }
