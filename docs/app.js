@@ -2335,7 +2335,7 @@ var View = /*#__PURE__*/function (_BaseView) {
     _this.template = require('./template');
     _this.args.rows = 10;
     _this.args.rows = 1000001;
-    _this.args.rowHeight = 65;
+    _this.args.rowHeight = 32;
     var gridScroller = new _Scroller.Scroller();
     _this.args.gridScroller = gridScroller;
 
@@ -2427,7 +2427,27 @@ var _Mixin = require("curvature/base/Mixin");
 
 var _Linear = require("curvature/animate/ease/Linear");
 
+var _QuadIn = require("curvature/animate/ease/QuadIn");
+
+var _QuadOut = require("curvature/animate/ease/QuadOut");
+
+var _QuadInOut = require("curvature/animate/ease/QuadInOut");
+
+var _CubicIn = require("curvature/animate/ease/CubicIn");
+
+var _CubicOut = require("curvature/animate/ease/CubicOut");
+
+var _CubicInOut = require("curvature/animate/ease/CubicInOut");
+
+var _QuartIn = require("curvature/animate/ease/QuartIn");
+
+var _QuartOut = require("curvature/animate/ease/QuartOut");
+
+var _QuartInOut = require("curvature/animate/ease/QuartInOut");
+
 var _QuintIn = require("curvature/animate/ease/QuintIn");
+
+var _QuintOut = require("curvature/animate/ease/QuintOut");
 
 var _QuintInOut = require("curvature/animate/ease/QuintInOut");
 
@@ -2584,11 +2604,20 @@ var InfiniteScroller = /*#__PURE__*/function (_Mixin$from) {
       }
 
       var container = this.container;
-      var open = container.scrollTop;
+      var start = container.scrollTop;
+      var depth = container.scrollHeight;
       var space = container.offsetHeight;
-      var first = Math.floor(open / this.args.rowHeight);
-      var last = Math.ceil((open + space) / this.args.rowHeight);
-      this.args.scrollTop = open;
+      var fold = start + space;
+      var first = Math.floor(start / this.args.rowHeight);
+      var last = Math.ceil(fold / this.args.rowHeight);
+
+      if (this.ease && !this.ease.done) {
+        this.ease.cancel();
+        this.framesDone && this.framesDone();
+        this.framesDone = false;
+      }
+
+      this.args.scrollTop = start;
 
       if (first > this.args.content.length) {
         first = this.args.content.length - 1;
@@ -2600,59 +2629,58 @@ var InfiniteScroller = /*#__PURE__*/function (_Mixin$from) {
 
       this.setVisible(first, last);
 
-      if (this.ease) {
-        this.ease.cancel();
+      if (this.scrollFrame) {
+        cancelAnimationFrame(this.scrollFrame);
       }
 
-      if (this.scrollTimeout) {
-        clearTimeout(this.scrollTimeout);
+      if (start === 0) {
+        container.style.setProperty('--scrollOffset', "0px");
+        return;
       }
 
-      var start = container.scrollTop;
       var closeRow = Math.round(start / this.args.rowHeight);
       var groove = closeRow * this.args.rowHeight;
       var diff = groove - start;
-      var duration = Math.abs(diff * 12); // if(duration < 95)
-      // {
-      // 	duration = 95;
-      // }
+      var duration = Math.abs(diff * 12);
 
-      if (duration > 500) {
-        duration = 500;
+      if (duration > 250) {
+        duration = 250;
       }
 
-      if (this.ease) {
-        this.ease.cancel();
+      if (fold === depth) {
+        return;
       }
 
-      this.ease = new _ElasticOut.ElasticOut(duration * 8, {
-        repeat: 1,
-        friction: 0.2
-      }); // this.ease = new QuintInOut(duration * 4, {repeat: 1});
-
-      this.ease.then(function () {
-        return _this3.onFrame(function () {
-          return container.style.setProperty('--scrollOffset', '0px');
+      if (Math.abs(diff) > 8) {
+        this.ease = new _ElasticOut.ElasticOut(duration * 8, {
+          repeat: 1,
+          friction: 0.25
         });
-      })["catch"](function () {})["finally"](function () {});
+      } else {
+        this.ease = new _QuadOut.QuadOut(duration * 0.5, {
+          repeat: 1
+        });
+      }
+
       this.framesDone = this.onFrame(function () {
         var offset = Math.round(_this3.ease.current() * diff);
-
-        _this3.onNextFrame(function () {
-          container.style.setProperty('--scrollOffset', "".concat(-1 * offset, "px"));
-        });
+        container.style.setProperty('--scrollOffset', "".concat(-1 * offset, "px"));
       });
-      this.ease.then(function () {
-        var offset = Math.round(_this3.ease.current() * diff);
-
-        _this3.onNextFrame(function () {
-          container.scrollTop = groove; // container.style.setProperty('--scrollOffset', `${offset}px`);					
-
-          _this3.framesDone && _this3.framesDone();
-          _this3.framesDone = false;
-        });
-      })["catch"](function () {});
-      this.ease.start();
+      this.ease.then(function (elapsed) {
+        container.style.setProperty('--scrollOffset', "0px");
+        container.scrollTop = groove;
+        _this3.framesDone && _this3.framesDone();
+        _this3.framesDone = false;
+      })["catch"](function (elapsed) {
+        if (elapsed > 0.5) {
+          var offset = Math.round(_this3.ease.current() * diff);
+          container.style.setProperty('--scrollOffset', "".concat(-1 * offset, "px"));
+          container.scrollTop = groove;
+        }
+      })["finally"](function () {});
+      this.scrollFrame = requestAnimationFrame(function () {
+        _this3.ease.start();
+      });
     }
   }, {
     key: "setVisible",
@@ -3218,7 +3246,7 @@ var Records = /*#__PURE__*/function (_RecordSet) {
 
       setTimeout(function () {
         return view.args.ready = true;
-      }, 750);
+      }, 250);
       return view;
     }
   }]);

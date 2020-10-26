@@ -2,8 +2,23 @@ import { View as BaseView } from 'curvature/base/View';
 import { Mixin } from 'curvature/base/Mixin';
 
 import { Linear  } from 'curvature/animate/ease/Linear';
-import { QuintIn } from 'curvature/animate/ease/QuintIn';
+
+import { QuadIn  } from 'curvature/animate/ease/QuadIn';
+import { QuadOut } from 'curvature/animate/ease/QuadOut';
+import { QuadInOut } from 'curvature/animate/ease/QuadInOut';
+
+import { CubicIn  } from 'curvature/animate/ease/CubicIn';
+import { CubicOut } from 'curvature/animate/ease/CubicOut';
+import { CubicInOut } from 'curvature/animate/ease/CubicInOut';
+
+import { QuartIn  } from 'curvature/animate/ease/QuartIn';
+import { QuartOut } from 'curvature/animate/ease/QuartOut';
+import { QuartInOut } from 'curvature/animate/ease/QuartInOut';
+
+import { QuintIn  } from 'curvature/animate/ease/QuintIn';
+import { QuintOut } from 'curvature/animate/ease/QuintOut';
 import { QuintInOut } from 'curvature/animate/ease/QuintInOut';
+
 import { ElasticOut } from 'curvature/animate/ease/ElasticOut';
 
 import { Row } from './Row';
@@ -144,13 +159,22 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 
 		const container = this.container;
 
-		const open  = container.scrollTop;
+		const start = container.scrollTop;
+		const depth = container.scrollHeight;
 		const space = container.offsetHeight;
+		const fold  = start + space;
 
-		let first   = Math.floor(open / this.args.rowHeight);
-		let last    = Math.ceil((open+space) / this.args.rowHeight);
+		let first   = Math.floor(start / this.args.rowHeight);
+		let last    = Math.ceil(fold / this.args.rowHeight);
 
-		this.args.scrollTop = open;
+		if(this.ease && !this.ease.done)
+		{
+			this.ease.cancel();
+			this.framesDone && this.framesDone();
+			this.framesDone = false;
+		}
+
+		this.args.scrollTop = start;
 
 		if(first > this.args.content.length)
 		{
@@ -164,66 +188,65 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 
 		this.setVisible(first, last);
 
-		if(this.ease)
+		if(this.scrollFrame)
 		{
-			this.ease.cancel();
-		}
-		
-		if(this.scrollTimeout)
-		{
-			clearTimeout(this.scrollTimeout);
+			cancelAnimationFrame(this.scrollFrame);
 		}
 
-		const start    = container.scrollTop;
+		if(start === 0)
+		{
+			container.style.setProperty('--scrollOffset', `0px`);
+			return;
+		}
+
 		const closeRow = Math.round(start / this.args.rowHeight);
 		const groove   = closeRow * this.args.rowHeight;
 		const diff     = groove - start;
 
 		let duration = Math.abs(diff * 12);
 
-		// if(duration < 95)
-		// {
-		// 	duration = 95;
-		// }
-		
-		if(duration > 500)
+		if(duration > 250)
 		{
-			duration = 500;
+			duration = 250;
 		}
 
-		if(this.ease)
+		if(fold === depth)
 		{
-			this.ease.cancel();
+			return;
 		}
 
-		this.ease = new ElasticOut(duration * 8, {repeat: 1, friction: 0.2});
-		// this.ease = new QuintInOut(duration * 4, {repeat: 1});
-
-		this.ease
-			.then(() => this.onFrame(() => container.style.setProperty('--scrollOffset', '0px')))
-			.catch(()=>{})
-			.finally(()=>{});
+		if(Math.abs(diff) > 8)
+		{
+			this.ease = new ElasticOut(duration * 8, {repeat: 1, friction: 0.25});
+		}
+		else
+		{
+			this.ease = new QuadOut(duration * 0.5, {repeat: 1});
+		}
 
 		this.framesDone = this.onFrame(()=>{
 			const offset = Math.round(this.ease.current() * diff);
-			this.onNextFrame(()=>{
-				container.style.setProperty('--scrollOffset', `${-1*offset}px`);
-			});
+			container.style.setProperty('--scrollOffset', `${-1*offset}px`);
 		});
 
-		this.ease.then(() => {
-			const offset = Math.round(this.ease.current() * diff);
-			
-			this.onNextFrame(()=>{
+		this.ease.then(elapsed => {
+			container.style.setProperty('--scrollOffset', `0px`);
+			container.scrollTop = groove;
+			this.framesDone && this.framesDone();
+			this.framesDone = false;
+		}).catch(elapsed => {
+			if(elapsed > 0.5)
+			{
+				const offset = Math.round(this.ease.current() * diff);
+				container.style.setProperty('--scrollOffset', `${-1*offset}px`);
 				container.scrollTop = groove;
-				// container.style.setProperty('--scrollOffset', `${offset}px`);					
-				this.framesDone && this.framesDone();
-				this.framesDone = false;
-			});
-			
-		}).catch(()=>{});
+			}
+		}).finally(() => {
+		});
 
-		this.ease.start();
+		this.scrollFrame = requestAnimationFrame(()=>{
+			this.ease.start();
+		});
 	}
 
 	setVisible(first, last)

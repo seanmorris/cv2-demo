@@ -19,7 +19,7 @@ export class Records extends RecordSet
 			, {k}
 		);
 
-		setTimeout(()=>view.args.ready = true, 750);
+		setTimeout(()=>view.args.ready = true, 250);
 
 		return view;
 	}

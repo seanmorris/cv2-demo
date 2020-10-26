@@ -39,7 +39,7 @@ export class View extends BaseView
 
 		this.args.rows      = 10;
 		this.args.rows      = 1000001;
-		this.args.rowHeight = 65;
+		this.args.rowHeight = 32;
 
 		const gridScroller = new GridScroller;
 
@@ -59,11 +59,11 @@ export class View extends BaseView
 			recordSet.changed(v);
 		});
 
-		this.args.arrayScroller =  new InfiniteScroller;
+		this.args.arrayScroller = new InfiniteScroller;
 
 		this.args.arrayScroller.args.content = Array(1000000).fill(1).map((v,k)=>k);
 
-		this.args.stringScroller =  new InfiniteScroller;
+		this.args.stringScroller = new InfiniteScroller;
 
 		this.args.stringScroller.args.content = new StringRecords;
 

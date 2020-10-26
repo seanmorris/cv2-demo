@@ -6,11 +6,9 @@
 }
 
 .grid.scroller {
-	height: 600px;	
 }
 
 .views.scroller > div > div:not([data-tag=shim]) {
-	padding: 1em;
 	white-space: nowrap;
 }
 
@@ -96,8 +94,8 @@
 	background-color: #AAA;
 	z-index: 1;
 	position: sticky !important;
-	top: 0;
 	transform: none !important;
+	top: 0 !important;
 }
 
 .line-up > div {
