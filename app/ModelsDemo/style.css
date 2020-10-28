@@ -1,14 +1,57 @@
 .models-demo input {
 	padding-left: 0.5em;
 	padding-right: 0.5em;
-	background-color: #BBB;
-	border-bottom: 1px solid black !important;
+	background-color: #DDD;
 	width: 0;
 	flex: 1;
 }
 
+.models-demo input[data-property="id"],
+.models-demo input[data-property="class"] {
+}
+
+.models-demo input[disabled] {
+	cursor: not-allowed;
+}
+
+.models-demo input:focus {
+	outline: none;
+	background-color: #BBB;
+}
+
+.models-demo .property-edit input {
+	border-bottom: 1px solid black !important;
+	border-right: 1px solid black !important;
+	border-left: 1px solid black !important;
+	font-weight: bold;
+}
+
 .models-demo pre{
 	line-height: 1.5em;
+}
+
+
+.models-demo pre img[data-icon] {
+	cursor: pointer;
+	margin-left: auto;
+	margin-right: 0.5em;
+	display: inline;
+	opacity: 1;
+}
+
+.models-demo pre img[data-icon]:focus {
+	opacity: 0.85;
+	outline: 1px dotted black;
+}
+
+.models-demo pre img[data-icon]:active {
+	opacity: 0.5;
+	filter: invert(55%);
+}
+
+.models-demo .firstline {
+	display: flex;
+	align-items: center;
 }
 
 .models-demo [contenteditable]:focus {
@@ -24,17 +67,48 @@
 	cursor: not-allowed;
 }
 
+.database-editor,
 .model-editor {
 	border: 1px solid black;
 	display: inline-block;
+}
+
+.model-editor {
 	width: 207px;
 }
 
-.model-editor .model-editor-title {
+.database-editor {
+	width: 100%;
+}
+
+.models-demo .models {}
+
+.models-demo .model-editor-title {
+	display: flex;
+	flex-direction: row;
 	background: black;
 	color: white;
 	font-weight: bold;
 	font-size: 0.85em;
+	padding: 0.5em;
+	user-select: none;
+}
+
+.model-editor .model-editor-title .title {
+	flex: 1;
+}
+
+.model-editor .model-editor-title .buttons {
+	margin-right: 0.25em;
+}
+
+.model-loader .model-editor-title .buttons {
+	pointer-events: none;
+	opacity: 0;
+}
+
+.model-editor .model-editor-title .buttons > * {
+	cursor: pointer;
 }
 
 .model-editor button {
@@ -42,15 +116,19 @@
 	color: white;
 }
 
+.model-editor img:focus,
+.model-editor input:focus,
+.model-editor button:focus {
+	outline: 1px dotted black;
+	outline-offset: 1px;
+}
+
 .model-editor .property-edit {
 	display: flex;
+	margin-top: 0.5em;
 }
 
-.model-editor .property-edit > * {
-	
-}
-
-.model-editor .model-editor-eyebrow {
+.models-demo .model-editor-eyebrow {
 	font-size: 0.8em;
 	padding: 0.5em;
 }
@@ -60,13 +138,25 @@
 	justify-content: center;
 }
 
+.model-editor .new-property {
+	border: 1px solid black !important;
+	margin: 0.5em;
+}
+
 .model-editor input {
 	flex: 1;
+}
+
+.model-editor > .buttons {
+	margin-bottom: 0.5em;
+	display: flex;
+	justify-content: center;
 }
 
 .model-editor button {
 	cursor: pointer;
 	font-weight: bold;
+	margin: 0.5em;
 }
 
 .model-editor button.tight {
@@ -94,6 +184,7 @@
 	justify-content: flex-start;
 }
 
-.models-demo .row > * {
-	margin-right: 1em;
+.model-editor {
+	margin-right: 0.75em;
+	margin-bottom: 0.75em;
 }

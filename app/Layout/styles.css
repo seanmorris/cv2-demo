@@ -37,7 +37,6 @@ h1 {
 	align-items: flex-end;
 	padding: 1em;
 	box-sizing: border-box;
-	font-size: 8pt;
 }
 
 .content {
@@ -51,6 +50,7 @@ html {
 
 pre, code {
 	font-family: 'Courier Prime', monospace;
-	font-weight: bold;
-	font-size: 11pt;
+}
+
+.CodeMirror pre {
 }

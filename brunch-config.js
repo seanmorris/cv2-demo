@@ -30,3 +30,11 @@ exports.plugins = {
 };
 
 exports.watcher = { awaitWriteFinish: true };
+exports.npm = {
+	styles: {
+		codemirror: [
+			"lib/codemirror.css",
+			"theme/elegant.css",
+		]
+	}
+};

@@ -208,7 +208,7 @@ var Ease = /*#__PURE__*/function (_Mixin$with) {
     _this.done = false;
     _this.calculate = _this.calculate || 'calculate' in options ? options.calculate : false;
     _this.bounded = 'bounded' in options ? options.bounded : true;
-    _this.repeat = 'repeat' in options ? options.repeat : false;
+    _this.repeat = 'repeat' in options ? options.repeat : 1;
     _this.reverse = 'reverse' in options ? options.reverse : false;
     return _this;
   }
@@ -587,7 +587,6 @@ var GeoIn = /*#__PURE__*/function (_Ease) {
     _this = _super.call(this, interval, options);
 
     _defineProperty(_assertThisInitialized(_this), "calculate", function (t) {
-      console.log(_this.power);
       return Math.pow(t, _this.power);
     });
 
@@ -649,7 +648,6 @@ var GeoOut = /*#__PURE__*/function (_Ease) {
     _this = _super.call(this, interval, options);
 
     _defineProperty(_assertThisInitialized(_this), "calculate", function (t) {
-      console.log(_this.power);
       return 1 - Math.abs(t - Math.pow(1, _this.power));
     });
 
@@ -1620,6 +1618,8 @@ var Executing = Symbol('executing');
 var Stack = Symbol('stack');
 var ObjSymbol = Symbol('object');
 var Wrapped = Symbol('wrapped');
+var OnGet = Symbol('onGet');
+var OnAllGet = Symbol('onAllGet');
 
 var Bindable = /*#__PURE__*/function () {
   function Bindable() {
@@ -1741,6 +1741,17 @@ var Bindable = /*#__PURE__*/function () {
         var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
         var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
         var bindToAll = false;
+
+        if (Array.isArray(property)) {
+          var debinders = property.map(function (p) {
+            return bindTo(p, callback, options);
+          });
+          return function () {
+            return debinders.map(function (d) {
+              return d();
+            });
+          };
+        }
 
         if (property instanceof Function) {
           options = callback || {};
@@ -2024,6 +2035,14 @@ var Bindable = /*#__PURE__*/function () {
           return target[key];
         }
 
+        if (object[OnAllGet]) {
+          return object[OnAllGet](key);
+        }
+
+        if (object[OnGet] && !(key in object)) {
+          return object[OnGet](key);
+        }
+
         if (target[key] instanceof Function) {
           if (target[Wrapped][key]) {
             return target[Wrapped][key];
@@ -2151,7 +2170,7 @@ var Bindable = /*#__PURE__*/function () {
     key: "wrapDelayCallback",
     value: function wrapDelayCallback(callback, delay) {
       return function (v, k, t, d) {
-        setTimeout(function () {
+        return setTimeout(function () {
           return callback(v, k, t, d, t[k]);
         }, delay);
       };
@@ -2215,6 +2234,18 @@ var Bindable = /*#__PURE__*/function () {
 }();
 
 exports.Bindable = Bindable;
+Object.defineProperty(Bindable, 'OnGet', {
+  configurable: false,
+  enumerable: false,
+  writable: false,
+  value: OnGet
+});
+Object.defineProperty(Bindable, 'OnAllGet', {
+  configurable: false,
+  enumerable: false,
+  writable: false,
+  value: OnAllGet
+});
   })();
 });
 
@@ -2314,9 +2345,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var AppConfig = {};
 
 try {
-  Object.assign(AppConfig, require('Config').Config || {});
+  Object.assign(AppConfig, require('/Config').Config || {});
 } catch (error) {
-  console.warn(error);
+  window.devMode === true && console.error(error);
 }
 
 var Config = /*#__PURE__*/function () {
@@ -3819,7 +3850,9 @@ var Router = /*#__PURE__*/function () {
       return result.then(function (result) {
         return _this3.update(listener, path, result, routes, selected, args, forceRefresh);
       })["catch"](function (error) {
-        return _this3.update(listener, path, error, routes, selected, args, forceRefresh);
+        console.error(error);
+
+        _this3.update(listener, path, error, routes, selected, args, forceRefresh);
       });
     }
   }, {
@@ -3999,7 +4032,7 @@ var AppRoutes = {};
 try {
   Object.assign(AppRoutes, require('Routes').Routes || {});
 } catch (error) {
-  window.devmode && console.warn(error);
+  window.devMode === true && console.warn(error);
 }
 
 var Routes = /*#__PURE__*/function () {
@@ -4278,15 +4311,52 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 var Tag = /*#__PURE__*/function () {
   function Tag(element, parent, ref, index, direct) {
+    var _this = this;
+
     _classCallCheck(this, Tag);
 
+    if (typeof element === 'string') {
+      var subdoc = document.createRange().createContextualFragment(element);
+      element = subdoc.firstChild;
+    }
+
     this.element = _Bindable.Bindable.makeBindable(element);
+    this.node = this.element;
     this.parent = parent;
     this.direct = direct;
     this.ref = ref;
     this.index = index;
     this.cleanup = [];
-    this.proxy = _Bindable.Bindable.makeBindable(this); // this.detachListener = (event) => {
+
+    this[_Bindable.Bindable.OnAllGet] = function (name) {
+      if (typeof _this[name] === 'function') {
+        return _this[name];
+      }
+
+      if (typeof _this.element[name] === 'function') {
+        return function () {
+          var _this$element;
+
+          return (_this$element = _this.element)[name].apply(_this$element, arguments);
+        };
+      }
+
+      if (name in _this.element) {
+        return _this.element[name];
+      }
+
+      return _this[name];
+    };
+
+    this.proxy = _Bindable.Bindable.makeBindable(this);
+    this.proxy.bindTo(function (v, k) {
+      if (k in element) {
+        element[k] = v;
+      }
+
+      return false;
+    });
+    return this.proxy; // this.detachListener = (event) => {
     // 	return;
     // 	if(event.target != this.element)
     // 	{
@@ -4362,6 +4432,10 @@ var Tag = /*#__PURE__*/function () {
       }
 
       for (var property in styles) {
+        if (property[0] === '-') {
+          this.element.style.setProperty(property, styles[property]);
+        }
+
         this.element.style[property] = styles[property];
       }
     }
@@ -4749,7 +4823,7 @@ var View = /*#__PURE__*/function () {
       this.mainView || this.ruleSet.apply(subDoc, this);
       this.nodes = [];
 
-      if (window['devmode'] === true) {
+      if (window.devMode === true) {
         this.firstNode = document.createComment("Template ".concat(this._id, " Start"));
         this.lastNode = document.createComment("Template ".concat(this._id, " End"));
       } else {
@@ -4791,6 +4865,21 @@ var View = /*#__PURE__*/function () {
           this.nodes.filter(function (n) {
             return n.nodeType !== Node.COMMENT_NODE;
           }).map(function (child) {
+            if (!child.matches) {
+              return;
+            }
+
+            _Dom.Dom.mapTags(child, false, function (tag, walker) {
+              if (!tag.matches) {
+                return;
+              }
+
+              tag.dispatchEvent(new Event('cvDomAttached', {
+                bubbles: true,
+                target: child
+              }));
+            });
+
             child.dispatchEvent(new Event('cvDomAttached', {
               bubbles: true,
               target: child
@@ -4814,6 +4903,21 @@ var View = /*#__PURE__*/function () {
         for (var _i7 in detach) {
           detach[_i7]();
         }
+
+        _Dom.Dom.mapTags(child, false, function (tag, walker) {
+          if (!child.matches) {
+            return;
+          }
+
+          if (!tag.matches) {
+            return;
+          }
+
+          tag.dispatchEvent(new Event('cvDomAttached', {
+            bubbles: true,
+            target: child
+          }));
+        });
 
         this.nodes.filter(function (n) {
           return n.nodeType === Node.ELEMENT_NODE;
@@ -5347,11 +5451,12 @@ var View = /*#__PURE__*/function () {
           _refAttr$split2$2 = _refAttr$split2[2],
           refKey = _refAttr$split2$2 === void 0 ? null : _refAttr$split2$2;
 
-      if (!refClassname) {
-        refClassname = 'curvature/base/Tag';
+      var refClass = _Tag.Tag;
+
+      if (refClassname) {
+        refClass = this.stringToClass(refClassname);
       }
 
-      var refClass = this.stringToClass(refClassname);
       tag.removeAttribute('cv-ref');
       Object.defineProperty(tag, '___tag___', {
         enumerable: false,
@@ -6070,11 +6175,17 @@ var View = /*#__PURE__*/function () {
       var sourceTag = tag;
       var ifProperty = sourceTag.getAttribute('cv-if');
       var inverted = false;
+      var defined = false;
       sourceTag.removeAttribute('cv-if');
 
       if (ifProperty.substr(0, 1) === '!') {
         ifProperty = ifProperty.substr(1);
         inverted = true;
+      }
+
+      if (ifProperty.substr(0, 1) === '?') {
+        ifProperty = ifProperty.substr(1);
+        defined = true;
       }
 
       var subTemplate = new DocumentFragment();
@@ -6102,12 +6213,8 @@ var View = /*#__PURE__*/function () {
 
       var hasRendered = false;
       var propertyDebind = proxy.bindTo(property, function (v, k) {
-        if (!hasRendered) {
-          var initValue = proxy[property];
-          var renderDoc = !!initValue ^ !!inverted ? tag : ifDoc;
-          view.render(renderDoc);
-          hasRendered = true;
-          return;
+        if (defined) {
+          v = v !== null && v !== undefined;
         }
 
         if (Array.isArray(v)) {
@@ -6116,6 +6223,13 @@ var View = /*#__PURE__*/function () {
 
         if (inverted) {
           v = !v;
+        }
+
+        if (!hasRendered) {
+          var renderDoc = !!proxy[property] ^ !!inverted ? tag : ifDoc;
+          view.render(renderDoc);
+          hasRendered = true;
+          return;
         }
 
         if (v) {
@@ -6458,7 +6572,9 @@ var View = /*#__PURE__*/function () {
   }, {
     key: "findTags",
     value: function findTags(selector) {
-      return this.nodes, map(function (n) {
+      return this.nodes.filter(function (n) {
+        return n.querySelectorAll;
+      }).map(function (n) {
         return n.querySelectorAll(selector);
       }).flat();
     }
@@ -6530,6 +6646,34 @@ var View = /*#__PURE__*/function () {
   }, {
     key: "listen",
     value: function listen(node, eventName, callback, options) {
+      var _this14 = this;
+
+      if (typeof node === 'string') {
+        options = callback;
+        callback = eventName;
+        eventName = node;
+        node = this;
+      }
+
+      if (node instanceof View) {
+        return this.listen(node.nodes, eventName, callback, options);
+      }
+
+      if (Array.isArray(node)) {
+        var removers = node.map(function (n) {
+          return _this14.listen(n, eventName, callback, options);
+        });
+        return function () {
+          return removers.map(function (r) {
+            return r();
+          });
+        };
+      }
+
+      if (node instanceof _Tag.Tag) {
+        return this.listen(node.element, eventName, callback, options);
+      }
+
       node.addEventListener(eventName, callback, options);
 
       var remove = function remove() {
@@ -6642,7 +6786,7 @@ var ViewList = /*#__PURE__*/function () {
     });
     this.willReRender = false;
 
-    this.args.___before(function (t, e, s, o) {
+    this.args.___before(function (t, e, s, o, a) {
       if (e == 'bindTo') {
         return;
       }
@@ -6650,7 +6794,7 @@ var ViewList = /*#__PURE__*/function () {
       _this.paused = true;
     });
 
-    this.args.___after(function (t, e, s, o) {
+    this.args.___after(function (t, e, s, o, a) {
       if (e == 'bindTo') {
         return;
       }
@@ -8545,7 +8689,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.SearchForm = void 0;
 
-var _Config = require("Config");
+var _Config = require("../../base/Config");
 
 var _FormWrapper2 = require("./FormWrapper");
 
@@ -8579,7 +8723,7 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
-var backend = _Config.Config ? _Config.Config.backend : '//';
+var backend = _Config.Config.get('backend') || '//';
 
 var SearchForm = /*#__PURE__*/function (_FormWrapper) {
   _inherits(SearchForm, _FormWrapper);
@@ -8737,7 +8881,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.View = void 0;
 
-var _Config = require("Config");
+var _Config = require("../../base/Config");
 
 var _Form = require("../../form/Form");
 
@@ -8821,8 +8965,8 @@ var View = /*#__PURE__*/function (_FieldSet) {
 
       var origin = '';
 
-      if (_Config.Config && _Config.Config.backend) {
-        origin = _Config.Config.backend;
+      if (_Config.Config.get('backend')) {
+        origin = _Config.Config.get('backend');
       }
 
       if (this.args.attrs['data-create-endpoint'] !== false) {
@@ -9132,7 +9276,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Wrapper = void 0;
 
-var _Config = require("Config");
+var _Config = require("../../base/Config");
 
 var _View2 = require("../../base/View");
 
@@ -9246,7 +9390,7 @@ var Wrapper = /*#__PURE__*/function (_View) {
   }, {
     key: "backendPath",
     value: function backendPath() {
-      var backend = _Config.Config ? _Config.Config.backend : '//';
+      var backend = _Config.Config.get('backend') || '//';
       return backend + this.args.parent.args.attrs['data-endpoint'];
     }
   }, {
@@ -9442,7 +9586,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Database = void 0;
 
-var _Bindable = require("curvature/base/Bindable");
+var _Bindable = require("../base/Bindable");
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 

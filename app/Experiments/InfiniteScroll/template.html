@@ -2,17 +2,15 @@
 
 <p>These scroll boxes automatically remove any DOM elements that are no longer visible to the user. This allows us to make large scrollable boxes without wasting large amounts of computing power on DOM calculations for records that may never become visible.</p>
 
-<span style = "font-weight:bold; position:relative; left:[[xx]]px">X</span>
-
 <div class = "row wide line-up">
 
 	<div class = "wide">
 		<h3>Simple Scroller</h3>
 
-		<p>This scroller uses an array of 1,000,000 integers.</p>
+		<p>This scroller uses an array of <b>[[simpleRows|thousands]]</b> integers.</p>
 		<p>Arrays and RecordSets are interchangeable here.</p>
 
-		<div class = "views scroller">
+		<div class = "simple scroller">
 			[[arrayScroller]]
 		</div>
 
@@ -25,7 +23,7 @@
 		<p>This scroller uses a RecordSet that returns strings.</p>
 		<p>An array of strings could easily have been used instead of a RecordSet.</p>
 
-		<div class = "views scroller">
+		<div class = "string scroller">
 			[[stringScroller]]
 		</div>
 
@@ -50,14 +48,16 @@
 
 <p>This scroller uses CSS grid, and a custom template to simulate a table. Its RecordSet returns plain objects.</p>
 
-<p>The number of records and row height can be altered on the fly as well, this is common to all Scrollers.</p>
+<p>The number (<b>[[rows|thousands]]</b>) of records and row height can be altered on the fly as well, this is common to all Scrollers.</p>
 
 <p>Counting both the texboxes & sliders, there are 2,000,002 input fields avaiable below, each mapped to an object in memory.</p>
+
+<p><b>NOTE:</b> This is currently limited by the scroll-height limit of <u>33,554,400 pixels</u> imposed by webkit.</p>
 
 <div class = "row wide">
 	<div class = "row wide">
 		<label>
-			<p>Rows:&nbsp;<input cv-bind = "rows" type = "number" min = "0"/></p>
+			<p>Rows:&nbsp;<input cv-bind = "rows" type = "number" min = "0" /></p>
 		</label>
 	</div>
 	<div class = "row wide">
@@ -76,7 +76,7 @@
 
 <div class = "row wide">
 	<div class = "row wide">
-		Position: [[gridScroller.args.scrollTop]]
+		Position: [[gridScroller.args.scrollTop]] / [[gridScroller.args.scrollMax]]
 	</div>
 	<div class = "row wide">
 		Speed: [[gridScroller.args.speed]] px/s

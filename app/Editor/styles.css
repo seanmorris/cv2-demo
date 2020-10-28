@@ -143,7 +143,7 @@
 
 .editor-window .button.expand [data-icon] {
 	background-image: url(/expand.svg);
-	background-size: 70%;
+	background-size: 80%;
 }
 
 .editor-window.expanded [data-icon="check"] {

@@ -444,7 +444,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Wrapper = void 0;
 
-var _Config = require("Config");
+var _Config = require("../../base/Config");
 
 var _View2 = require("../../base/View");
 
@@ -558,7 +558,7 @@ var Wrapper = /*#__PURE__*/function (_View) {
   }, {
     key: "backendPath",
     value: function backendPath() {
-      var backend = _Config.Config ? _Config.Config.backend : '//';
+      var backend = _Config.Config.get('backend') || '//';
       return backend + this.args.parent.args.attrs['data-endpoint'];
     }
   }, {
@@ -2357,7 +2357,7 @@ var View = /*#__PURE__*/function (_BaseView) {
     _this.template = require('./template');
     _this.args.rows = 10;
     _this.args.rows = 1000001;
-    _this.args.rowHeight = 32;
+    _this.args.rowHeight = 33;
     var gridScroller = new _Scroller.Scroller();
     _this.args.gridScroller = gridScroller;
 
@@ -2367,59 +2367,35 @@ var View = /*#__PURE__*/function (_BaseView) {
 
     var recordSet = new _SliderRecords.SliderRecords();
     gridScroller.args.content = recordSet;
-    recordSet.bindTo('length', function (v) {
-      gridScroller.args.max = v;
-    });
 
     _this.args.bindTo('rows', function (v) {
-      recordSet.changed(v);
+      return recordSet.changed(v);
     });
 
-    _this.args.arrayScroller = new _InfiniteScroller.InfiniteScroller();
-    _this.args.arrayScroller.args.content = Array(1000000).fill(1).map(function (v, k) {
-      return k;
+    _this.args.simpleRows = 1000001;
+    _this.args.arrayScroller = new _InfiniteScroller.InfiniteScroller({
+      rowHeight: 33
     });
-    _this.args.stringScroller = new _InfiniteScroller.InfiniteScroller();
+    _this.args.arrayScroller.args.content = Array(_this.args.simpleRows).fill(1).map(function (v, k) {
+      return _this.thousands(k);
+    });
+    _this.args.stringScroller = new _InfiniteScroller.InfiniteScroller({
+      rowHeight: 33
+    });
     _this.args.stringScroller.args.content = new _Records2.Records();
-    _this.args.viewScroller = new _InfiniteScroller.InfiniteScroller();
+    _this.args.viewScroller = new _InfiniteScroller.InfiniteScroller({
+      rowHeight: 33
+    });
     _this.args.viewScroller.args.content = new _Records.Records();
-    var friction = 0.1;
-    var easeIn = new _SineOut.SineOut(750, {
-      friction: 0.35,
-      power: 5,
-      reverse: 0,
-      repeat: 1
-    });
-    var easeOut = new _SineIn.SineIn(750, {
-      reverse: 1,
-      power: 1,
-      repeat: 1
-    });
-
-    var cancelFrames = _this.onFrame(function () {
-      if (!easeIn.done) {
-        _this.args.xx = 500 * easeIn.current();
-      } else if (!easeOut.done) {
-        _this.args.xx = 500 * easeOut.current();
-      }
-    }); // this.onTimeout(751, () => easeIn.cancel());
-
-
-    easeIn.then(function () {
-      easeOut.start();
-      easeOut.then(function () {
-        return cancelFrames();
-      });
-    });
-
-    _this.onTimeout(250, function () {
-      return easeIn.start();
-    });
-
     return _this;
   }
 
   _createClass(View, [{
+    key: "thousands",
+    value: function thousands(x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+  }, {
     key: "leftPad",
     value: function leftPad(x) {
       return String(x).padStart(4, 0);
@@ -2449,41 +2425,19 @@ var _View = require("curvature/base/View");
 
 var _Mixin = require("curvature/base/Mixin");
 
-var _Linear = require("curvature/animate/ease/Linear");
+var _Tag = require("curvature/base/Tag");
 
-var _QuadIn = require("curvature/animate/ease/QuadIn");
+var _GeoIn = require("curvature/animate/ease/GeoIn");
 
-var _QuadOut = require("curvature/animate/ease/QuadOut");
-
-var _QuadInOut = require("curvature/animate/ease/QuadInOut");
-
-var _CubicIn = require("curvature/animate/ease/CubicIn");
-
-var _CubicOut = require("curvature/animate/ease/CubicOut");
-
-var _CubicInOut = require("curvature/animate/ease/CubicInOut");
-
-var _QuartIn = require("curvature/animate/ease/QuartIn");
-
-var _QuartOut = require("curvature/animate/ease/QuartOut");
-
-var _QuartInOut = require("curvature/animate/ease/QuartInOut");
-
-var _QuintIn = require("curvature/animate/ease/QuintIn");
-
-var _QuintOut = require("curvature/animate/ease/QuintOut");
-
-var _QuintInOut = require("curvature/animate/ease/QuintInOut");
+var _GeoOut = require("curvature/animate/ease/GeoOut");
 
 var _ElasticOut = require("curvature/animate/ease/ElasticOut");
-
-var _SineIn = require("curvature/animate/ease/SineIn");
-
-var _SineOut = require("curvature/animate/ease/SineOut");
 
 var _Row = require("./Row");
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -2531,14 +2485,13 @@ var InfiniteScroller = /*#__PURE__*/function (_Mixin$from) {
     _this.last = null;
     _this.changing = false;
     _this.lastScroll = false;
-    _this.speed = 0;
     _this.topSpeed = 0;
-    _this.args.topSpeed = 0;
+    _this.speed = 0;
     _this.args.width = '100%';
     _this.args.height = '100%';
     _this.args.scrollTop = 0;
     _this.args.scrollDir = 0;
-    _this.autoScrolling = false;
+    _this.args.rowHeight = _this.args.rowHeight || 32;
 
     _this.args.bindTo('scrollTop', function (v, k, t) {
       _this.args.scrollDir = 0;
@@ -2558,112 +2511,117 @@ var InfiniteScroller = /*#__PURE__*/function (_Mixin$from) {
     value: function attached() {
       var _this2 = this;
 
-      var container = this.container = this.tags.list.element;
+      var container = this.container = this.tags.list;
+      var shim = new _Tag.Tag('<div data-tag = "shim">');
+      container.style({
+        overflowY: 'scroll',
+        position: 'relative',
+        display: 'block',
+        width: '100%'
+      });
+      shim.style({
+        pointerEvents: 'none',
+        position: 'absolute',
+        opacity: 0,
+        height: 'var(--shimHeight)',
+        width: '1px'
+      });
+      container.append(shim.element);
 
       var setHeights = function setHeights(v, k) {
-        container.style.setProperty("--".concat(k), "".concat(v, "px"));
+        return container.style(_defineProperty({}, "--".concat(k), "".concat(v, "px")));
       };
 
       this.args.bindTo('height', function (v) {
-        return container.style.height = v;
+        return container.style({
+          height: v
+        });
       });
       this.args.bindTo('width', function (v) {
-        return container.style.height = v;
+        return container.style({
+          width: v
+        });
       });
-      container.style.position = 'relative';
-      container.style.overflowY = 'scroll';
-      container.style.display = 'block';
-      container.style.width = '100%';
       this.args.bindTo('rowHeight', setHeights);
       this.args.bindTo('shimHeight', setHeights);
-      this.listen(container, 'scroll', function (event) {
-        return _this2.updateViewport(event);
-      }, {
-        passive: true
-      });
-      var shim = document.createElement('div');
-      shim.setAttribute('data-tag', 'shim');
-      shim.setAttribute('style', "position: absolute;width: 1px;height: var(--shimHeight);pointer-events: none;opacity: 0;");
-      container.append(shim);
       this.args.bindTo('rowHeight', function (v, k, t) {
         t[k] = parseInt(v);
-        var rows = _this2.args.content.length;
+        var headerRow = _this2.header() ? 1 : 0;
+        var rows = headerRow + _this2.args.content.length;
+        _this2.args.shimHeight = rows * _this2.args.rowHeight;
+        _this2.container.scrollTop = _this2.first * _this2.args.rowHeight;
 
-        if (rows && _this2.args.rowHeight) {
-          _this2.args.shimHeight = (rows * _this2.args.rowHeight).toFixed(2);
-        }
-
-        if (_this2.container) {
-          _this2.updateViewport();
-        }
+        _this2.updateViewport();
       });
       this.contentDebind = this.args.bindTo('content', function (v, k, t) {
-        var _v$length;
+        var headerRow = _this2.header() ? 1 : 0;
+        var rows = headerRow + v.length;
+        _this2.args.shimHeight = rows * _this2.args.rowHeight;
 
-        t[k] = v;
-        var rows = (_v$length = v.length) !== null && _v$length !== void 0 ? _v$length : 0;
+        _this2.onNextFrame(function () {
+          return _this2.updateViewport();
+        });
 
-        if (_this2.args.rowHeight) {
-          _this2.args.shimHeight = rows * _this2.args.rowHeight;
-        }
+        _this2.lengthDebind && _this2.lengthDebind();
+        _this2.lengthDebind = v.bindTo('length', function (v) {
+          v = Number(v);
+          _this2.args.shimHeight = (v + headerRow) * _this2.args.rowHeight;
+
+          _this2.onNextFrame(function () {
+            return _this2.updateViewport();
+          });
+        });
 
         _this2.updateViewport();
       });
-      this.args.content.bindTo('length', function (v, k, t) {
-        t[k] = v;
-        var rows = v !== null && v !== void 0 ? v : 0;
-
-        if (_this2.args.rowHeight) {
-          _this2.args.shimHeight = rows * _this2.args.rowHeight;
-        }
-
-        _this2.updateViewport();
-      }, {
-        wait: 0
+      this.listen('scroll', function (event) {
+        return _this2.updateViewport(event);
       });
-      this.args.rowHeight = this.args.rowHeight || 32;
-      this.onNextFrame(function () {
-        return _this2.updateViewport();
-      });
+      this.updateViewport();
     }
   }, {
     key: "updateViewport",
-    value: function updateViewport(event) {
+    value: function updateViewport() {
       var _this3 = this;
+
+      this.snapper && this.snapper.cancel();
 
       if (this.changing) {
         return;
       }
 
       var container = this.container;
-      var start = container.scrollTop;
-      var depth = container.scrollHeight;
+      var start = this.args.scrollTop = container.scrollTop;
+      var depth = this.args.scrollHeight = container.scrollHeight;
       var space = container.offsetHeight;
       var fold = start + space;
+      this.args.scrollMax = depth - space;
       var first = Math.floor(start / this.args.rowHeight);
       var last = Math.ceil(fold / this.args.rowHeight);
       var lastScroll = {
         time: Date.now(),
         pos: start
       };
-      this.onTimeout(100, function () {
-        var timeDiff = Date.now() - lastScroll.time;
-        var posDiff = container.scrollTop - start;
-        _this3.speed = posDiff / (timeDiff / 100);
-        _this3.args.speed = _this3.speed.toFixed(2);
-      });
 
-      if (this.snapper && !this.snapper.done) {
-        this.snapper.cancel();
-        this.snapperDone && this.snapperDone();
-        this.snapperDone = false;
+      if (!this.speedTimer) {
+        this.speedTimer = this.onTimeout(100, function () {
+          var timeDiff = Date.now() - lastScroll.time;
+          var posDiff = container.scrollTop - start;
+          _this3.speed = posDiff / timeDiff * 1000;
+          var absSpeed = Math.abs(_this3.speed);
 
-        if (this.scrollFrame) {
-          cancelAnimationFrame(this.scrollFrame);
-        }
+          if (absSpeed > Math.abs(_this3.topSpeed)) {
+            _this3.topSpeed = _this3.speed;
+          }
+
+          if (!_this3.speed) {
+            _this3.topSpeed = _this3.speed;
+          }
+
+          _this3.args.speed = _this3.speed.toFixed(2);
+        });
+        this.speedTimer = false;
       }
-
-      this.args.scrollTop = start;
 
       if (first > this.args.content.length) {
         first = this.args.content.length - 1;
@@ -2675,54 +2633,62 @@ var InfiniteScroller = /*#__PURE__*/function (_Mixin$from) {
 
       this.setVisible(first, last);
 
-      if (start === 0) {
-        container.style.setProperty('--snapperOffset', "0px");
+      if (start === 0 || fold === depth) {
+        container.style({
+          '--inertiaOffset': "0px"
+        });
+        container.style({
+          '--snapperOffset': "0px"
+        });
         return;
       }
 
       var closeRow = Math.round(start / this.args.rowHeight);
       var groove = closeRow * this.args.rowHeight;
       var diff = groove - start;
-      var duration = Math.abs(diff * 12);
+      var duration = Math.abs(diff * this.args.rowHeight / 2);
 
-      if (duration > 250) {
-        duration = 250;
+      if (duration > 192) {
+        duration = 192;
       }
+      /*/
+      const snapper = new GeoIn(duration, {power: 5});
+      /*/
 
-      if (fold === depth) {
-        return;
-      }
 
-      if (Math.abs(diff) > 5) {
-        this.snapper = new _ElasticOut.ElasticOut(duration * 8, {
-          repeat: 1,
-          friction: 0.25
-        });
-      } else {
-        this.snapper = new _Linear.Linear(duration * 0.5, {
-          repeat: 1
-        });
-      }
+      var snapper = new _ElasticOut.ElasticOut(duration * 13, {
+        friction: 0.15
+      }); //*/
 
+      this.snapperDone && this.snapperDone();
       this.snapperDone = this.onFrame(function () {
-        var offset = Math.round(_this3.snapper.current() * diff);
-        container.style.setProperty('--snapperOffset', "".concat(-1 * offset, "px"));
+        var offset = snapper.current() * diff;
+        container.style({
+          '--snapperOffset': "".concat(-1 * offset, "px")
+        });
       });
-      this.snapper.then(function (elapsed) {
-        container.style.setProperty('--snapperOffset', "0px");
-        container.scrollTop = groove;
-        _this3.snapperDone && _this3.snapperDone();
-        _this3.snapperDone = false;
+      snapper.then(function (elapsed) {
+        _this3.onNextFrame(function () {
+          container.style({
+            '--snapperOffset': 0
+          });
+          container.node.scrollTop = groove;
+        });
+
+        _this3.snapperDone();
+
+        event.preventDefault();
       })["catch"](function (elapsed) {
-        if (Math.abs(_this3.topSpeed) <= 100 && elapsed > 0.5) {
-          var offset = Math.round(_this3.snapper.current() * diff);
-          container.style.setProperty('--snapperOffset', "".concat(-1 * offset, "px"));
-          container.scrollTop = groove;
-        }
+        var offset = _this3.snapper.current() * diff;
+        container.style({
+          '--snapperOffset': "".concat(-1 * offset, "px")
+        });
       });
+      this.scrollFrame && cancelAnimationFrame(this.scrollFrame);
       this.scrollFrame = requestAnimationFrame(function () {
-        _this3.snapper.start();
+        return snapper.start();
       });
+      this.snapper = snapper;
     }
   }, {
     key: "setVisible",
@@ -2793,6 +2759,19 @@ var InfiniteScroller = /*#__PURE__*/function (_Mixin$from) {
       this.first = first;
       this.last = last;
       this.changing = false;
+    }
+  }, {
+    key: "header",
+    value: function header() {
+      if (!this.args.content) {
+        return false;
+      }
+
+      if (typeof this.args.content.header !== 'function') {
+        return false;
+      }
+
+      return this.args.content.header();
     }
   }, {
     key: "leftPad",
@@ -2979,12 +2958,12 @@ var Row = /*#__PURE__*/function (_BaseView) {
       rowTag.style.setProperty('--index', this.args.r);
       rowTag.style.position = 'absolute';
       rowTag.style.height = 'var(--rowHeight)';
-      rowTag.style.transform = "translateY(calc( var(--snapperOffset) ))";
+      rowTag.style.transform = "translateY(calc( var(--snapperOffset) + var(--inertiaOffset) ))";
       rowTag.style.top = 'calc( var(--rowHeight) * var(--index)';
       var observer = new IntersectionObserver(function (e, o) {
         return _this2.scrollObserved(e, o);
       }, {
-        root: this.parent.container
+        root: this.parent.container.node
       });
       observer.observe(rowTag);
     }
@@ -3022,7 +3001,7 @@ exports.Row = Row;
 });
 
 ;require.register("Experiments/InfiniteScroll/lib/infinite-scroller.html", function(exports, require, module) {
-module.exports = "<div cv-ref  = \"list\">\n\t<div cv-ref = \"row\">[[row]]</div>\n</div>\n"
+module.exports = "<div class = \"cv-hyperscroller\" cv-ref  = \"list\">\n\t<div class = \"cv-hyperscroller-row\" cv-ref = \"row\">[[row]]</div>\n</div>\n"
 });
 
 ;require.register("Experiments/InfiniteScroll/sliders/Scroller.js", function(exports, require, module) {
@@ -3134,9 +3113,9 @@ var SliderRecords = /*#__PURE__*/function (_RecordSet) {
   }, {
     key: "fetch",
     value: function fetch(k) {
-      var id = (0xFFFFFF * Math.random()).toString(36);
-      var value = k;
-      var title = '';
+      var id = k + 1;
+      var title = ((k + 0xFF * 0xFF + 30) / 77).toString(36);
+      var value = k % 100;
       return {
         index: k,
         id: id,
@@ -3153,7 +3132,7 @@ exports.SliderRecords = SliderRecords;
 });
 
 ;require.register("Experiments/InfiniteScroll/sliders/scroller.html", function(exports, require, module) {
-module.exports = "<div cv-ref = \"list\" class = \"table\">\n\n\t<div\n\t\tcv-ref  = \"row\"\n\t\tcv-with = \"row\"\n\t\tclass   = \"table-row [[row.___header]]\">\n\n\t\t<div>[[index]]</div>\n\n\t\t<div>[[id]]</div>\n\n\t\t<div>\n\t\t\t<span cv-if = \"___header\">\n\t\t\t\ttitle\n\t\t\t</span>\n\t\t\t<span cv-if = \"!___header\">\n\t\t\t\t<input type = \"text\" cv-bind = \"title\">\n\t\t\t</span>\n\t\t</div>\n\n\t\t<div>[[value]]</div>\n\n\t\t<div cv-if = \"!___header\">\n\n\t\t\t<input\n\t\t\t\ttype    = \"range\"\n\t\t\t\tmin     = \"0\"\n\t\t\t\tmax     = \"1000000\"\n\t\t\t\tcv-bind = \"value\">\n\n\t\t</div>\n\n\t</div>\n\n</div>\n"
+module.exports = "<div cv-ref = \"list\" class = \"table\">\n\n\t<div\n\t\tcv-ref  = \"row\"\n\t\tcv-with = \"row\"\n\t\tclass   = \"table-row [[row.___header]]\">\n\n\t\t<div>[[id]]</div>\n\n\t\t<div>\n\t\t\t<span cv-if = \"___header\">\n\t\t\t\ttitle\n\t\t\t</span>\n\t\t\t<span cv-if = \"!___header\">\n\t\t\t\t<input type = \"text\" cv-bind = \"title\" placeholder = \"input a title\">\n\t\t\t</span>\n\t\t</div>\n\n\t\t<div>[[value]]</div>\n\n\t\t<div cv-if = \"!___header\">\n\n\t\t\t<input\n\t\t\t\ttype    = \"range\"\n\t\t\t\tmin     = \"0\"\n\t\t\t\tmax     = \"100\"\n\t\t\t\tcv-bind = \"value\">\n\n\t\t</div>\n\n\t\t<div>\n\t\t\t<span cv-if = \"!?index\">Row</span>\n\t\t\t<span cv-if = \"?index\">[[index]]</span>\n\t\t</div>\n\n\t</div>\n\n</div>\n"
 });
 
 ;require.register("Experiments/InfiniteScroll/strings/Records.js", function(exports, require, module) {
@@ -3206,7 +3185,7 @@ var Records = /*#__PURE__*/function (_RecordSet) {
 
     _this = _super.call.apply(_super, [this].concat(args));
 
-    _defineProperty(_assertThisInitialized(_this), "length", 1000000);
+    _defineProperty(_assertThisInitialized(_this), "length", 1000001);
 
     return _this;
   }
@@ -3225,7 +3204,7 @@ exports.Records = Records;
 });
 
 ;require.register("Experiments/InfiniteScroll/template.html", function(exports, require, module) {
-module.exports = "<h2>Experimental Scrollers</h2>\n\n<p>These scroll boxes automatically remove any DOM elements that are no longer visible to the user. This allows us to make large scrollable boxes without wasting large amounts of computing power on DOM calculations for records that may never become visible.</p>\n\n<span style = \"font-weight:bold; position:relative; left:[[xx]]px\">X</span>\n\n<div class = \"row wide line-up\">\n\n\t<div class = \"wide\">\n\t\t<h3>Simple Scroller</h3>\n\n\t\t<p>This scroller uses an array of 1,000,000 integers.</p>\n\t\t<p>Arrays and RecordSets are interchangeable here.</p>\n\n\t\t<div class = \"views scroller\">\n\t\t\t[[arrayScroller]]\n\t\t</div>\n\n\t</div>\n\n\t<div class = \"wide\">\n\n\t\t<h3>String Scroller</h3>\n\n\t\t<p>This scroller uses a RecordSet that returns strings.</p>\n\t\t<p>An array of strings could easily have been used instead of a RecordSet.</p>\n\n\t\t<div class = \"views scroller\">\n\t\t\t[[stringScroller]]\n\t\t</div>\n\n\t</div>\n\n\t<div class = \"wide\">\n\n\t\t<h3>View Scroller</h3>\n\n\t\t<p>This scroller uses a RecordSet that returns curvature View objects.</p>\n\t\t<p>There is a 250ms simulated load time when the view is first accessed.</p>\n\n\t\t<div class = \"views scroller\">\n\t\t\t[[viewScroller]]\n\t\t</div>\n\n\t</div>\n\n</div>\n\n<h3>Grid Scroller</h3>\n\n<p>This scroller uses CSS grid, and a custom template to simulate a table. Its RecordSet returns plain objects.</p>\n\n<p>The number of records and row height can be altered on the fly as well, this is common to all Scrollers.</p>\n\n<p>Counting both the texboxes & sliders, there are 2,000,002 input fields avaiable below, each mapped to an object in memory.</p>\n\n<div class = \"row wide\">\n\t<div class = \"row wide\">\n\t\t<label>\n\t\t\t<p>Rows:&nbsp;<input cv-bind = \"rows\" type = \"number\" min = \"0\"/></p>\n\t\t</label>\n\t</div>\n\t<div class = \"row wide\">\n\t\t<label>\n\t\t\t<p>\n\t\t\t\tRow Height [[rowHeight|leftPad]]px\n\t\t\t\t<input cv-bind = \"rowHeight\" type = \"range\" max = \"100\" />\n\t\t\t</p>\n\t\t</label>\n\t</div>\n</div>\n\n<div class = \"grid scroller\">\n\t[[gridScroller]]\n</div>\n\n<div class = \"row wide\">\n\t<div class = \"row wide\">\n\t\tPosition: [[gridScroller.args.scrollTop]]\n\t</div>\n\t<div class = \"row wide\">\n\t\tSpeed: [[gridScroller.args.speed]] px/s\n\t</div>\n</div>\n\n"
+module.exports = "<h2>Experimental Scrollers</h2>\n\n<p>These scroll boxes automatically remove any DOM elements that are no longer visible to the user. This allows us to make large scrollable boxes without wasting large amounts of computing power on DOM calculations for records that may never become visible.</p>\n\n<div class = \"row wide line-up\">\n\n\t<div class = \"wide\">\n\t\t<h3>Simple Scroller</h3>\n\n\t\t<p>This scroller uses an array of <b>[[simpleRows|thousands]]</b> integers.</p>\n\t\t<p>Arrays and RecordSets are interchangeable here.</p>\n\n\t\t<div class = \"simple scroller\">\n\t\t\t[[arrayScroller]]\n\t\t</div>\n\n\t</div>\n\n\t<div class = \"wide\">\n\n\t\t<h3>String Scroller</h3>\n\n\t\t<p>This scroller uses a RecordSet that returns strings.</p>\n\t\t<p>An array of strings could easily have been used instead of a RecordSet.</p>\n\n\t\t<div class = \"string scroller\">\n\t\t\t[[stringScroller]]\n\t\t</div>\n\n\t</div>\n\n\t<div class = \"wide\">\n\n\t\t<h3>View Scroller</h3>\n\n\t\t<p>This scroller uses a RecordSet that returns curvature View objects.</p>\n\t\t<p>There is a 250ms simulated load time when the view is first accessed.</p>\n\n\t\t<div class = \"views scroller\">\n\t\t\t[[viewScroller]]\n\t\t</div>\n\n\t</div>\n\n</div>\n\n<h3>Grid Scroller</h3>\n\n<p>This scroller uses CSS grid, and a custom template to simulate a table. Its RecordSet returns plain objects.</p>\n\n<p>The number (<b>[[rows|thousands]]</b>) of records and row height can be altered on the fly as well, this is common to all Scrollers.</p>\n\n<p>Counting both the texboxes & sliders, there are 2,000,002 input fields avaiable below, each mapped to an object in memory.</p>\n\n<p><b>NOTE:</b> This is currently limited by the scroll-height limit of <u>33,554,400 pixels</u> imposed by webkit.</p>\n\n<div class = \"row wide\">\n\t<div class = \"row wide\">\n\t\t<label>\n\t\t\t<p>Rows:&nbsp;<input cv-bind = \"rows\" type = \"number\" min = \"0\" /></p>\n\t\t</label>\n\t</div>\n\t<div class = \"row wide\">\n\t\t<label>\n\t\t\t<p>\n\t\t\t\tRow Height [[rowHeight|leftPad]]px\n\t\t\t\t<input cv-bind = \"rowHeight\" type = \"range\" max = \"100\" />\n\t\t\t</p>\n\t\t</label>\n\t</div>\n</div>\n\n<div class = \"grid scroller\">\n\t[[gridScroller]]\n</div>\n\n<div class = \"row wide\">\n\t<div class = \"row wide\">\n\t\tPosition: [[gridScroller.args.scrollTop]] / [[gridScroller.args.scrollMax]]\n\t</div>\n\t<div class = \"row wide\">\n\t\tSpeed: [[gridScroller.args.speed]] px/s\n\t</div>\n</div>\n\n"
 });
 
 ;require.register("Experiments/InfiniteScroll/views/Records.js", function(exports, require, module) {
@@ -3280,7 +3259,7 @@ var Records = /*#__PURE__*/function (_RecordSet) {
 
     _this = _super.call.apply(_super, [this].concat(args));
 
-    _defineProperty(_assertThisInitialized(_this), "length", 1000000);
+    _defineProperty(_assertThisInitialized(_this), "length", 1000001);
 
     return _this;
   }
@@ -3288,7 +3267,7 @@ var Records = /*#__PURE__*/function (_RecordSet) {
   _createClass(Records, [{
     key: "fetch",
     value: function fetch(k) {
-      var view = _View.View.from("<div>\n\t\t\t\t<span cv-if = \"ready\">\n\t\t\t\t\t<i>View #<b>[[k]]!</b></i> <input placeholder = \"type here\" cv-bind = \"x\"> [[x]]\n\t\t\t\t</span>\n\t\t\t\t<span cv-if = \"!ready\">\n\t\t\t\t\tloading...\n\t\t\t\t</span>\n\t\t\t</div>", {
+      var view = _View.View.from("<div class = \"contents\">\n\t\t\t\t<span cv-if = \"ready\" class = \"contents\">\n\t\t\t\t\t<i>#[[k]]</i>\n\t\t\t\t\t<div class = \"input\">\n\t\t\t\t\t\t<input placeholder = \"type here\" cv-bind = \"val\">\n\t\t\t\t\t\t<div>[[val]]</div>\n\t\t\t\t\t</div>\n\t\t\t\t</span>\n\t\t\t\t<span cv-if = \"!ready\">\n\t\t\t\t\tloading...\n\t\t\t\t</span>\n\t\t\t</div>", {
         k: k
       });
 
@@ -3930,6 +3909,12 @@ var _Database2 = require("curvature/model/Database");
 
 var _View = require("curvature/base/View");
 
+var _codemirror = _interopRequireDefault(require("codemirror"));
+
+require("codemirror/mode/javascript/javascript");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -3995,6 +3980,8 @@ var View = /*#__PURE__*/function (_BaseView) {
     _this.template = require('./template');
     _this.args.newClass = 'Fake';
     _this.args.newId = 1;
+    _this.args.models = [];
+    _this.modelCount = 0;
     ExampleDatabase.open('models-db', 1).then(function (db) {
       var store = 'models-store';
       var index = 'id';
@@ -4032,36 +4019,60 @@ var View = /*#__PURE__*/function (_BaseView) {
             return db["delete"](record);
           }
         });
-      }).then(function () {
-        db.select(query).each(function (record, index) {
-          return console.log(record, index);
-        });
+      }).then(function () {// db.select(query).each((record, index) => console.log(record, index));
       });
     });
     return _this;
   }
 
   _createClass(View, [{
+    key: "postRender",
+    value: function postRender() {
+      this.edit = _codemirror["default"].fromTextArea(this.tags.txt.element, {
+        theme: "elegant"
+      });
+      console.log(_codemirror["default"].modes);
+      console.log(this.edit);
+      this.listen(this, 'focusin', function (event) {
+        return event.srcElement.select && event.srcElement.select();
+      });
+    }
+  }, {
     key: "removeKey",
-    value: function removeKey(key) {
+    value: function removeKey(key, index) {
       if (['id', 'class'].includes(key)) {
         return;
       }
 
-      delete this.args.model[key];
+      delete this.args.models[index][key];
     }
   }, {
     key: "addKey",
-    value: function addKey(key) {
-      this.args.model[key] = this.args.model[key] || '';
+    value: function addKey(event, key, index) {
+      event.preventDefault();
+      this.args.models[index][key] = this.args.models[index][key] || '';
+    }
+  }, {
+    key: "closeModel",
+    value: function closeModel(event, index) {
+      this.args.models.splice(index, 1);
     }
   }, {
     key: "loadModel",
     value: function loadModel() {
-      this.args.model = _Model.Model.from({
+      this.args.models.push(_Model.Model.from({
         id: String(this.args.newId).trim(),
         "class": this.args.newClass
-      });
+      }));
+    }
+  }, {
+    key: "fieldAttached",
+    value: function fieldAttached(event) {
+      if (!event.target.matches('[data-property=id],[data-property=class]')) {
+        return;
+      }
+
+      event.target.setAttribute('disabled', 'disabled');
     }
   }]);
 
@@ -4072,7 +4083,7 @@ exports.View = View;
 });
 
 ;require.register("ModelsDemo/template.html", function(exports, require, module) {
-module.exports = "<div class=\"models-demo\">\n\n\t<h2>models</h2>\n\n\t<p>Models are simple objects, with some light tooling to make them simple to populate. They will also use the <b>class</b> and <b>id</b> properties to ensure that each model only gets a single reference.</p>\n\n\t<div class = \"row\">\n\n\n\t\t<div class = \"model-editor\">\n\n\t\t\t<div class = \"model-editor-title\">Model Loader</div>\n\t\t\t\n<pre>model = Model.from({\n<div class = \"property-edit\"><span>  id: </span><input cv-bind = \"newId\" />,</div>\n<div class = \"property-edit\"><span>  class: </span><input cv-bind = \"newClass\" />,</div>});</pre>\n\n\t\t\t<div class = \"model-editor-eyebrow\">Press \"load\" to grab an instance of a record with the given ID and type. If no record is found, one will be created.</div>\n\t\t\t\n\t\t\t<div class = \"new-property\">\n\t\t\t\t<button cv-on = \"click:loadModel\">Load</button>\n\t\t\t</div>\n\t\t\n\t\t</div>\n\t\t<div cv-if = \"model\">\n\t\t\t<div class = \"model-editor\">\n\t\t\t\t\n\t\t\t\t<div class = \"model-editor-title\">Model Editor</div>\n\n<pre>model = {\n<div cv-each = \"model:value:property\"><div class = \"property-edit\"><span class = \"prop-remove remove-[[property]]\" cv-on = \"click:removeKey(property)\">  ✕ </span> [[property]]: <input cv-bind = \"value\" />,\n</div></div>};</pre>\n\n\t\t\t\t<div class = \"model-editor-eyebrow\">Modify the properties below. The in-memory values will be updated as you type.</div>\n\n\t\t\t\t<div class = \"model-editor-eyebrow\">Add a new property to the model:</div>\n\t\t\t\t\n\t\t\t\t<div class = \"new-property\">\n\t\t\t\t\t<input cv-bind = \"newField\" placeholder=\"new property\">\n\t\t\t\t\t<button cv-on = \"click:addKey(newField)\" class = \"tight\">+</button>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\n\t</div>\n\n\t<h3>Database Objects</h3>\n\n\t<h3>Record Set Objects</h3>\n\n</div>\n"
+module.exports = "<div class=\"models-demo\">\n\n\t<h2>models</h2>\n\n\t<p>Models are simple objects, with some light tooling to make them simple to populate. They will also use the <b>class</b> and <b>id</b> properties to ensure that each model only gets a single reference. If you load the same model multiple times, the input fields should remain synced.</p>\n\n\t<textarea cv-ref = \"txt\">\nfunction findSequence(goal) {\n  function find(start, history) {\n    if (start == goal)\n      return history;\n    else if (start > goal)\n      return null;\n    else\n      return find(start + 5, \"(\" + history + \" + 5)\") ||\n             find(start * 3, \"(\" + history + \" * 3)\");\n  }\n  return find(1, \"1\");\n}</textarea>\n\n\t<div class = \"row wrap\">\n\n\t\t<div class = \"model-editor model-loader\">\n\n\t\t\t<div class = \"model-editor-title\">\n\t\t\t\t<span class = \"title\">Model Loader</span>\n\t\t\t\t<span class = \"buttons\">✕</span>\n\t\t\t</div>\n\t\t\t\n\t\t\t<div class = \"model-editor-eyebrow\">Load an instance of a record with the given ID and type. If no record is found, one will be created.</div>\n\n<pre>model = Model.from({\n<div class = \"property-edit\"><span>  id: </span><input cv-bind = \"newId\" />,</div>\n<div class = \"property-edit\"><span>  class: </span><input cv-bind = \"newClass\" />,</div>});</pre>\t\t\t\n\t\t\t<div class = \"buttons\">\n\t\t\t\t<button cv-on = \"click:loadModel\">load</button>\n\t\t\t</div>\n\t\t\n\t\t</div>\n\t\t<div cv-each = \"models:model:m\" cv-ref = \"models\" class = \"contents\">\n\t\t\t<div class = \"model-editor\">\n\t\t\t\t\n\t\t\t\t<div class = \"model-editor-title\">\n\t\t\t\t\t<span class = \"title\">Model Editor</span>\n\t\t\t\t\t<span class = \"buttons\">\n\t\t\t\t\t\t<span tabindex=\"-1\" cv-on = \"click:closeModel(event, m)\">✕</span>\n\t\t\t\t\t</span>\n\t\t\t\t</div>\n\n\t\t\t\t<div class = \"model-editor-eyebrow\">When you modify the properties below, the in-memory values will be updated as you type.</div>\n\n<pre><span class = \"firstline row\">model = { <img src = \"/save.svg\" data-icon tabindex=\"-1\"></span>\n<div cv-each = \"model:value:property\"><div class = \"property-edit\"><span class = \"prop-remove remove-[[property]]\" cv-on = \"click:removeKey(property, m);\">  ✕ </span> [[property]]: <input data-property = \"[[property]]\" cv-bind = \"value\" cv-on = \"cvDomAttached:fieldAttached(event)\" />,\n</div></div>};</pre>\n\n\t\t\t\t<div class = \"model-editor-eyebrow\">Add a new key:</div>\n\n\t\t\t\t<div class = \"new-property\">\n\t\t\t\t\t<form class = \"contents\" cv-on = \"submit:addKey(event, newField, m)\">\n\t\t\t\t\t\t<input cv-bind = \"newField\" placeholder=\"new property\">\n\t\t\t\t\t\t<button cv-on = \"click:addKey(event, newField, m)\" class = \"tight\">+</button>\n\t\t\t\t\t</form>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\n\t</div>\n\n\t<h3>databases & stores</h3>\n\n\t<div class = \"databases\">\n\n\t\t<div class = \"database-editor\">\n\t\t\t<div class = \"model-editor-title\">\n\t\t\t\tDatabases Explorer\n\t\t\t</div>\n\t\t\t<div class = \"model-editor-eyebrow\">\n\t\t\t\tsomething\n\t\t\t</div>\n\t\t</div>\n\n\t</div>\n\n\t<h3>record sets</h3>\n\n</div>\n"
 });
 
 ;require.register("ObjectDemo/View.js", function(exports, require, module) {

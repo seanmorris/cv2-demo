@@ -47,7 +47,7 @@ export class View extends BaseView
 
 		this.args.rows      = 10;
 		this.args.rows      = 1000001;
-		this.args.rowHeight = 32;
+		this.args.rowHeight = 33;
 
 		const gridScroller = new GridScroller;
 
@@ -59,62 +59,23 @@ export class View extends BaseView
 
 		gridScroller.args.content = recordSet;
 
-		recordSet.bindTo('length', v => {
-			gridScroller.args.max = v;
-		});
+		this.args.bindTo('rows', v => recordSet.changed(v));
 
-		this.args.bindTo('rows', v => {
-			recordSet.changed(v);
-		});
+		this.args.simpleRows = 1000001;
 
-		this.args.arrayScroller = new InfiniteScroller;
+		this.args.arrayScroller = new InfiniteScroller({rowHeight: 33});
+		this.args.arrayScroller.args.content = Array(this.args.simpleRows).fill(1).map((v,k)=>this.thousands(k));
 
-		this.args.arrayScroller.args.content = Array(1000000).fill(1).map((v,k)=>k);
-
-		this.args.stringScroller = new InfiniteScroller;
-
+		this.args.stringScroller = new InfiniteScroller({rowHeight: 33});
 		this.args.stringScroller.args.content = new StringRecords;
 
-		this.args.viewScroller = new InfiniteScroller;
-
+		this.args.viewScroller = new InfiniteScroller({rowHeight: 33});
 		this.args.viewScroller.args.content = new ViewRecords;
-
-		const friction = 0.1;
-
-		const easeIn = new SineOut(750, {
-			friction:  0.35
-			, power:   5
-			, reverse: 0
-			, repeat:  1
-		});
-
-		const easeOut = new SineIn(750, {
-			reverse:  1
-			, power:  1
-			, repeat: 1
-		});
-
-		const cancelFrames = this.onFrame(()=>{
-			if(!easeIn.done)
-			{
-				this.args.xx = 500 * easeIn.current();
-			}
-			else if(!easeOut.done)
-			{
-				this.args.xx = 500 * easeOut.current();
-			}
-		});
-
-		// this.onTimeout(751, () => easeIn.cancel());
-
-		easeIn.then(() => {
-
-				easeOut.start();
-
-				easeOut.then(() => cancelFrames());
-			});
-
-		this.onTimeout(250, () => easeIn.start());
+	}
+	
+	thousands(x)
+	{
+		return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 	}
 
 	leftPad(x)

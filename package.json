@@ -24,7 +24,7 @@
     "brunch": "^3.0.0",
     "brunch-preval": "^0.0.0",
     "clean-css-brunch": "^3.0.0",
-    "codemirror": "^5.54",
+    "codemirror": "^5.58.2",
     "raw-brunch": "^1.0.2",
     "uglify-es-brunch": "^1.0.5"
   }

@@ -5,15 +5,12 @@ body {
 }
 
 .navigation {
-	font-size: 11pt;
 	flex-shrink: 0;
 	min-width: 10rem;
-	line-height: 13pt;
 	font-weight: bold;
 }
 
 .content {
-	font-size: 13pt;
 }
 
 .header {
