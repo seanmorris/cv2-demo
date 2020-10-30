@@ -570,28 +570,22 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 var GeoIn = /*#__PURE__*/function (_Ease) {
   _inherits(GeoIn, _Ease);
 
   var _super = _createSuper(GeoIn);
 
   function GeoIn(interval) {
-    var _this;
-
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
     _classCallCheck(this, GeoIn);
 
-    _this = _super.call(this, interval, options);
-
-    _defineProperty(_assertThisInitialized(_this), "calculate", function (t) {
-      return Math.pow(t, _this.power);
-    });
-
-    _this.power = _this.power || 'power' in options ? options.power : 1;
-    return _this;
+    return _super.call(this, interval, options); // this.calculate = t => Math.pow(t, this.power);
+    // this.power = 1;
+    // if('power' in options)
+    // {
+    // 	this.power = options.power
+    // }
   }
 
   return GeoIn;
@@ -4540,29 +4534,80 @@ var View = /*#__PURE__*/function () {
   }]);
 
   function View() {
-    var _this2 = this;
+    var _this = this;
 
     var args = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     var mainView = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
     _classCallCheck(this, View);
 
-    Object.defineProperty(this, '___VIEW___', {
-      enumerable: false,
-      writable: true
-    });
-    this.___VIEW___ = View;
     Object.defineProperty(this, 'args', {
-      configurable: false,
-      writable: false,
       value: _Bindable.Bindable.make(args)
     });
+    Object.defineProperty(this, 'attach', {
+      value: new _Bag.Bag(function (i, s, a) {})
+    });
+    Object.defineProperty(this, 'detach', {
+      value: new _Bag.Bag(function (i, s, a) {})
+    });
+    Object.defineProperty(this, 'cleanup', {
+      value: []
+    });
+    Object.defineProperty(this, '_onRemove', {
+      value: new _Bag.Bag(function (i, s, a) {})
+    });
+    Object.defineProperty(this, 'parent', {
+      value: mainView
+    });
+    Object.defineProperty(this, 'views', {
+      value: new Map()
+    });
+    Object.defineProperty(this, 'viewLists', {
+      value: new Map()
+    });
+    Object.defineProperty(this, 'withViews', {
+      value: new Map()
+    });
+    Object.defineProperty(this, 'tags', {
+      value: _Bindable.Bindable.make({})
+    });
+    Object.defineProperty(this, 'intervals', {
+      value: []
+    });
+    Object.defineProperty(this, 'timeouts', {
+      value: []
+    });
+    Object.defineProperty(this, 'frames', {
+      value: []
+    });
+    Object.defineProperty(this, 'ruleSet', {
+      value: new _RuleSet.RuleSet()
+    });
+    Object.defineProperty(this, 'preRuleSet', {
+      value: new _RuleSet.RuleSet()
+    });
+    Object.defineProperty(this, 'subBindings', {
+      value: {}
+    });
+    Object.defineProperty(this, 'subTemplates', {
+      value: {}
+    });
+    Object.defineProperty(this, 'eventCleanup', {
+      value: []
+    });
+    Object.defineProperty(this, 'interpolateRegex', {
+      value: /(\[\[((?:\$+)?[\w\.\|-]+)\]\])/g
+    });
+    Object.defineProperty(this, 'rendered', {
+      value: new Promise(function (accept, reject) {
+        return Object.defineProperty(_this, 'renderComplete', {
+          value: accept
+        });
+      })
+    });
 
-    var _this = this;
-
-    if (!this.args._id) {
+    if (args._id) {
       Object.defineProperty(this.args, '_id', {
-        configurable: false,
         get: function get() {
           return _this._id;
         }
@@ -4571,45 +4616,20 @@ var View = /*#__PURE__*/function () {
 
     this.template = "";
     this.document = "";
+    this.nodes = null;
     this.firstNode = null;
     this.lastNode = null;
-    this.nodes = null;
-    this.cleanup = [];
-    this._onRemove = new _Bag.Bag(function (i, s, a) {// console.log('View _onRemove', i, s, a);
-    });
-    this.attach = new _Bag.Bag(function (i, s, a) {});
-    this.detach = new _Bag.Bag(function (i, s, a) {});
-    this.eventCleanup = [];
-    this.mainView = null;
-    this.parent = mainView;
     this.viewList = null;
-    this.viewLists = new Map();
-    this.withViews = {};
-    this.tags = _Bindable.Bindable.make({});
-    this.intervals = [];
-    this.timeouts = [];
-    this.frames = [];
-    this.ruleSet = new _RuleSet.RuleSet();
-    this.preRuleSet = new _RuleSet.RuleSet();
-    this.subBindings = {};
-    this.subTemplates = {};
-    this.removed = false;
+    this.mainView = null;
     this.preserve = false;
-    this.interpolateRegex = /(\[\[((?:\$+)?[\w\.\|-]+)\]\])/g;
-    this.rendered = new Promise(function (accept, reject) {
-      Object.defineProperty(_this2, 'renderComplete', {
-        configurable: false,
-        writable: false,
-        value: accept
-      });
-    });
+    this.removed = false;
     return _Bindable.Bindable.make(this);
   }
 
   _createClass(View, [{
     key: "onFrame",
     value: function onFrame(callback) {
-      var _this3 = this;
+      var _this2 = this;
 
       var stopped = false;
 
@@ -4618,11 +4638,11 @@ var View = /*#__PURE__*/function () {
       };
 
       var c = function c(timestamp) {
-        if (_this3.removed || stopped) {
+        if (_this2.removed || stopped) {
           return;
         }
 
-        if (!_this3.paused) {
+        if (!_this2.paused) {
           callback(Date.now());
         }
 
@@ -4652,11 +4672,11 @@ var View = /*#__PURE__*/function () {
   }, {
     key: "onTimeout",
     value: function onTimeout(time, callback) {
-      var _this4 = this;
+      var _this3 = this;
 
       var wrappedCallback = function wrappedCallback() {
-        _this4.timeouts[index].fired = true;
-        _this4.timeouts[index].callback = null;
+        _this3.timeouts[index].fired = true;
+        _this3.timeouts[index].callback = null;
         callback();
       };
 
@@ -4959,7 +4979,7 @@ var View = /*#__PURE__*/function () {
   }, {
     key: "mapTags",
     value: function mapTags(subDoc) {
-      var _this5 = this;
+      var _this4 = this;
 
       _Dom.Dom.mapTags(subDoc, false, function (tag, walker) {
         if (tag[dontParse]) {
@@ -4967,22 +4987,22 @@ var View = /*#__PURE__*/function () {
         }
 
         if (tag.matches) {
-          tag = _this5.mapInterpolatableTag(tag);
-          tag = tag.matches('[cv-template]') && _this5.mapTemplateTag(tag) || tag;
-          tag = tag.matches('[cv-slot]') && _this5.mapSlotTag(tag) || tag;
-          tag = tag.matches('[cv-prerender]') && _this5.mapPrendererTag(tag) || tag;
-          tag = tag.matches('[cv-link]') && _this5.mapLinkTag(tag) || tag;
-          tag = tag.matches('[cv-attr]') && _this5.mapAttrTag(tag) || tag;
-          tag = tag.matches('[cv-expand]') && _this5.mapExpandableTag(tag) || tag;
-          tag = tag.matches('[cv-ref]') && _this5.mapRefTag(tag) || tag;
-          tag = tag.matches('[cv-on]') && _this5.mapOnTag(tag) || tag;
-          tag = tag.matches('[cv-each]') && _this5.mapEachTag(tag) || tag;
-          tag = tag.matches('[cv-bind]') && _this5.mapBindTag(tag) || tag;
-          tag = tag.matches('[cv-with]') && _this5.mapWithTag(tag) || tag;
-          tag = tag.matches('[cv-if]') && _this5.mapIfTag(tag) || tag;
-          tag = tag.matches('[cv-view]') && _this5.mapViewTag(tag) || tag;
+          tag = _this4.mapInterpolatableTag(tag);
+          tag = tag.matches('[cv-template]') && _this4.mapTemplateTag(tag) || tag;
+          tag = tag.matches('[cv-slot]') && _this4.mapSlotTag(tag) || tag;
+          tag = tag.matches('[cv-prerender]') && _this4.mapPrendererTag(tag) || tag;
+          tag = tag.matches('[cv-link]') && _this4.mapLinkTag(tag) || tag;
+          tag = tag.matches('[cv-attr]') && _this4.mapAttrTag(tag) || tag;
+          tag = tag.matches('[cv-expand]') && _this4.mapExpandableTag(tag) || tag;
+          tag = tag.matches('[cv-ref]') && _this4.mapRefTag(tag) || tag;
+          tag = tag.matches('[cv-on]') && _this4.mapOnTag(tag) || tag;
+          tag = tag.matches('[cv-each]') && _this4.mapEachTag(tag) || tag;
+          tag = tag.matches('[cv-bind]') && _this4.mapBindTag(tag) || tag;
+          tag = tag.matches('[cv-with]') && _this4.mapWithTag(tag) || tag;
+          tag = tag.matches('[cv-if]') && _this4.mapIfTag(tag) || tag;
+          tag = tag.matches('[cv-view]') && _this4.mapViewTag(tag) || tag;
         } else {
-          tag = _this5.mapInterpolatableTag(tag);
+          tag = _this4.mapInterpolatableTag(tag);
         }
 
         if (tag !== walker.currentNode) {
@@ -5181,7 +5201,7 @@ var View = /*#__PURE__*/function () {
   }, {
     key: "mapInterpolatableTag",
     value: function mapInterpolatableTag(tag) {
-      var _this6 = this;
+      var _this5 = this;
 
       var regex = this.interpolateRegex;
 
@@ -5203,7 +5223,7 @@ var View = /*#__PURE__*/function () {
           var transformer = false;
 
           if (propertySplit.length > 1) {
-            transformer = _this6.stringTransformer(propertySplit.slice(1));
+            transformer = _this5.stringTransformer(propertySplit.slice(1));
             bindProperty = propertySplit[0];
           }
 
@@ -5238,11 +5258,11 @@ var View = /*#__PURE__*/function () {
           }
 
           dynamicNode[dontParse] = true;
-          var proxy = _this6.args;
+          var proxy = _this5.args;
           var property = bindProperty;
 
           if (bindProperty.match(/\./)) {
-            var _Bindable$resolve5 = _Bindable.Bindable.resolve(_this6.args, bindProperty, true);
+            var _Bindable$resolve5 = _Bindable.Bindable.resolve(_this5.args, bindProperty, true);
 
             var _Bindable$resolve6 = _slicedToArray(_Bindable$resolve5, 2);
 
@@ -5262,7 +5282,7 @@ var View = /*#__PURE__*/function () {
 
             if (unsafeView && !(v instanceof View)) {
               var unsafeTemplate = v;
-              v = new View(_this6.args, _this6);
+              v = new View(_this5.args, _this5);
               v.template = unsafeTemplate;
             }
 
@@ -5271,7 +5291,7 @@ var View = /*#__PURE__*/function () {
                 v.attached(parentNode);
               };
 
-              _this6.attach.add(onAttach);
+              _this5.attach.add(onAttach);
 
               v.render(tag.parentNode, dynamicNode);
 
@@ -5281,12 +5301,12 @@ var View = /*#__PURE__*/function () {
                 }
               };
 
-              _this6.onRemove(cleanup);
+              _this5.onRemove(cleanup);
 
               v.onRemove(function () {
-                _this6.attach.remove(onAttach);
+                _this5.attach.remove(onAttach);
 
-                _this6._onRemove.remove(cleanup);
+                _this5._onRemove.remove(cleanup);
               });
             } else {
               if (transformer) {
@@ -5311,7 +5331,7 @@ var View = /*#__PURE__*/function () {
             }
           });
 
-          _this6.onRemove(function () {
+          _this5.onRemove(function () {
             debind();
 
             if (!proxy.isBound()) {
@@ -5335,7 +5355,7 @@ var View = /*#__PURE__*/function () {
 
       if (tag.nodeType === Node.ELEMENT_NODE) {
         var _loop4 = function _loop4(_i11) {
-          if (!_this6.interpolatable(tag.attributes[_i11].value)) {
+          if (!_this5.interpolatable(tag.attributes[_i11].value)) {
             // console.log('!!', tag.attributes[i].value);
             return "continue";
           } // console.log(tag.attributes[i].value);
@@ -5363,19 +5383,19 @@ var View = /*#__PURE__*/function () {
           segments.push(original.substring(header));
 
           var _loop5 = function _loop5(j) {
-            var proxy = _this6.args;
+            var proxy = _this5.args;
             var property = j;
             var propertySplit = j.split('|');
             var transformer = false;
             var longProperty = j;
 
             if (propertySplit.length > 1) {
-              transformer = _this6.stringTransformer(propertySplit.slice(1));
+              transformer = _this5.stringTransformer(propertySplit.slice(1));
               property = propertySplit[0];
             }
 
             if (property.match(/\./)) {
-              var _Bindable$resolve7 = _Bindable.Bindable.resolve(_this6.args, property, true);
+              var _Bindable$resolve7 = _Bindable.Bindable.resolve(_this5.args, property, true);
 
               var _Bindable$resolve8 = _slicedToArray(_Bindable$resolve7, 2);
 
@@ -5396,7 +5416,7 @@ var View = /*#__PURE__*/function () {
             var bindProperty = j;
             var matchingSegments = bindProperties[longProperty];
 
-            _this6.onRemove(proxy.bindTo(property, function (v, k, t, d) {
+            _this5.onRemove(proxy.bindTo(property, function (v, k, t, d) {
               if (transformer) {
                 v = transformer(v);
               }
@@ -5414,7 +5434,7 @@ var View = /*#__PURE__*/function () {
               tag.setAttribute(attribute.name, segments.join(''));
             }));
 
-            _this6.onRemove(function () {
+            _this5.onRemove(function () {
               if (!proxy.isBound()) {
                 _Bindable.Bindable.clearBindings(proxy);
               }
@@ -5507,7 +5527,7 @@ var View = /*#__PURE__*/function () {
   }, {
     key: "mapBindTag",
     value: function mapBindTag(tag) {
-      var _this7 = this;
+      var _this6 = this;
 
       var bindArg = tag.getAttribute('cv-bind');
       var proxy = this.args;
@@ -5527,8 +5547,8 @@ var View = /*#__PURE__*/function () {
       if (proxy !== this.args) {
         this.subBindings[bindArg] = this.subBindings[bindArg] || [];
         this.onRemove(this.args.bindTo(top, function () {
-          while (_this7.subBindings.length) {
-            _this7.subBindings.shift()();
+          while (_this6.subBindings.length) {
+            _this6.subBindings.shift()();
           }
         }));
       }
@@ -5579,7 +5599,7 @@ var View = /*#__PURE__*/function () {
                 }
               };
 
-              _this7.attach.add(onAttach);
+              _this6.attach.add(onAttach);
             } else {
               tag.value = v == null ? '' : v;
             }
@@ -5606,11 +5626,11 @@ var View = /*#__PURE__*/function () {
               v.attached(parentNode);
             };
 
-            _this7.attach.add(_onAttach);
+            _this6.attach.add(_onAttach);
 
             v.render(tag);
             v.onRemove(function () {
-              return _this7.attach.remove(_onAttach);
+              return _this6.attach.remove(_onAttach);
             });
           } else if (unsafeHtml) {
             if (tag.innerHTML !== v) {
@@ -5755,7 +5775,7 @@ var View = /*#__PURE__*/function () {
   }, {
     key: "mapOnTag",
     value: function mapOnTag(tag) {
-      var _this8 = this;
+      var _this7 = this;
 
       var referents = String(tag.getAttribute('cv-on'));
       referents.split(';').map(function (a) {
@@ -5796,7 +5816,7 @@ var View = /*#__PURE__*/function () {
         }
 
         var eventMethod;
-        var parent = _this8;
+        var parent = _this7;
 
         while (parent) {
           if (typeof parent[callbackName] === 'function') {
@@ -5834,11 +5854,11 @@ var View = /*#__PURE__*/function () {
             } else if (arg === '$tag') {
               return tag;
             } else if (arg === '$parent') {
-              return _this8.parent;
+              return _this7.parent;
             } else if (arg === '$subview') {
-              return _this8;
-            } else if (arg in _this8.args) {
-              return _this8.args[arg];
+              return _this7;
+            } else if (arg in _this7.args) {
+              return _this7.args[arg];
             } else if (match = /^['"]([\w-]+?)["']$/.exec(arg)) {
               return match[1];
             }
@@ -5877,19 +5897,19 @@ var View = /*#__PURE__*/function () {
             break;
 
           case '_attach':
-            _this8.attach.add(eventListener);
+            _this7.attach.add(eventListener);
 
             break;
 
           case '_detach':
-            _this8.detach.add(eventListener);
+            _this7.detach.add(eventListener);
 
             break;
 
           default:
             tag.addEventListener(eventName, eventListener, eventOptions);
 
-            _this8.onRemove(function () {
+            _this7.onRemove(function () {
               tag.removeEventListener(eventName, eventListener, eventOptions);
             });
 
@@ -5969,7 +5989,7 @@ var View = /*#__PURE__*/function () {
   }, {
     key: "mapWithTag",
     value: function mapWithTag(tag) {
-      var _this9 = this;
+      var _this8 = this;
 
       var withAttr = tag.getAttribute('cv-with');
       var carryAttr = tag.getAttribute('cv-carry');
@@ -5993,17 +6013,17 @@ var View = /*#__PURE__*/function () {
       }
 
       var debind = this.args.bindTo(withAttr, function (v, k, t, d) {
-        if (_this9.withViews[k]) {
-          _this9.withViews[k].remove();
+        if (_this8.withViews.has(tag)) {
+          _this8.withViews["delete"](tag);
         }
 
         while (tag.firstChild) {
           tag.removeChild(tag.firstChild);
         }
 
-        var view = new viewClass({}, _this9);
+        var view = new viewClass({}, _this8);
 
-        _this9.onRemove(function (view) {
+        _this8.onRemove(function (view) {
           return function () {
             view.remove();
           };
@@ -6012,13 +6032,13 @@ var View = /*#__PURE__*/function () {
         view.template = subTemplate;
 
         var _loop7 = function _loop7(_i14) {
-          var debind = _this9.args.bindTo(carryProps[_i14], function (v, k) {
+          var debind = _this8.args.bindTo(carryProps[_i14], function (v, k) {
             view.args[k] = v;
           });
 
           view.onRemove(debind);
 
-          _this9.onRemove(function () {
+          _this8.onRemove(function () {
             debind();
             view.remove();
           });
@@ -6036,7 +6056,7 @@ var View = /*#__PURE__*/function () {
             v[kk] = vv;
           });
 
-          _this9.onRemove(function () {
+          _this8.onRemove(function () {
             debind();
 
             if (!v.isBound()) {
@@ -6060,14 +6080,21 @@ var View = /*#__PURE__*/function () {
         }
 
         view.render(tag);
-        _this9.withViews[k] = view;
+
+        _this8.withViews.set(tag, view);
       });
-      this.onRemove(debind);
+      this.onRemove(function () {
+        _this8.withViews["delete"](tag);
+
+        debind();
+      });
       return tag;
     }
   }, {
     key: "mapViewTag",
     value: function mapViewTag(tag) {
+      var _this9 = this;
+
       var viewAttr = tag.getAttribute('cv-view');
       tag.removeAttribute('cv-view');
       var subTemplate = new DocumentFragment();
@@ -6076,11 +6103,23 @@ var View = /*#__PURE__*/function () {
         return subTemplate.appendChild(n);
       });
 
-      var viewClass = viewAttr ? this.stringToClass(viewAttr) : View;
+      var parts = viewAttr.split(':');
+      var viewClass = parts.pop() ? this.stringToClass(viewAttr) : View;
+      var viewName = parts.shift();
       var view = new viewClass(this.args, this);
+      this.views.set(tag, view);
+
+      if (viewName) {
+        this.views.set(viewName, view);
+      }
+
       this.onRemove(function (view) {
         return function () {
           view.remove();
+
+          _this9.views["delete"](tag);
+
+          _this9.views["delete"](viewName);
         };
       }(view));
       view.template = subTemplate;
@@ -9670,7 +9709,7 @@ var Database = /*#__PURE__*/function () {
       return new Promise(function (accept, reject) {
         _this2[Bank][storeName] = _this2[Bank][storeName] || new WeakMap();
 
-        var trans = _this2[Connection].transaction([storeName], "readwrite");
+        var trans = _this2[Connection].transaction([storeName], 'readwrite');
 
         var store = trans.objectStore(storeName);
         var bank = _this2[Bank][storeName];
@@ -9720,7 +9759,7 @@ var Database = /*#__PURE__*/function () {
 
       return new Promise(function (accept, reject) {
         // const storeName = record[Store];
-        var trans = _this3[Connection].transaction([storeName], "readwrite");
+        var trans = _this3[Connection].transaction([storeName], 'readwrite');
 
         var store = trans.objectStore(storeName);
         var request = store.put(Object.assign({}, record));
@@ -9764,7 +9803,7 @@ var Database = /*#__PURE__*/function () {
 
       return new Promise(function (accept, reject) {
         // const storeName = record[Store];
-        var trans = _this4[Connection].transaction([storeName], "readwrite");
+        var trans = _this4[Connection].transaction([storeName], 'readwrite');
 
         var store = trans.objectStore(storeName);
         var request = store["delete"](Number(record[PrimaryKey].description));
@@ -9805,6 +9844,13 @@ var Database = /*#__PURE__*/function () {
     key: "listStores",
     value: function listStores() {
       return _toConsumableArray(this[Connection].objectStoreNames);
+    }
+  }, {
+    key: "listIndexes",
+    value: function listIndexes(storeName) {
+      var trans = this[Connection].transaction([storeName]);
+      var store = trans.objectStore(storeName);
+      return _toConsumableArray(store.indexNames);
     }
   }, {
     key: Fetch,

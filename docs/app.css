@@ -930,6 +930,7 @@ span.CodeMirror-selectedtext { background: none; }
 	display:         flex;
 	align-items:     center;
 	justify-content: center;
+	user-select:     none;
 }
 
 .invert div {
@@ -1411,7 +1412,7 @@ pre, code {
 }
 
 .models-demo [contenteditable]:focus {
-	outline: none;	
+	outline: none;
 }
 
 .prop-remove {
@@ -1510,9 +1511,9 @@ label.buttons button,
 	color: white;
 }
 
-.model-editor img:focus,
-.model-editor input:focus,
-.model-editor button:focus {
+.models-demo img:focus,
+.models-demo input:focus,
+.models-demo button:focus {
 	outline: 1px dotted black;
 	outline-offset: 1px;
 }
@@ -1636,5 +1637,13 @@ label.buttons {
 	flex-direction: row;
 	justify-content: flex-end;
 }
+
+.scroller.tight {
+	padding: 0;
+	box-sizing: border-box;
+	border: 0;
+	border-top: 1px solid black;
+}
+
 
 /*# sourceMappingURL=app.css.map*/

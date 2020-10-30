@@ -45,8 +45,7 @@ export class View extends BaseView
 
 		this.template = require('./template');
 
-		this.args.rows      = 10;
-		this.args.rows      = 1000001;
+		this.args.rows      = 0;
 		this.args.rowHeight = 33;
 
 		const gridScroller = new GridScroller;
@@ -64,15 +63,21 @@ export class View extends BaseView
 		this.args.simpleRows = 1000001;
 
 		this.args.arrayScroller = new InfiniteScroller({rowHeight: 33});
-		this.args.arrayScroller.args.content = Array(this.args.simpleRows).fill(1).map((v,k)=>this.thousands(k));
-
 		this.args.stringScroller = new InfiniteScroller({rowHeight: 33});
-		this.args.stringScroller.args.content = new StringRecords;
-
 		this.args.viewScroller = new InfiniteScroller({rowHeight: 33});
-		this.args.viewScroller.args.content = new ViewRecords;
 	}
-	
+
+	attached()
+	{
+		this.onTimeout(40, ()=>{
+			this.args.rows = 1000001;
+
+			this.args.arrayScroller.args.content  = Array(this.args.simpleRows).fill(1).map((v,k)=>this.thousands(k));
+			this.args.stringScroller.args.content = new StringRecords;
+			this.args.viewScroller.args.content   = new ViewRecords;
+		});
+	}
+
 	thousands(x)
 	{
 		return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");

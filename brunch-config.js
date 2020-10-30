@@ -20,7 +20,7 @@ exports.paths = {
 
 exports.plugins = {
   babel: {
-  	presets: ['@babel/preset-env'],
+  	presets: ['@babel/preset-env', ['minify', {builtIns: false}]],
   	plugins:   ["@babel/plugin-proposal-class-properties"]
   },
   raw: {

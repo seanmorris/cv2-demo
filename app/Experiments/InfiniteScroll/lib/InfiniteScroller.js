@@ -92,7 +92,7 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 
 			const headerRow = this.header() ? 1 : 0;
 
-			const rows = headerRow + this.args.content.length;
+			const rows = headerRow + this.args.content ? this.args.content.length : 0;
 
 			this.args.shimHeight = rows * this.args.rowHeight;
 
@@ -105,7 +105,7 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 
 			const headerRow = this.header() ? 1 : 0;
 
-			const rows = headerRow + v.length;
+			const rows = headerRow + v ? v.length : 0;
 
 			this.args.shimHeight = rows * this.args.rowHeight;
 
@@ -113,14 +113,18 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 
 			this.lengthDebind && this.lengthDebind();
 
-			this.lengthDebind = v.bindTo('length', v => {
+			if(v)
+			{
+				this.lengthDebind = v.bindTo('length', v => {
 
-				v = Number(v);
+					v = Number(v);
 
-				this.args.shimHeight = (v + headerRow) * this.args.rowHeight;
+					this.args.shimHeight = (v + headerRow) * this.args.rowHeight;
 
-				this.onNextFrame(() => this.updateViewport());
-			});
+					this.onNextFrame(() => this.updateViewport());
+				});
+
+			}
 
 			this.updateViewport();
 		});
@@ -145,7 +149,7 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 		const depth = this.args.scrollHeight = container.scrollHeight;
 		const space = container.offsetHeight;
 		const fold  = start + space;
-		
+
 		this.args.scrollMax = depth - space;
 
 		let first = Math.floor(start / this.args.rowHeight);
@@ -177,6 +181,11 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 			});
 
 			this.speedTimer = false;
+		}
+
+		if(!this.args.content && !Array.isArray(this.args.content))
+		{
+			return;
 		}
 
 		if(first > this.args.content.length)
@@ -340,7 +349,7 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 		{
 			return false;
 		}
-		
+
 		if(typeof this.args.content.header !== 'function')
 		{
 			return false;

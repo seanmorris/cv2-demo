@@ -12,20 +12,20 @@
 				<span class = "title">Model Loader</span>
 				<span class = "buttons">✕</span>
 			</div>
-			
+
 			<div class = "model-editor-eyebrow">Load an instance of a record with the given ID and type. If no record is found, one will be created.</div>
 
 <pre>model = Model.from({
 <div class = "property-edit"><span>  id: </span><input type = "number" cv-bind = "newId" />,</div>
-<div class = "property-edit"><span>  class: </span><input cv-bind = "newClass" />,</div>});</pre>			
+<div class = "property-edit"><span>  class: </span><input cv-bind = "newClass" />,</div>});</pre>
 			<div class = "buttons">
 				<button cv-on = "click:loadModel">load</button>
 			</div>
-		
+
 		</div>
 		<div cv-each = "models:model:m" cv-ref = "models" class = "contents">
 			<div class = "model-editor">
-				
+
 				<div class = "model-editor-title">
 					<span class = "title">Model Editor</span>
 					<span class = "buttons">
@@ -66,19 +66,26 @@
 				<div class = "database-store-list">
 					<div class = "model-editor-eyebrow">
 						<ul cv-each = "stores:store:s">
-							<li>[[store]]</li>
+							<li cv-on = "click:useDb(event, store);">[[store]]</li>
 						</ul>
 					</div>
 				</div>
 				<div class = "database-editor-right">
 					<form cv-on = "submit:queryDatabase(event)">
-						<label>index: <select cv-bind = "queryIndex" cv-each = "stores:store:s">
-							<option>[[store]] index [[s]]</option>
+						<label>index: <select cv-bind = "queryIndex" cv-each = "queryIndexes:store:s">
+							<option value="[[store]]">[[store]]</option>
 						</select></label>
 						<label>value: <input cv-bind = "queryValue" /></label>
-						<label class = "buttons"><button>query</button></label>
+						<label>limit: <input type = "number" cv-bind = "queryLimit" /></label>
+						<input type = "hidden" readonly="readonly" cv-bind = "queryStore" />
+						<label class = "buttons">
+							<span cv-if = "?total"> [[total]] record returned. </span>
+							<button>query</button>
+						</label>
 					</form>
-					<div style = "height: 10em;">[[resultScroller]]</div>
+					<div class = "tight scroller">
+						[[resultScroller]]
+					</div>
 				</div>
 			</div>
 		</div>

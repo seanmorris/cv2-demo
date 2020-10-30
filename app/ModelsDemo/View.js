@@ -36,17 +36,18 @@ export class View extends BaseView
 		this.args.models = [];
 		this.modelCount  = 0;
 
+		this.args.content = [1,2,3];
+
 		this.args.resultScroller = new Scroller({rowHeight: 33});
-		this.args.resultScroller.args.content = Array(10000).fill(1).map((v,k)=>k);
 
 		ExampleDatabase.open('models-db', 1).then(db => {
 			const store = 'models-store';
 			const index = 'id';
 			const query = {store, index, type: Model};
 
-			this.args.stores = [db.listStores(), db.listStores()].flat();
+			this.args.stores = db.listStores();
 
-			console.log(this.args.stores);
+			this.args.queryStore = this.args.stores[0] ?? null;
 
 			Promise.all(Array(10).fill().map((x,y)=>{
 
@@ -85,6 +86,15 @@ export class View extends BaseView
 
 			});
 		});
+
+		this.args.bindTo('queryStore', v => {
+
+			if(!v) return;
+
+			ExampleDatabase.open('models-db', 1).then(db => {
+				this.args.queryIndexes = db.listIndexes(v);
+			});
+		});
 	}
 
 	postRender()
@@ -105,7 +115,7 @@ function findSequence(goal) {
 }`;
 
 		const textbox = new Tag(`<textarea>`);
-		
+
 		const editor = CodeMirror(textbox, {
 			theme:        'elegant'
 			, autoRefresh: true
@@ -169,6 +179,40 @@ function findSequence(goal) {
 	queryDatabase(event)
 	{
 		event.preventDefault();
-		console.log(event);
+
+		const query = {
+			store: this.args.queryStore
+			, index: this.args.queryIndex
+			, range: Number(this.args.queryValue) == this.args.queryValue
+				? Number(this.args.queryValue)
+				: this.args.queryValue
+			, limit: Number(this.args.queryLimit)
+		};
+
+		ExampleDatabase.open('models-db', 1).then(db => {
+
+			db.listIndexes(this.args.queryStore);
+
+			const scroller = this.args.resultScroller;
+			const content  =  [];
+
+			this.args.total       = null;
+
+			scroller.args.content && scroller.args.content.splice(0);
+
+			db.select(query)
+				.each(record => content.push(JSON.stringify(record)))
+				.then(({index})  => {
+					this.args.total = index;
+					scroller.args.content = content;
+
+					console.log(content);
+				});
+		});
+	}
+
+	useDb(event, database)
+	{
+		this.args.queryStore = database
 	}
 }
