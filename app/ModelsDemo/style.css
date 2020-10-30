@@ -1,4 +1,5 @@
-.models-demo input {
+.models-demo input,
+.models-demo select {
 	padding-left: 0.5em;
 	padding-right: 0.5em;
 	background-color: #DDD;
@@ -29,7 +30,6 @@
 .models-demo pre{
 	line-height: 1.5em;
 }
-
 
 .models-demo pre img[data-icon] {
 	cursor: pointer;
@@ -74,11 +74,34 @@
 }
 
 .model-editor {
-	width: 207px;
+	max-width: 30%;
+	flex: 1;
 }
 
 .database-editor {
+	box-sizing: border-box;
 	width: 100%;
+}
+
+.database-editor-body {
+	display: flex;
+	flex-direction: row;
+}
+
+.database-store-list {
+	border-right: 1px solid black;
+	flex-shrink: 1;
+	align-items: flex-end;
+}
+
+.database-store-list ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.database-store-list ul li {
+	padding: 0.5em;
 }
 
 .models-demo .models {}
@@ -92,6 +115,20 @@
 	font-size: 0.85em;
 	padding: 0.5em;
 	user-select: none;
+}
+
+.models-demo > .row {
+	justify-content: flex-start;
+	margin-left: -1em;
+}
+
+.model-editor {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	min-width: calc(33% - calc(1em - 0.3px));
+	margin-left: 1em;
+	margin-bottom: 1em;
 }
 
 .model-editor .model-editor-title .title {
@@ -111,6 +148,7 @@
 	cursor: pointer;
 }
 
+label.buttons button,
 .model-editor button {
 	background: black;
 	color: white;
@@ -128,9 +166,14 @@
 	margin-top: 0.5em;
 }
 
-.models-demo .model-editor-eyebrow {
-	font-size: 0.8em;
+.models-demo .model-editor-eyebrow,
+.models-demo .model-editor-text {
+	font-size: 0.85em;
 	padding: 0.5em;
+}
+
+.models-demo .model-editor-eyebrow {
+	min-height: 4em;
 }
 
 .model-editor .new-property {
@@ -151,6 +194,8 @@
 	margin-bottom: 0.5em;
 	display: flex;
 	justify-content: center;
+	align-items: center;
+	flex: 1;
 }
 
 .model-editor button {
@@ -163,11 +208,13 @@
 	border-bottom: 1px solid black;
 }
 
+label.buttons button,
 .model-editor button:not(.tight) {
-	padding: 8pt;	
+	padding: 8pt;
 }
 
 .model-editor input,
+label.buttons button,
 .model-editor button {
 	margin: 0px;
 	border: none;
@@ -180,11 +227,56 @@
 	margin: 0;
 }
 
-.models-demo .row {
-	justify-content: flex-start;
+.CodeMirror.cm-s-elegant {
+	border: 1px solid black;
+	margin-bottom: 1em;
 }
 
-.model-editor {
-	margin-right: 0.75em;
-	margin-bottom: 0.75em;
+.database-editor-right {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+}
+
+.database-editor-right > *{
+	padding: 0.5em;
+	flex: 1;
+}
+
+.database-editor-right form {
+	padding: 0;
+	display: flex;
+	flex-direction: row;
+	box-sizing: border-box;
+	flex-wrap: wrap;
+}
+
+.database-editor-right label {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	padding-top: 0.25em;
+	padding-right: 0.5em;
+}
+
+.database-editor-right label:first-child {
+	border-left: none;
+	padding-left: 0.5em;
+}
+
+.database-editor-right select,
+.database-editor-right input {
+	width: 100%;
+	box-sizing: border-box;
+	border-right: none;
+	border: 1px solid black;
+}
+
+label.buttons {
+	padding: 0.5em;
+	min-width: 100%;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
 }

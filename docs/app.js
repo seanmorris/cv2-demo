@@ -1778,7 +1778,6 @@ var View = /*#__PURE__*/function (_BaseView) {
       var list = _this.args.list;
       var a = _this.args.list[start];
       var b = _this.args.list[finish];
-      console.log(a, b);
       var _ref = [a, b];
       list[finish] = _ref[0];
       list[start] = _ref[1];
@@ -1791,8 +1790,8 @@ var View = /*#__PURE__*/function (_BaseView) {
     _this.dragger.render(document.body);
 
     _this.args.trackSize = 16;
-    _this.args.xsize = _this.args.xsize || 9;
-    _this.args.ysize = _this.args.ysize || 9;
+    _this.args.xsize = _this.args.xsize || 7;
+    _this.args.ysize = _this.args.ysize || 7;
     _this.args.hGrab = Array(-1 + _this.args.xsize).fill(0);
     _this.args.vGrab = Array(-1 + _this.args.ysize).fill(0);
     _this.args.cols = [];
@@ -1814,8 +1813,7 @@ var View = /*#__PURE__*/function (_BaseView) {
           return isNaN(c) ? c : "".concat(c, "px");
         }).join(' var(--tracksize) ');
       });
-    }); // this.args.auto = {x: 1, y: 0}
-
+    });
 
     _this.args.auto = _this.args.auto || {
       x: Math.floor(_this.args.xsize / 2),
@@ -1829,7 +1827,7 @@ var View = /*#__PURE__*/function (_BaseView) {
         continue;
       }
 
-      _this.args.cols.push(30);
+      _this.args.cols.push(50);
     }
 
     for (var y = 0; y < _this.args.ysize; y++) {
@@ -1839,7 +1837,7 @@ var View = /*#__PURE__*/function (_BaseView) {
         continue;
       }
 
-      _this.args.rows.push(30);
+      _this.args.rows.push(50);
     }
 
     _this.resizing = false;
@@ -1850,20 +1848,29 @@ var View = /*#__PURE__*/function (_BaseView) {
     timer.preserve = true;
     timer.onFrame(function () {
       return timer.args.time = new Date().toISOString();
-    });
+    }); // const face = BaseView.from('<img src = "/player-head-180.png" />');
+    // face.preserve = true;
 
-    var face = _View.View.from('<img src = "/player-head-180.png" />');
+    var list = Array(23).fill('1');
+    var fill = [];
 
-    face.preserve = true;
-    _this.args.list = [1, 2 //timer
-    , 3, 4, 5, 6 //face
-    , 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, null, null, null, null, null, null, null, null, null].map(function (v, k) {
+    if (list.length < _this.args.xsize * _this.args.xsize) {
+      fill = Array(_this.args.xsize * _this.args.xsize - list.length).fill(null);
+    }
+
+    _this.args.list = [list, fill].flat().map(function (v, k) {
+      if (k === 0) {
+        return {
+          label: '<img src = "/player-head.png" />',
+          index: k
+        };
+      }
+
       return {
-        label: v ? String.fromCharCode(96 + v) : '',
+        label: (v !== null && v !== void 0 ? v : v) ? String.fromCharCode(-1 + 0x262F + k) : v,
         index: k
       };
-    }); // .map(x=> x && String.fromCharCode(96 + x));
-
+    });
     return _this;
   }
 
@@ -2053,7 +2060,7 @@ module.exports = "<div class = \"drag-drop-stage\" cv-ref = \"stage\">\n\t<div c
 });
 
 ;require.register("Experiments/GridResizer/template.html", function(exports, require, module) {
-module.exports = "<h2>grid-tools</h2>\n\n<p>Grid tools implements one dimensional resize on tracks and two-dimensional on intersections. It also re-sorts its source array on drag & drop.</p>\n\n<p>The order of these black squares will change as you drag & drop the items in the grid below.\n\n<p class = \"list-preview\">\n\t<span class = \"contents\" cv-each = \"list:item:index\">\n\t\t<span class = \"invert\" cv-with = \"item\">\n\t\t\t[[label]]\n\t\t\t<span cv-if = \"!label\">×</span>\n\t\t</span>\n\t</span>\n</p>\n\n<p class = \"row\">track width: <input type = \"range\" min = \"0\" max = \"100\" cv-bind = \"trackSize\"/> [[trackSize]]px</p>\n\n<div\n\tclass = \"grid-resize [[dragging]]\"\n\tstyle = \"\n\t\t--xsize:       calc([[xsize]] * 2);\n\t\t--ysize:       calc([[ysize]] * 2);\n\t\t--tracksize:   [[trackSize]]px;\n\t\t--colTemplate: [[colTemplate]];\n\t\t--rowTemplate: [[rowTemplate]];\n\t\">\n\n\t<span class = \"contents\" cv-each = \"list:item:index\">\n\t\t<div\n\t\t\tclass = \"box box-[[index]]\"\n\t\t\tcv-on = \"\n\t\t\t\tcvDragDrop:stopdrop(event, $tag, index)c;\n\t\t\t\tcvDragGrab:stopdrop(event, $tag, index);\n\t\t\t\tcvDragHover:hover(event, $tag, index);\n\t\t\t\tcvDragUnhover:unhover(event, $tag, index);\n\t\t\t\tmousedown:drag(event, $tag, index)c;\n\t\t\t\tmouseup:drop(event, $tag, index)c;\n\t\t\t\"\n\t\t>\n\t\t\t<div style = \"--index:[[index]]\" cv-with = \"item\">[[label]]</div>\n\t\t</div>\n\t</span>\n\n\t<span class = \"contents\" cv-each = \"hGrab::h\" cv-on = \"mousedown(event);mousemove(event)c;\">\n\t\t<div style = \"--track:[[h|trackNumber]]\" data-resize = \"h\" class = \"resizer resizer-h\"></div>\n\t</span>\n\n\t<span class = \"contents\" cv-each = \"vGrab::v\" cv-on = \"mousedown(event);mousemove(event)c;\">\n\t\t<div style = \"--track:[[v|trackNumber]]\" data-resize = \"v\" class = \"resizer resizer-v\">\n\t\t\t<span class = \"contents\" cv-each = \"hGrab::vh\">\n\t\t\t\t<div style = \"--track:[[vh|trackNumber]]\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t</span>\n\t\t</div>\n\t</span>\n\n\n</div>\n\n<p>[[rowTemplate]]</p>\n<p>[[colTemplate]]</p>\n"
+module.exports = "<h2>grid-tools</h2>\n\n<p>Grid tools implements one dimensional resize on tracks and two-dimensional on intersections.</p>\n\n<p>It will re-sort its source array on drag & drop.</p>\n\n<p>The order of these black circles will change as you drag & drop the items in the grid below.\n\n<div class = \"list-preview\">\n\t<span class = \"contents\" cv-each = \"list:item:index\">\n\t\t<span cv-with = \"item\">\n\t\t\t<span cv-if = \"label\">\n\t\t\t\t<span class = \"invert\">[[$label]]</span>\n\t\t\t</span>\n\t\t</span>\n\t</span>\n</div>\n\n<p class = \"row\">track width: <input type = \"range\" min = \"0\" max = \"100\" cv-bind = \"trackSize\"/> [[trackSize]]px</p>\n\n<div\n\tclass = \"grid-resize [[dragging]]\"\n\tstyle = \"\n\t\t--xsize:       calc([[xsize]] * 2);\n\t\t--ysize:       calc([[ysize]] * 2);\n\t\t--tracksize:   [[trackSize]]px;\n\t\t--colTemplate: [[colTemplate]];\n\t\t--rowTemplate: [[rowTemplate]];\n\t\">\n\n\t<span class = \"contents\" cv-each = \"list:item:index\">\n\t\t<div\n\t\t\tclass   = \"box box-[[index]]\"\n\t\t\tstyle   = \"--index:[[index]]\"\n\t\t\tcv-with = \"item\"\n\t\t\tcv-on   = \"\n\t\t\t\tcvDragDrop:stopdrop(event, $tag, index)c;\n\t\t\t\tcvDragGrab:stopdrop(event, $tag, index);\n\t\t\t\tcvDragHover:hover(event, $tag, index);\n\t\t\t\tcvDragUnhover:unhover(event, $tag, index);\n\t\t\t\tmousedown:drag(event, $tag, index)c;\n\t\t\t\tmouseup:drop(event, $tag, index)c;\n\t\t\t\"\n\t\t>[[$label]]</div>\n\t</span>\n\n\t<span class = \"contents\" cv-each = \"hGrab::h\" cv-on = \"mousedown(event);mousemove(event)c;\">\n\t\t<div style = \"--track:[[h|trackNumber]]\" data-resize = \"h\" class = \"resizer resizer-h\"></div>\n\t</span>\n\n\t<span class = \"contents\" cv-each = \"vGrab::v\" cv-on = \"mousedown(event);mousemove(event)c;\">\n\t\t<div style = \"--track:[[v|trackNumber]]\" data-resize = \"v\" class = \"resizer resizer-v\">\n\t\t\t<span class = \"contents\" cv-each = \"hGrab::vh\">\n\t\t\t\t<div style = \"--track:[[vh|trackNumber]]\" data-resize = \"vh\" class = \"resizer resizer-vh\"></div>\n\t\t\t</span>\n\t\t</div>\n\t</span>\n\n\n</div>\n\n<p>[[rowTemplate]]</p>\n<p>[[colTemplate]]</p>\n"
 });
 
 ;require.register("Experiments/HtmlEditor/View.js", function(exports, require, module) {
@@ -2581,7 +2588,7 @@ var InfiniteScroller = /*#__PURE__*/function (_Mixin$from) {
     }
   }, {
     key: "updateViewport",
-    value: function updateViewport() {
+    value: function updateViewport(event) {
       var _this3 = this;
 
       this.snapper && this.snapper.cancel();
@@ -2643,6 +2650,10 @@ var InfiniteScroller = /*#__PURE__*/function (_Mixin$from) {
         return;
       }
 
+      if (!event) {
+        return;
+      }
+
       var closeRow = Math.round(start / this.args.rowHeight);
       var groove = closeRow * this.args.rowHeight;
       var diff = groove - start;
@@ -2651,15 +2662,12 @@ var InfiniteScroller = /*#__PURE__*/function (_Mixin$from) {
       if (duration > 192) {
         duration = 192;
       }
-      /*/
-      const snapper = new GeoIn(duration, {power: 5});
-      /*/
 
-
-      var snapper = new _ElasticOut.ElasticOut(duration * 13, {
+      var snapper = Math.abs(diff) > 3 ? new _ElasticOut.ElasticOut(duration * 13, {
         friction: 0.15
-      }); //*/
-
+      }) : new _GeoIn.GeoIn(duration, {
+        power: 5
+      });
       this.snapperDone && this.snapperDone();
       this.snapperDone = this.onFrame(function () {
         var offset = snapper.current() * diff;
@@ -3907,7 +3915,11 @@ var _Model = require("curvature/model/Model");
 
 var _Database2 = require("curvature/model/Database");
 
+var _Tag = require("curvature/base/Tag");
+
 var _View = require("curvature/base/View");
+
+var _InfiniteScroller = require("../Experiments/InfiniteScroll/lib/InfiniteScroller");
 
 var _codemirror = _interopRequireDefault(require("codemirror"));
 
@@ -3951,13 +3963,13 @@ var ExampleDatabase = /*#__PURE__*/function (_Database) {
   _createClass(ExampleDatabase, null, [{
     key: "_version_1",
     value: function _version_1(database) {
-      var eventLog = database.createObjectStore('models-store', {
+      var modelStore = database.createObjectStore('models-store', {
         keyPath: 'id'
       });
-      eventLog.createIndex('id', 'id', {
+      modelStore.createIndex('id', 'id', {
         unique: false
       });
-      eventLog.createIndex('class', 'class', {
+      modelStore.createIndex('class', 'class', {
         unique: false
       });
     }
@@ -3982,6 +3994,12 @@ var View = /*#__PURE__*/function (_BaseView) {
     _this.args.newId = 1;
     _this.args.models = [];
     _this.modelCount = 0;
+    _this.args.resultScroller = new _InfiniteScroller.InfiniteScroller({
+      rowHeight: 33
+    });
+    _this.args.resultScroller.args.content = Array(10000).fill(1).map(function (v, k) {
+      return k;
+    });
     ExampleDatabase.open('models-db', 1).then(function (db) {
       var store = 'models-store';
       var index = 'id';
@@ -3990,13 +4008,14 @@ var View = /*#__PURE__*/function (_BaseView) {
         index: index,
         type: _Model.Model
       };
+      _this.args.stores = [db.listStores(), db.listStores()].flat();
+      console.log(_this.args.stores);
       Promise.all(Array(10).fill().map(function (x, y) {
         var id = 1 + y;
         var qq = Object.assign({}, query, {
           range: id
         });
-        var select = db.select(qq);
-        return select.one().then(function (_ref) {
+        return db.select(qq).one().then(function (_ref) {
           var record = _ref.record,
               index = _ref.index;
 
@@ -4014,9 +4033,9 @@ var View = /*#__PURE__*/function (_BaseView) {
             record.consume({
               updated: Date.now()
             });
-            return db.update(record);
+            return db.update(store, record);
           } else {
-            return db["delete"](record);
+            return db["delete"](store, record);
           }
         });
       }).then(function () {// db.select(query).each((record, index) => console.log(record, index));
@@ -4028,11 +4047,19 @@ var View = /*#__PURE__*/function (_BaseView) {
   _createClass(View, [{
     key: "postRender",
     value: function postRender() {
-      this.edit = _codemirror["default"].fromTextArea(this.tags.txt.element, {
-        theme: "elegant"
+      var exampleSource = "// sample code to test out CodeMirror\n// as a replacement for ACE-editor\nfunction findSequence(goal) {\n  function find(start, history) {\n    if (start == goal)\n      return history;\n    else if (start > goal)\n      return null;\n    else\n      return find(start + 5, \"(\" + history + \" + 5)\") ||\n             find(start * 3, \"(\" + history + \" * 3)\");\n  }\n  return find(1, \"1\");\n}";
+      var textbox = new _Tag.Tag("<textarea>");
+      var editor = (0, _codemirror["default"])(textbox, {
+        theme: 'elegant',
+        autoRefresh: true,
+        mode: 'javascript'
       });
-      console.log(_codemirror["default"].modes);
-      console.log(this.edit);
+      editor.setValue(exampleSource);
+      textbox.value = 123;
+      this.onNextFrame(function () {
+        return editor.refresh();
+      });
+      this.args.editor = editor.display.wrapper;
       this.listen(this, 'focusin', function (event) {
         return event.srcElement.select && event.srcElement.select();
       });
@@ -4061,7 +4088,7 @@ var View = /*#__PURE__*/function (_BaseView) {
     key: "loadModel",
     value: function loadModel() {
       this.args.models.push(_Model.Model.from({
-        id: String(this.args.newId).trim(),
+        id: Number(this.args.newId),
         "class": this.args.newClass
       }));
     }
@@ -4074,6 +4101,12 @@ var View = /*#__PURE__*/function (_BaseView) {
 
       event.target.setAttribute('disabled', 'disabled');
     }
+  }, {
+    key: "queryDatabase",
+    value: function queryDatabase(event) {
+      event.preventDefault();
+      console.log(event);
+    }
   }]);
 
   return View;
@@ -4083,7 +4116,7 @@ exports.View = View;
 });
 
 ;require.register("ModelsDemo/template.html", function(exports, require, module) {
-module.exports = "<div class=\"models-demo\">\n\n\t<h2>models</h2>\n\n\t<p>Models are simple objects, with some light tooling to make them simple to populate. They will also use the <b>class</b> and <b>id</b> properties to ensure that each model only gets a single reference. If you load the same model multiple times, the input fields should remain synced.</p>\n\n\t<textarea cv-ref = \"txt\">\nfunction findSequence(goal) {\n  function find(start, history) {\n    if (start == goal)\n      return history;\n    else if (start > goal)\n      return null;\n    else\n      return find(start + 5, \"(\" + history + \" + 5)\") ||\n             find(start * 3, \"(\" + history + \" * 3)\");\n  }\n  return find(1, \"1\");\n}</textarea>\n\n\t<div class = \"row wrap\">\n\n\t\t<div class = \"model-editor model-loader\">\n\n\t\t\t<div class = \"model-editor-title\">\n\t\t\t\t<span class = \"title\">Model Loader</span>\n\t\t\t\t<span class = \"buttons\">✕</span>\n\t\t\t</div>\n\t\t\t\n\t\t\t<div class = \"model-editor-eyebrow\">Load an instance of a record with the given ID and type. If no record is found, one will be created.</div>\n\n<pre>model = Model.from({\n<div class = \"property-edit\"><span>  id: </span><input cv-bind = \"newId\" />,</div>\n<div class = \"property-edit\"><span>  class: </span><input cv-bind = \"newClass\" />,</div>});</pre>\t\t\t\n\t\t\t<div class = \"buttons\">\n\t\t\t\t<button cv-on = \"click:loadModel\">load</button>\n\t\t\t</div>\n\t\t\n\t\t</div>\n\t\t<div cv-each = \"models:model:m\" cv-ref = \"models\" class = \"contents\">\n\t\t\t<div class = \"model-editor\">\n\t\t\t\t\n\t\t\t\t<div class = \"model-editor-title\">\n\t\t\t\t\t<span class = \"title\">Model Editor</span>\n\t\t\t\t\t<span class = \"buttons\">\n\t\t\t\t\t\t<span tabindex=\"-1\" cv-on = \"click:closeModel(event, m)\">✕</span>\n\t\t\t\t\t</span>\n\t\t\t\t</div>\n\n\t\t\t\t<div class = \"model-editor-eyebrow\">When you modify the properties below, the in-memory values will be updated as you type.</div>\n\n<pre><span class = \"firstline row\">model = { <img src = \"/save.svg\" data-icon tabindex=\"-1\"></span>\n<div cv-each = \"model:value:property\"><div class = \"property-edit\"><span class = \"prop-remove remove-[[property]]\" cv-on = \"click:removeKey(property, m);\">  ✕ </span> [[property]]: <input data-property = \"[[property]]\" cv-bind = \"value\" cv-on = \"cvDomAttached:fieldAttached(event)\" />,\n</div></div>};</pre>\n\n\t\t\t\t<div class = \"model-editor-eyebrow\">Add a new key:</div>\n\n\t\t\t\t<div class = \"new-property\">\n\t\t\t\t\t<form class = \"contents\" cv-on = \"submit:addKey(event, newField, m)\">\n\t\t\t\t\t\t<input cv-bind = \"newField\" placeholder=\"new property\">\n\t\t\t\t\t\t<button cv-on = \"click:addKey(event, newField, m)\" class = \"tight\">+</button>\n\t\t\t\t\t</form>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\n\t</div>\n\n\t<h3>databases & stores</h3>\n\n\t<div class = \"databases\">\n\n\t\t<div class = \"database-editor\">\n\t\t\t<div class = \"model-editor-title\">\n\t\t\t\tDatabases Explorer\n\t\t\t</div>\n\t\t\t<div class = \"model-editor-eyebrow\">\n\t\t\t\tsomething\n\t\t\t</div>\n\t\t</div>\n\n\t</div>\n\n\t<h3>record sets</h3>\n\n</div>\n"
+module.exports = "<div class=\"models-demo\">\n\n\t<h2>models</h2>\n\n\t<p>Models are simple objects, with some light tooling to make them simple to populate. They will also use the <b>class</b> and <b>id</b> properties to ensure that each model only gets a single reference. If you load the same model multiple times, the input fields should remain synced.</p>\n\n\t<div class = \"row wrap\">\n\n\t\t<div class = \"model-editor model-loader\">\n\n\t\t\t<div class = \"model-editor-title\">\n\t\t\t\t<span class = \"title\">Model Loader</span>\n\t\t\t\t<span class = \"buttons\">✕</span>\n\t\t\t</div>\n\t\t\t\n\t\t\t<div class = \"model-editor-eyebrow\">Load an instance of a record with the given ID and type. If no record is found, one will be created.</div>\n\n<pre>model = Model.from({\n<div class = \"property-edit\"><span>  id: </span><input type = \"number\" cv-bind = \"newId\" />,</div>\n<div class = \"property-edit\"><span>  class: </span><input cv-bind = \"newClass\" />,</div>});</pre>\t\t\t\n\t\t\t<div class = \"buttons\">\n\t\t\t\t<button cv-on = \"click:loadModel\">load</button>\n\t\t\t</div>\n\t\t\n\t\t</div>\n\t\t<div cv-each = \"models:model:m\" cv-ref = \"models\" class = \"contents\">\n\t\t\t<div class = \"model-editor\">\n\t\t\t\t\n\t\t\t\t<div class = \"model-editor-title\">\n\t\t\t\t\t<span class = \"title\">Model Editor</span>\n\t\t\t\t\t<span class = \"buttons\">\n\t\t\t\t\t\t<span tabindex=\"-1\" cv-on = \"click:closeModel(event, m)\">✕</span>\n\t\t\t\t\t</span>\n\t\t\t\t</div>\n\n\t\t\t\t<div class = \"model-editor-eyebrow\">When you modify the properties below, the in-memory values will be updated as you type.</div>\n\n<pre><span class = \"firstline row\">model = { <img src = \"/save.svg\" data-icon tabindex=\"-1\"></span>\n<div cv-each = \"model:value:property\"><div class = \"property-edit\"><span class = \"prop-remove remove-[[property]]\" cv-on = \"click:removeKey(property, m);\">  ✕ </span> [[property]]: <input data-property = \"[[property]]\" cv-bind = \"value\" cv-on = \"cvDomAttached:fieldAttached(event)\" />,\n</div></div>};</pre>\n\n\t\t\t\t<div class = \"model-editor-text\">Add a new key:</div>\n\n\t\t\t\t<div class = \"new-property\">\n\t\t\t\t\t<form class = \"contents\" cv-on = \"submit:addKey(event, newField, m)\">\n\t\t\t\t\t\t<input cv-bind = \"newField\" placeholder=\"new property\">\n\t\t\t\t\t\t<button cv-on = \"click:addKey(event, newField, m)\" class = \"tight\">+</button>\n\t\t\t\t\t</form>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\n\t</div>\n\n\t<h3>querying databases</h3>\n\n\t<p>Under the hood, the system uses the browser's IndexedDb system for local persistence.</p>\n\n\t<div class = \"databases\">\n\n\t\t<div class = \"database-editor\">\n\t\t\t<div class = \"model-editor-title\">\n\t\t\t\tDatabases Explorer\n\t\t\t</div>\n\t\t\t<div class = \"database-editor-body\">\n\t\t\t\t<div class = \"database-store-list\">\n\t\t\t\t\t<div class = \"model-editor-eyebrow\">\n\t\t\t\t\t\t<ul cv-each = \"stores:store:s\">\n\t\t\t\t\t\t\t<li>[[store]]</li>\n\t\t\t\t\t\t</ul>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t<div class = \"database-editor-right\">\n\t\t\t\t\t<form cv-on = \"submit:queryDatabase(event)\">\n\t\t\t\t\t\t<label>index: <select cv-bind = \"queryIndex\" cv-each = \"stores:store:s\">\n\t\t\t\t\t\t\t<option>[[store]] index [[s]]</option>\n\t\t\t\t\t\t</select></label>\n\t\t\t\t\t\t<label>value: <input cv-bind = \"queryValue\" /></label>\n\t\t\t\t\t\t<label class = \"buttons\"><button>query</button></label>\n\t\t\t\t\t</form>\n\t\t\t\t\t<div style = \"height: 10em;\">[[resultScroller]]</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\n\t</div>\n\n\t<h3>events, workers & sync</h3>\n\n\t[[editor]]\n\n</div>\n"
 });
 
 ;require.register("ObjectDemo/View.js", function(exports, require, module) {

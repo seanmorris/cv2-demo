@@ -130,7 +130,7 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 		this.updateViewport();
 	}
 
-	updateViewport()
+	updateViewport(event)
 	{
 		this.snapper && this.snapper.cancel();
 
@@ -198,6 +198,11 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 			return;
 		}
 
+		if(!event)
+		{
+			return;
+		}
+
 		const closeRow = Math.round(start / this.args.rowHeight);
 		const groove   = closeRow * this.args.rowHeight;
 		const diff     = groove - start;
@@ -209,11 +214,9 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 			duration = 192;
 		}
 
-		/*/
-		const snapper = new GeoIn(duration, {power: 5});
-		/*/
-		const snapper = new ElasticOut(duration * 13, {friction: 0.15});
-		//*/
+		const snapper = Math.abs(diff) > 3
+			? new ElasticOut(duration * 13, {friction: 0.15})
+			: new GeoIn(duration, {power: 5});
 
 		this.snapperDone && this.snapperDone();
 

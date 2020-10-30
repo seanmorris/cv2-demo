@@ -1,7 +1,10 @@
 import { Model    } from 'curvature/model/Model';
 import { Database } from 'curvature/model/Database';
 
+import { Tag } from 'curvature/base/Tag';
 import { View as BaseView } from 'curvature/base/View';
+
+import { InfiniteScroller as Scroller } from '../Experiments/InfiniteScroll/lib/InfiniteScroller';
 
 import CodeMirror from 'codemirror';
 import 'codemirror/mode/javascript/javascript';
@@ -10,12 +13,12 @@ class ExampleDatabase extends Database
 {
 	static _version_1(database)
 	{
-		const eventLog = database.createObjectStore(
+		const modelStore = database.createObjectStore(
 			'models-store', {keyPath: 'id'}
 		);
 
-		eventLog.createIndex('id',    'id',    {unique: false});
-		eventLog.createIndex('class', 'class', {unique: false});
+		modelStore.createIndex('id',    'id',    {unique: false});
+		modelStore.createIndex('class', 'class', {unique: false});
 	}
 }
 
@@ -33,20 +36,24 @@ export class View extends BaseView
 		this.args.models = [];
 		this.modelCount  = 0;
 
-		ExampleDatabase.open('models-db', 1).then(db => {
+		this.args.resultScroller = new Scroller({rowHeight: 33});
+		this.args.resultScroller.args.content = Array(10000).fill(1).map((v,k)=>k);
 
+		ExampleDatabase.open('models-db', 1).then(db => {
 			const store = 'models-store';
 			const index = 'id';
 			const query = {store, index, type: Model};
+
+			this.args.stores = [db.listStores(), db.listStores()].flat();
+
+			console.log(this.args.stores);
 
 			Promise.all(Array(10).fill().map((x,y)=>{
 
 				const id = 1+y;
 				const qq = Object.assign({}, query, {range: id});
 
-				const select = db.select(qq);
-
-				return select.one().then(({record,index}) => {
+				return db.select(qq).one().then(({record,index}) => {
 					if(!record)
 					{
 						return db.insert(store, Model.from({
@@ -56,7 +63,6 @@ export class View extends BaseView
 						}));
 					}
 				});
-
 			})).then(() => {
 
 				return db.select(query).each((record, index)=>{
@@ -65,11 +71,11 @@ export class View extends BaseView
 					{
 						record.consume({updated: Date.now()});
 
-						return db.update(record);
+						return db.update(store, record);
 					}
 					else
 					{
-						return db.delete(record);
+						return db.delete(store, record);
 					}
 
 				});
@@ -83,11 +89,34 @@ export class View extends BaseView
 
 	postRender()
 	{
-		this.edit = CodeMirror.fromTextArea(this.tags.txt.element, {theme: "elegant"});
+		const exampleSource = `// sample code to test out CodeMirror
+// as a replacement for ACE-editor
+function findSequence(goal) {
+  function find(start, history) {
+    if (start == goal)
+      return history;
+    else if (start > goal)
+      return null;
+    else
+      return find(start + 5, "(" + history + " + 5)") ||
+             find(start * 3, "(" + history + " * 3)");
+  }
+  return find(1, "1");
+}`;
 
-		console.log(CodeMirror.modes);
+		const textbox = new Tag(`<textarea>`);
+		
+		const editor = CodeMirror(textbox, {
+			theme:        'elegant'
+			, autoRefresh: true
+			, mode:        'javascript'
+		});
 
-		console.log(this.edit);
+		editor.setValue(exampleSource);
+		textbox.value = 123;
+		this.onNextFrame(()=> editor.refresh());
+
+		this.args.editor = editor.display.wrapper;
 
 		this.listen(
 			this
@@ -122,7 +151,7 @@ export class View extends BaseView
 	loadModel()
 	{
 		this.args.models.push(Model.from({
-			id: String(this.args.newId).trim()
+			id: Number(this.args.newId)
 			, class: this.args.newClass
 		}));
 	}
@@ -135,5 +164,11 @@ export class View extends BaseView
 		}
 
 		event.target.setAttribute('disabled', 'disabled');
+	}
+
+	queryDatabase(event)
+	{
+		event.preventDefault();
+		console.log(event);
 	}
 }

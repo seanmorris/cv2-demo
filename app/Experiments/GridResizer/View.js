@@ -15,8 +15,6 @@ export class View extends BaseView
 			const a = this.args.list[start];
 			const b = this.args.list[finish];
 
-			console.log(a, b);
-
 			[list[finish], list[start]] = [a, b];
 		});
 
@@ -28,8 +26,8 @@ export class View extends BaseView
 
 		this.args.trackSize = 16;
 
-		this.args.xsize = this.args.xsize || 9;
-		this.args.ysize = this.args.ysize || 9;
+		this.args.xsize = this.args.xsize || 7;
+		this.args.ysize = this.args.ysize || 7;
 
 		this.args.hGrab = Array(-1 + this.args.xsize).fill(0);
 		this.args.vGrab = Array(-1 + this.args.ysize).fill(0);
@@ -52,8 +50,6 @@ export class View extends BaseView
 				.join(' var(--tracksize) ');
 		}));
 
-		// this.args.auto = {x: 1, y: 0}
-
 		this.args.auto = this.args.auto || {
 			x:   Math.floor(this.args.xsize / 2)
 			, y: Math.floor(this.args.ysize / 2)
@@ -66,7 +62,7 @@ export class View extends BaseView
 				this.args.cols.push('auto');
 				continue;
 			}
-			this.args.cols.push(30);
+			this.args.cols.push(50);
 		}
 
 		for(let y = 0; y < this.args.ysize; y++)
@@ -77,7 +73,7 @@ export class View extends BaseView
 				continue;
 			}
 
-			this.args.rows.push(30);
+			this.args.rows.push(50);
 		}
 
 		this.resizing = false;
@@ -89,26 +85,31 @@ export class View extends BaseView
 
 		timer.onFrame(()=>timer.args.time = (new Date).toISOString());
 
-		const face = BaseView.from('<img src = "/player-head-180.png" />');
+		// const face = BaseView.from('<img src = "/player-head-180.png" />');
+		// face.preserve = true;
 
-		face.preserve = true;
+		const list = Array(23).fill('1');
 
-		this.args.list = [
-			1
-			, 2 //timer
-			, 3
-			, 4
-			, 5
-			, 6 //face
-			, 7, 8, 9, 10 , 11, 12, 13, 14, 15, 16
-			, null, null, null, null, null, null, null, null, null
-		].map((v,k)=>({
-			label: v ? String.fromCharCode(96 + v) : ''
-			, index: k
-		}));
+		let fill = [];
 
-		// .map(x=> x && String.fromCharCode(96 + x));
+		if(list.length < this.args.xsize * this.args.xsize)
+		{
+			fill = Array(this.args.xsize * this.args.xsize - list.length).fill(null);
+		}
 
+		this.args.list = [list, fill].flat().map((v,k)=>{
+
+			if(k === 0)
+			{
+
+				return {label: '<img src = "/player-head.png" />', index: k}
+			}
+
+			return {
+				label: v ?? v ? String.fromCharCode(-1 + 0x262F + k) : v
+				, index: k
+			}
+		});
 	}
 
 	mousedown(startEvent)
