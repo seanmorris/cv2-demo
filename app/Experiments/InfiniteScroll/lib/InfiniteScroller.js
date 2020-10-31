@@ -236,9 +236,9 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 
 		let duration = Math.abs(diff * this.args.rowHeight / 2);
 
-		if(duration > 192)
+		if(duration > 128)
 		{
-			duration = 192;
+			duration = 128;
 		}
 
 		const snapper = Math.abs(diff) > 3
@@ -253,18 +253,16 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 		});
 
 		snapper.then(elapsed => {
-			this.onNextFrame(()=> {
-				if(this.args.snapOffset == 0)
-				{
-					return;
-				}
+			if(this.args.snapOffset == 0)
+			{
+				return;
+			}
 
-				if(scroller.scrollTop !== groove)
-				{
-					scroller.scrollTop = groove;
-					this.args.snapOffset = 0;
-				}
-			});
+			if(scroller.scrollTop !== groove)
+			{
+				this.args.snapOffset = 0;
+				scroller.scrollTop = groove;
+			}
 
 			this.snapperDone && this.snapperDone();
 			event.preventDefault();

@@ -14,7 +14,9 @@ export class Row extends BaseView
 	{
 		const rowTag = this.tags.row;
 
-		rowTag.style.setProperty('--index', this.args.r);
+		rowTag.style({
+			'--index': this.args.r
+		});
 
 		rowTag.style.position  = 'absolute';
 		rowTag.style.height    = 'var(--rowHeight)';
@@ -26,7 +28,7 @@ export class Row extends BaseView
 			, {root: this.parent.container.node}
 		);
 
-		observer.observe(rowTag);
+		observer.observe(rowTag.node);
 	}
 
 	scrollObserved(entries, observer)

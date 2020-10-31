@@ -1,27 +1,19 @@
-import { Model    } from 'curvature/model/Model';
-import { Database } from 'curvature/model/Database';
+import { Model } from 'curvature/model/Model';
 
 import { Tag } from 'curvature/base/Tag';
 import { View as BaseView } from 'curvature/base/View';
 
 import { InfiniteScroller as Scroller } from '../Experiments/InfiniteScroll/lib/InfiniteScroller';
+
 import { ModelScroller } from './ModelScroller';
+import { ExampleDatabase } from './ExampleDatabase';
 
 import CodeMirror from 'codemirror';
 import 'codemirror/mode/javascript/javascript';
 
-class ExampleDatabase extends Database
-{
-	static _version_1(database)
-	{
-		const modelStore = database.createObjectStore(
-			'models-store', {keyPath: 'id'}
-		);
+import { rawquire } from 'rawquire/rawquire.macro';
 
-		modelStore.createIndex('id',    'id',    {unique: false});
-		modelStore.createIndex('class', 'class', {unique: false});
-	}
-}
+import { ModelMap } from './ModelMap';
 
 export class View extends BaseView
 {
@@ -41,6 +33,8 @@ export class View extends BaseView
 
 		this.args.resultScroller = new ModelScroller({rowHeight: 33});
 
+		this.args.rangeValue = 'value';
+
 		this.db = new Promise((accept, reject) => {
 			ExampleDatabase.open('models-db', 1).then(db => {
 				accept(db);
@@ -48,11 +42,13 @@ export class View extends BaseView
 		});
 
 		ExampleDatabase.open('models-db', 1).then(db => {
-			const store = 'models-store';
+			const store = 'Mock-store';
 			const index = 'id';
-			const query = {store, index, type: Model};
+			const query = {store, index, limit: 0, type: Model};
 
 			this.args.stores = db.listStores();
+
+			this.onNextFrame(()=>this.useDb('Mock-store'));
 
 			this.args.queryStore = this.args.stores[0] ?? null;
 
@@ -61,15 +57,17 @@ export class View extends BaseView
 				const id = 1+y;
 				const qq = Object.assign({}, query, {range: id});
 
-				return db.select(qq).one().then(({record,index}) => {
-					if(!record)
-					{
+				return db.select(qq).then(({index}) => {
+						if(index)
+						{
+							return;
+						}
+
 						return db.insert(store, Model.from({
-							id:        id
-							, class:   'Mock'
+							class: 'Mock'
+							, id:  id
 						}));
-					}
-				});
+					});
 			}))
 		});
 
@@ -78,48 +76,26 @@ export class View extends BaseView
 			if(!v) return;
 
 			ExampleDatabase.open('models-db', 1).then(db => {
-				this.args.queryIndexes = db.listIndexes(v);
+				this.args.queryIndexes = [db.listIndexes(v),db.listIndexes(v)].flat();
 			});
 		});
 	}
 
 	postRender()
 	{
-		const exampleSource = `// sample code to test out CodeMirror
-// as a replacement for ACE-editor
-function findSequence(goal) {
-  function find(start, history) {
-    if (start == goal)
-      return history;
-    else if (start > goal)
-      return null;
-    else
-      return find(start + 5, "(" + history + " + 5)") ||
-             find(start * 3, "(" + history + " * 3)");
-  }
-  return find(1, "1");
-}`;
+		const modelEdit = this.newEditor();
 
-		const textbox = new Tag(`<textarea>`);
+		modelEdit.setValue(rawquire('./ModelMap.js'));
 
-		const editor = CodeMirror(textbox, {
-			theme:        'elegant'
-			, autoRefresh: true
-			, mode:        'javascript'
-		});
+		this.args.modelEdit = modelEdit.display.wrapper;
 
-		editor.setValue(exampleSource);
-		textbox.value = 123;
-		this.onNextFrame(()=> editor.refresh());
+		const dbEdit = this.newEditor();
 
-		this.args.editor = editor.display.wrapper;
+		dbEdit.setValue(rawquire('./ExampleDatabase.js'));
 
-		this.listen(
-			this
-			, 'focusin'
-			, event => event.srcElement.select
-				&& event.srcElement.select()
-		);
+		this.args.databaseEdit = dbEdit.display.wrapper;
+
+		this.listen('focusin', event => event.srcElement.select && event.srcElement.select());
 	}
 
 	removeKey(key, index)
@@ -146,7 +122,11 @@ function findSequence(goal) {
 
 	loadModel()
 	{
-		const query = {store: 'models-store', index: 'id', range: Number(this.args.newId)};
+		const query = {
+			store: `${this.args.newClass}-store`
+			, index: 'id'
+			, range: Number(this.args.newId)
+		};
 
 		this.db.then(db =>{
 			db.select(query).one(record=>{
@@ -182,10 +162,10 @@ function findSequence(goal) {
 		event.preventDefault();
 
 		const query = {
-
 			store: this.args.queryStore
 			, index: this.args.queryIndex
-			, limit: Number(this.args.queryLimit)
+			, limit: Number(this.args.queryLimit || 0)
+			, type: Model
 		};
 
 		if(this.args.queryLimit === '')
@@ -207,6 +187,25 @@ function findSequence(goal) {
 			query.range = Number(query.range);
 		}
 
+		if(this.args.advancedValue)
+		{
+			console.log(
+				this.isNumeric(this.args.queryValue) ? Number(this.args.queryValue) : this.args.queryValue ?? ''
+				, this.isNumeric(this.args.queryMaxValue) ? Number(this.args.queryMaxValue) : this.args.queryMaxValue ?? ''
+				, false
+				, false
+			);
+
+			query.range = IDBKeyRange.bound(
+				this.isNumeric(this.args.queryValue) ? Number(this.args.queryValue) : this.args.queryValue ?? this.isNumeric(this.args.queryMaxValue) ? 0 : ''
+				, this.isNumeric(this.args.queryMaxValue) ? Number(this.args.queryMaxValue) : this.args.queryMaxValue ?? ''
+				, false
+				, false
+			);
+		}
+
+		console.log(query);
+
 		ExampleDatabase.open('models-db', 1).then(db => {
 			this.args.total = null;
 			const scroller  = this.args.resultScroller;
@@ -220,19 +219,34 @@ function findSequence(goal) {
 		});
 	}
 
-	useDb(event, database)
+	useDb(selected, event)
 	{
-		this.args.queryStore = database
+		this.args.total = null;
+
+		this.args.resultScroller.args.content = [];
+
+		for(const storeName in this.tags.dbSelectors)
+		{
+			const tag = this.tags.dbSelectors[storeName];
+
+			console.log(storeName);
+
+			if(storeName === selected)
+			{
+				tag.parent.args.active = 'db-active';
+				continue;
+			}
+
+			tag.parent.args.active = '';
+		}
+
+		this.args.queryStore = selected;
 	}
 
-	showModelStores(event, $subview)
+	storeModel(event, model)
 	{
-		$subview.args.saving = 'saving';
-	}
-
-	storeModel(event, model, store, $subview)
-	{
-		const query = {store, index: 'id', range: model.id};
+		const store = `${model.class}-store`
+		const query = {store, index: 'id', range: model.id, type: Model};
 
 		ExampleDatabase.open('models-db', 1).then(db => {
 			db.select(query).one(record=>{
@@ -246,16 +260,62 @@ function findSequence(goal) {
 					}
 				});
 
-				db.update(store, Object.assign({}, record, model));
+				const newRecord = Object.assign({}, record, model);
+
+				console.log(model, record, newRecord);
+
+				db.update(store, newRecord).then(()=>{
+					model.stored();
+					console.log('!!');
+				});
 
 			}).then(({index})=> {
 				if(index === 0)
 				{
-					db.insert(store, model);
+					db.insert(store, model).then(()=>{
+						model.stored();
+					});
+
+					model.stored();
 				}
 			});
 		});
+	}
 
-		$subview.args.saving = '';
+	newEditor()
+	{
+		const textbox = new Tag(`<textarea>`);
+
+		const editor = CodeMirror(textbox, {
+			theme:        'elegant'
+			, autoRefresh: true
+			, mode:        'javascript'
+		});
+
+		this.onNextFrame(()=> editor.refresh());
+
+		return editor;
+	}
+
+	advancedValue()
+	{
+		this.args.advancedValue = !this.args.advancedValue;
+
+		this.args.rangeValue = this.args.advancedValue
+			? 'range'
+			: 'value';
+	}
+
+	isNumeric(input)
+	{
+		if(!isNaN(input)
+			&& input.length
+			&& input == Number(input)
+			&& input.length === String(Number(input)).length
+		){
+			return true;
+		}
+
+		return false;
 	}
 }
