@@ -44,11 +44,7 @@ export class RecordSet
 
 	count()
 	{
-		const offset = this.header()
-			? -1
-			: 0;
-
-		return this.length - offset;
+		return this.length;
 	}
 
 	header()
@@ -67,21 +63,17 @@ export class RecordSet
 			return header;
 		}
 
-		const offset = header
-			? -1
-			: 0;
-
 		if(!this.content)
 		{
 			this.content = [];
 		}
 
-		if(this.content[k + offset])
+		if(this.content[k])
 		{
-			return this.content[k + offset];
+			return this.content[k];
 		}
 
-		return this.content[k + offset] = this.fetch(k + offset);
+		return this.content[k] = this.fetch(k);
 	}
 
 	fetch(k)

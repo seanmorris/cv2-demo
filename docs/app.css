@@ -1015,13 +1015,10 @@ textarea.editable {
 
 .scroller .table .table-row {
 	width: 100%;
-	display: grid;
-	grid-template-columns: 5em 1fr 5em 1fr 5em;
 }
 
 .grid.scroller .table .table-row {
 	box-sizing: border-box;
-	grid-template-columns: auto-fill;
 }
 
 .grid.scroller .table .table-row div {
@@ -1090,7 +1087,6 @@ textarea.editable {
 	background-color: #AAA;
 	z-index: 1;
 	transform: none !important;
-	position: sticky !important;
 
 }
 
@@ -1105,7 +1101,6 @@ textarea.editable {
 
 .cv-hyperscroller-row {
 	width: 100%;
-	padding: 0.5em;
 	box-sizing: border-box;
 }
 
@@ -1125,7 +1120,7 @@ textarea.editable {
 }
 
 .views.scroller .cv-hyperscroller-row .input div {
-	padding: 1px;	
+	padding: 1px;
 }
 
 .views.scroller .cv-hyperscroller-row input {
@@ -1140,6 +1135,46 @@ div.list-preview {
 	flex-direction: row;
 	flex-wrap: wrap;
 }
+
+div.table-scrollable {
+	width: 100%;
+	height: 100%;
+}
+
+div.table-scrollable table {
+	overflow: visible;
+	width: 100%;
+	height: 100%;
+	table-layout: fixed;
+	border-spacing: 0;
+}
+
+div.table-scrollable thead {
+
+}
+
+div.table-row.is-header {
+	position: sticky !important;
+	top: 0 !important;
+	transform: none !important;
+}
+
+div.table-row {
+	display: flex;
+}
+
+div.table-row > * {
+	flex: 1;
+}
+
+div.table-row > *:first-child {
+	flex: 0 1 4em;
+}
+
+div.table-row > *:last-child {
+	flex: 3;
+}
+
 form {
 	display: flex;
 	flex-direction: column;
@@ -1483,7 +1518,7 @@ pre, code {
 	display: flex;
 	flex-direction: column;
 	flex: 1;
-	min-width: calc(33% - calc(1em - 0.3px));
+	max-width: 300px;
 	margin-left: 1em;
 	margin-bottom: 1em;
 }
@@ -1505,15 +1540,9 @@ pre, code {
 	cursor: pointer;
 }
 
-label.buttons button,
-.model-editor button {
-	background: black;
-	color: white;
-}
-
-.models-demo img:focus,
-.models-demo input:focus,
-.models-demo button:focus {
+img:focus,
+input:focus,
+button:focus {
 	outline: 1px dotted black;
 	outline-offset: 1px;
 }
@@ -1555,26 +1584,38 @@ label.buttons button,
 	flex: 1;
 }
 
-.model-editor button {
+button {
 	cursor: pointer;
 	font-weight: bold;
 	margin: 0.5em;
+	border: none;
+	background: black;
+	color: white;
 }
 
-.model-editor button.tight {
+button.tight {
 	border-bottom: 1px solid black;
 }
 
-label.buttons button,
-.model-editor button:not(.tight) {
+button:not(.tight) {
 	padding: 8pt;
+}
+
+label.buttons div {
+	display: flex;
+	align-items: center;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+.model-editor input {
+	border: 0;
 }
 
 .model-editor input,
 label.buttons button,
 .model-editor button {
 	margin: 0px;
-	border: none;
 }
 
 .model-editor pre {
@@ -1643,6 +1684,91 @@ label.buttons {
 	box-sizing: border-box;
 	border: 0;
 	border-top: 1px solid black;
+}
+
+.model-editor-body {
+	position: relative;
+}
+
+.model-editor .database-store-selector {
+	display: flex;
+	flex-direction: column;
+	position: absolute;
+	background: white;
+	z-index: 1;
+	top: 0.5em;
+	left: 0.5em;
+	bottom: 0.5em;
+	right: 0.5em;
+	opacity: 0;
+	overflow: scroll;
+	transition: opacity 0.5s ease-in;
+	pointer-events: none;
+}
+
+.model-editor.saving .database-store-selector {
+	opacity: 1;
+	pointer-events: initial;
+}
+
+.model-editor .database-store-selector > *:first-child {
+	border-top: 1px solid #999;
+}
+
+.model-editor .database-store-selector > * {
+	flex: 0 0 2em;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-bottom: 1px solid #999;
+}
+
+.model-scroller .table-row > div {
+	display: flex;
+	flex-direction: row;
+}
+
+.model-scroller .table-row > div > * {
+	flex: 1 1 33%;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding: 0.3em;
+	border-bottom: 1px solid #AAA;
+	border-right: 1px solid #999
+}
+
+.model-scroller .table-row > div > *:nth-child(1) {
+	flex: 0 0 4em;
+}
+
+.model-scroller .table-row > div > *:nth-child(2) {
+	flex: 0 0 8em;
+}
+
+[data-property="id"] input
+,[data-property="class"] input {
+	pointer-events: none;
+	color: #555;
+}
+
+.database-editor .scroller .table .table-row div input {
+	border-right: 1px solid #666;
+	border-bottom: 1px solid #666;
+	box-sizing: content-box;
+	text-decoration: none;
+}
+
+[data-property="id"] input
+,[data-property="class"] input {
+	pointer-events: none;
+	color: #333;
+}
+
+.database-editor .scroller .table .table-row [data-property="id"] input,
+.database-editor .scroller .table .table-row [data-property="class"] input {
+	border: 0;
+	text-decoration: none;
 }
 
 

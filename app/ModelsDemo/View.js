@@ -5,6 +5,7 @@ import { Tag } from 'curvature/base/Tag';
 import { View as BaseView } from 'curvature/base/View';
 
 import { InfiniteScroller as Scroller } from '../Experiments/InfiniteScroll/lib/InfiniteScroller';
+import { ModelScroller } from './ModelScroller';
 
 import CodeMirror from 'codemirror';
 import 'codemirror/mode/javascript/javascript';
@@ -30,15 +31,21 @@ export class View extends BaseView
 
 		this.template = require('./template');
 
-		this.args.newClass = 'Fake';
+		this.args.newClass = 'Mock';
 		this.args.newId    = 1;
 
 		this.args.models = [];
 		this.modelCount  = 0;
 
-		this.args.content = [1,2,3];
+		this.args.content = [...Array(100)].map((v,k)=>k+1);
 
-		this.args.resultScroller = new Scroller({rowHeight: 33});
+		this.args.resultScroller = new ModelScroller({rowHeight: 33});
+
+		this.db = new Promise((accept, reject) => {
+			ExampleDatabase.open('models-db', 1).then(db => {
+				accept(db);
+			});
+		});
 
 		ExampleDatabase.open('models-db', 1).then(db => {
 			const store = 'models-store';
@@ -49,7 +56,7 @@ export class View extends BaseView
 
 			this.args.queryStore = this.args.stores[0] ?? null;
 
-			Promise.all(Array(10).fill().map((x,y)=>{
+			Promise.all(Array(500).fill().map((x,y)=>{
 
 				const id = 1+y;
 				const qq = Object.assign({}, query, {range: id});
@@ -60,31 +67,10 @@ export class View extends BaseView
 						return db.insert(store, Model.from({
 							id:        id
 							, class:   'Mock'
-							, created: Date.now()
 						}));
 					}
 				});
-			})).then(() => {
-
-				return db.select(query).each((record, index)=>{
-
-					if(record.id > 6)
-					{
-						record.consume({updated: Date.now()});
-
-						return db.update(store, record);
-					}
-					else
-					{
-						return db.delete(store, record);
-					}
-
-				});
-			}).then(() => {
-
-				// db.select(query).each((record, index) => console.log(record, index));
-
-			});
+			}))
 		});
 
 		this.args.bindTo('queryStore', v => {
@@ -160,10 +146,25 @@ function findSequence(goal) {
 
 	loadModel()
 	{
-		this.args.models.push(Model.from({
-			id: Number(this.args.newId)
-			, class: this.args.newClass
-		}));
+		const query = {store: 'models-store', index: 'id', range: Number(this.args.newId)};
+
+		this.db.then(db =>{
+			db.select(query).one(record=>{
+
+				this.args.models.push(Model.from(record));
+
+			}).then(({index})=> {
+
+				if(index === 0)
+				{
+					this.args.models.push(Model.from({
+						id: Number(this.args.newId)
+						, class: this.args.newClass
+					}));
+				}
+
+			});
+		});
 	}
 
 	fieldAttached(event)
@@ -181,32 +182,40 @@ function findSequence(goal) {
 		event.preventDefault();
 
 		const query = {
+
 			store: this.args.queryStore
 			, index: this.args.queryIndex
-			, range: Number(this.args.queryValue) == this.args.queryValue
-				? Number(this.args.queryValue)
-				: this.args.queryValue
 			, limit: Number(this.args.queryLimit)
 		};
 
+		if(this.args.queryLimit === '')
+		{
+			delete query.limit;
+		}
+
+		query.range = this.args.queryValue;
+
+		if(this.args.queryValue === '')
+		{
+			delete query.range;
+		}
+		else if(!isNaN(query.range)
+			&& query.range.length
+			&& query.range == Number(query.range)
+			&& query.range.length === String(Number(query.range)).length
+		){
+			query.range = Number(query.range);
+		}
+
 		ExampleDatabase.open('models-db', 1).then(db => {
-
-			db.listIndexes(this.args.queryStore);
-
-			const scroller = this.args.resultScroller;
-			const content  =  [];
-
-			this.args.total       = null;
-
-			scroller.args.content && scroller.args.content.splice(0);
-
+			this.args.total = null;
+			const scroller  = this.args.resultScroller;
+			const content   = [];
 			db.select(query)
-				.each(record => content.push(JSON.stringify(record)))
+				.each(record => content.push(record))
 				.then(({index})  => {
 					this.args.total = index;
 					scroller.args.content = content;
-
-					console.log(content);
 				});
 		});
 	}
@@ -214,5 +223,39 @@ function findSequence(goal) {
 	useDb(event, database)
 	{
 		this.args.queryStore = database
+	}
+
+	showModelStores(event, $subview)
+	{
+		$subview.args.saving = 'saving';
+	}
+
+	storeModel(event, model, store, $subview)
+	{
+		const query = {store, index: 'id', range: model.id};
+
+		ExampleDatabase.open('models-db', 1).then(db => {
+			db.select(query).one(record=>{
+
+				const keys = Object.keys(model);
+
+				Object.keys(record).map(k=>{
+					if(!keys.includes(k))
+					{
+						delete record[k];
+					}
+				});
+
+				db.update(store, Object.assign({}, record, model));
+
+			}).then(({index})=> {
+				if(index === 0)
+				{
+					db.insert(store, model);
+				}
+			});
+		});
+
+		$subview.args.saving = '';
 	}
 }

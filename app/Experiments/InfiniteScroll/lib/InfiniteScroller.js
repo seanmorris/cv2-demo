@@ -40,6 +40,8 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 		this.args.scrollTop = 0;
 		this.args.scrollDir = 0;
 
+		this.args.snapOffset = 0;
+
 		this.args.rowHeight = this.args.rowHeight || 32;
 
 		this.args.bindTo('scrollTop', (v,k,t) => {
@@ -59,9 +61,10 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 	attached()
 	{
 		const container = this.container = this.tags.list;
+		const scroller  = this.scroller  = (this.tags.scroller || container);
 		const shim = new Tag('<div data-tag = "shim">');
 
-		container.style({
+		scroller.style({
 			overflowY:  'scroll'
 			, position: 'relative'
 			, display:  'block'
@@ -69,16 +72,21 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 		});
 
 		shim.style({
-			pointerEvents: 'none'
-			, position:    'absolute'
-			, opacity:     0
-			, height:      'var(--shimHeight)'
-			, width:       '1px'
+			pointerEvents:    'none'
+			, position:         'absolute'
+			, opacity:          0
+			, height:           'var(--shimHeight)'
+			, width:            '1px'
 		});
 
-		container.append(shim.element);
+		this.listen(scroller.node, 'scroll', event => this.updateViewport(event));
 
-		const setHeights = (v,k) => container.style({[`--${k}`]: `${v}px`});
+		this.args.bindTo('snapOffset', v => container.style({'--snapperOffset': `${-1*v}px`}));
+		this.args.bindTo('snapOffset', v => container.style({'--snapperOffset': `${-1*v}px`}));
+
+		scroller.append(shim.element);
+
+		const setHeights = (v,k) => scroller.style({[`--${k}`]: `${v}px`});
 
 		this.args.bindTo('height', v => container.style({height: v}));
 		this.args.bindTo('width', v => container.style({width: v}));
@@ -88,30 +96,34 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 
 		this.args.bindTo('rowHeight', (v,k,t) => {
 
+			const headers = this.header && this.header();
+
 			t[k] = parseInt(v);
 
-			const headerRow = this.header() ? 1 : 0;
+			const headerRow = headers ? 1 : 0;
 
 			const rows = headerRow + this.args.content ? this.args.content.length : 0;
 
 			this.args.shimHeight = rows * this.args.rowHeight;
 
-			this.container.scrollTop = this.first * this.args.rowHeight;
+			this.scroller.scrollTop = this.first * this.args.rowHeight;
 
 			this.updateViewport();
 		});
 
 		this.contentDebind = this.args.bindTo('content', (v,k,t) => {
 
-			const headerRow = this.header() ? 1 : 0;
+
+			const headers = this.header && this.header();
+
+			const headerRow = headers ? 1 : 0;
 
 			const rows = headerRow + v ? v.length : 0;
 
 			this.args.shimHeight = rows * this.args.rowHeight;
 
-			this.onNextFrame(()=> this.updateViewport());
-
 			this.lengthDebind && this.lengthDebind();
+
 
 			if(v)
 			{
@@ -119,17 +131,17 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 
 					v = Number(v);
 
-					this.args.shimHeight = (v + headerRow) * this.args.rowHeight;
+					this.args.shimHeight = v * this.args.rowHeight;
 
 					this.onNextFrame(() => this.updateViewport());
 				});
 
 			}
 
-			this.updateViewport();
-		});
+			this.onNextFrame(()=> this.updateViewport());
 
-		this.listen('scroll', event => this.updateViewport(event));
+		}, {wait: 0});
+
 
 		this.updateViewport();
 	}
@@ -144,11 +156,15 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 		}
 
 		const container = this.container;
+		const scroller  = this.scroller || container;
+		const headers   = this.header && this.header();
 
-		const start = this.args.scrollTop    = container.scrollTop;
-		const depth = this.args.scrollHeight = container.scrollHeight;
+		const start = this.args.scrollTop    = scroller.scrollTop;
+		const depth = this.args.scrollHeight = scroller.scrollHeight;
 		const space = container.offsetHeight;
 		const fold  = start + space;
+
+		scroller.style({'--scrollTop': start});
 
 		this.args.scrollMax = depth - space;
 
@@ -161,7 +177,7 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 		{
 			this.speedTimer = this.onTimeout(100, ()=>{
 				const timeDiff = Date.now() - lastScroll.time
-				const posDiff  = container.scrollTop - start;
+				const posDiff  = scroller.scrollTop - start;
 
 				this.speed = (posDiff / timeDiff) * 1000;
 
@@ -187,6 +203,8 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 		{
 			return;
 		}
+
+		container.style({'--hasHeaders': Number(!!headers)});
 
 		if(first > this.args.content.length)
 		{
@@ -231,22 +249,29 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 
 		this.snapperDone = this.onFrame(()=>{
 			const offset = snapper.current() * diff;
-			container.style({'--snapperOffset': `${-1*offset}px`});
+			this.args.snapOffset = offset;
 		});
 
 		snapper.then(elapsed => {
-
 			this.onNextFrame(()=> {
-				container.style({'--snapperOffset': 0});
-				container.node.scrollTop = groove;
+				if(this.args.snapOffset == 0)
+				{
+					return;
+				}
+
+				if(scroller.scrollTop !== groove)
+				{
+					scroller.scrollTop = groove;
+					this.args.snapOffset = 0;
+				}
 			});
 
-			this.snapperDone();
+			this.snapperDone && this.snapperDone();
 			event.preventDefault();
 
 		}).catch(elapsed => {
 			const offset = this.snapper.current() * diff;
-			container.style({'--snapperOffset': `${-1*offset}px`});
+			this.args.snapOffset = offset;
 		});
 
 		this.scrollFrame && cancelAnimationFrame(this.scrollFrame);
@@ -263,10 +288,10 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 			return;
 		}
 
-		if(this.first === first && this.last === last)
-		{
-			return;
-		}
+		// if(this.first === first && this.last === last)
+		// {
+		// 	return;
+		// }
 
 		if(!this.tags.list)
 		{
@@ -282,38 +307,45 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 
 		const del = [];
 
-		for(const i in visible)
+		if(first <= last)
 		{
-			const index = parseInt(i);
-			const entry = visible[index];
-
-			if(first === last && last === 0)
+			for(const i in visible)
 			{
-				del.unshift(index);
-				continue;
-			}
+				const index = parseInt(i);
+				const entry = visible[index];
 
-			if(index < first || index > last)
-			{
-				del.unshift(index);
-				continue;
-			}
+				if(first === last && last === 0)
+				{
+					del.unshift(index);
+					continue;
+				}
 
-			if(entry && (!entry.visible || entry.removed))
-			{
-				del.unshift(index);
-				continue;
+				if(index < first || index > last)
+				{
+					del.unshift(index);
+					continue;
+				}
+
+				if(entry && (!entry.visible || entry.removed))
+				{
+					del.unshift(index);
+					continue;
+				}
 			}
+		}
+		else
+		{
+			visible.map((v,k) => del.push(k));
 		}
 
 		for(const d of del)
 		{
-			if(d === 0)
+			if(d === 0 && this.header())
 			{
 				continue;
 			}
 
-			visible[d].remove();
+			visible[d] && visible[d].remove();
 
 			delete visible[d];
 			delete this.args.visible[d];
@@ -321,14 +353,6 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 
 		for(let i = first; i <= last; i++)
 		{
-			if(visible[i]
-				&& !visible[i].removed
-				&&  visible[i].firstNode
-				&&  visible[i].firstNode.getRootNode() === document
-			){
-				continue;
-			}
-
 			if(this.args.content.length <= i)
 			{
 				continue;
@@ -346,6 +370,11 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 	header()
 	{
 		if(!this.args.content)
+		{
+			return false;
+		}
+
+		if(Array.isArray(this.args.content))
 		{
 			return false;
 		}

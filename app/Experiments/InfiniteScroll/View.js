@@ -60,22 +60,19 @@ export class View extends BaseView
 
 		this.args.bindTo('rows', v => recordSet.changed(v));
 
-		this.args.simpleRows = 1000001;
+		this.args.simpleRows = 1000;
 
-		this.args.arrayScroller = new InfiniteScroller({rowHeight: 33});
+		this.args.arrayScroller  = new InfiniteScroller({rowHeight: 33});
 		this.args.stringScroller = new InfiniteScroller({rowHeight: 33});
-		this.args.viewScroller = new InfiniteScroller({rowHeight: 33});
+		this.args.viewScroller   = new InfiniteScroller({rowHeight: 33});
 	}
 
 	attached()
 	{
-		this.onTimeout(40, ()=>{
-			this.args.rows = 1000001;
-
-			this.args.arrayScroller.args.content  = Array(this.args.simpleRows).fill(1).map((v,k)=>this.thousands(k));
-			this.args.stringScroller.args.content = new StringRecords;
-			this.args.viewScroller.args.content   = new ViewRecords;
-		});
+		this.args.viewScroller.args.content   = new ViewRecords;
+		this.args.stringScroller.args.content = new StringRecords;
+		this.args.arrayScroller.args.content  = Array(this.args.simpleRows).fill(1).map((v,k)=>this.thousands(k));
+		this.args.rows = 1000001;
 	}
 
 	thousands(x)
@@ -91,5 +88,11 @@ export class View extends BaseView
 	round(input)
 	{
 		return Math.round(input);
+	}
+
+	increase(event)
+	{
+		this.args.simpleRows = 1000000;
+		this.args.arrayScroller.args.content  = Array(1000000).fill(1).map((v,k)=>this.thousands(k));
 	}
 }

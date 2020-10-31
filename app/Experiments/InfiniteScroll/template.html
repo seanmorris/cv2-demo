@@ -8,7 +8,9 @@
 		<h3>Simple Scroller</h3>
 
 		<p>This scroller uses an array of <b>[[simpleRows|thousands]]</b> integers.</p>
-		<p>Arrays and RecordSets are interchangeable here.</p>
+		<p>Building large arrays can have significant overhead.</p>
+
+		<button cv-on = "click:increase(event)">increase to 1,000,000</button>
 
 		<div class = "simple scroller">
 			[[arrayScroller]]
@@ -20,8 +22,8 @@
 
 		<h3>String Scroller</h3>
 
-		<p>This scroller uses a RecordSet that returns strings.</p>
-		<p>An array of strings could easily have been used instead of a RecordSet.</p>
+		<p>This scroller uses a RecordSet  that returns <b>1,000,000</b> strings.</p>
+		<p>This list was able to populate quickly because RecordSets defer loading.</p>
 
 		<div class = "string scroller">
 			[[stringScroller]]
@@ -33,8 +35,8 @@
 
 		<h3>View Scroller</h3>
 
-		<p>This scroller uses a RecordSet that returns curvature View objects.</p>
-		<p>There is a 250ms simulated load time when the view is first accessed.</p>
+		<p>This scroller uses a RecordSet that returns <b>1,000,000</b> curvature View objects.</p>
+		<p>There is a 250ms <b>simulated</b> load time on each row.</p>
 
 		<div class = "views scroller">
 			[[viewScroller]]
@@ -44,11 +46,11 @@
 
 </div>
 
-<h3>Grid Scroller</h3>
+<h3>Table Scroller</h3>
 
-<p>This scroller uses CSS grid, and a custom template to simulate a table. Its RecordSet returns plain objects.</p>
+<p>This scroller uses flexbox, and a custom template to simulate a table. Its RecordSet returns <b>[[rows|thousands]]</b> plain objects.</p>
 
-<p>The number (<b>[[rows|thousands]]</b>) of records and row height can be altered on the fly as well, this is common to all Scrollers.</p>
+<p>The number of records and row height can be altered on the fly as well, this is common to all Scrollers.</p>
 
 <p>Counting both the texboxes & sliders, there are 2,000,002 input fields avaiable below, each mapped to an object in memory.</p>
 

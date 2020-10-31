@@ -14,9 +14,9 @@ export class SliderRecords extends RecordSet
 
 	fetch(k)
 	{
-		const id    = k + 1;
+		const id    = k;
 		const title = ((k + 0xFF * 0xFF + 30) / 77).toString(36);
-		const value = k % 100;
+		const value = 1024 - k % 1024;
 
 		return {index: k, id, title, value};
 	}

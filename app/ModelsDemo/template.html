@@ -24,7 +24,7 @@
 
 		</div>
 		<div cv-each = "models:model:m" cv-ref = "models" class = "contents">
-			<div class = "model-editor">
+			<div class = "model-editor [[saving]]">
 
 				<div class = "model-editor-title">
 					<span class = "title">Model Editor</span>
@@ -35,18 +35,26 @@
 
 				<div class = "model-editor-eyebrow">When you modify the properties below, the in-memory values will be updated as you type.</div>
 
-<pre><span class = "firstline row">model = { <img src = "/save.svg" data-icon tabindex="-1"></span>
+				<div class = "model-editor-body">
+
+					<div cv-each = "stores:store:s" class = "database-store-selector">
+						<div cv-on = "click:storeModel(event, model, store, $parent)">[[store]]</div>
+					</div>
+
+<pre><span class = "firstline row">model = { <img src = "/save.svg" cv-on = "click:showModelStores(event, $subview)" data-icon tabindex="-1"></span>
 <div cv-each = "model:value:property"><div class = "property-edit"><span class = "prop-remove remove-[[property]]" cv-on = "click:removeKey(property, m);">  ✕ </span> [[property]]: <input data-property = "[[property]]" cv-bind = "value" cv-on = "cvDomAttached:fieldAttached(event)" />,
 </div></div>};</pre>
 
-				<div class = "model-editor-text">Add a new key:</div>
+					<div class = "model-editor-text">Add a new key:</div>
 
-				<div class = "new-property">
-					<form class = "contents" cv-on = "submit:addKey(event, newField, m)">
-						<input cv-bind = "newField" placeholder="new property">
-						<button cv-on = "click:addKey(event, newField, m)" class = "tight">+</button>
-					</form>
+					<div class = "new-property">
+						<form class = "contents" cv-on = "submit:addKey(event, newField, m)">
+							<input cv-bind = "newField" placeholder="new property">
+							<button cv-on = "click:addKey(event, newField, m)" class = "tight">+</button>
+						</form>
+					</div>
 				</div>
+
 			</div>
 		</div>
 
@@ -72,18 +80,20 @@
 				</div>
 				<div class = "database-editor-right">
 					<form cv-on = "submit:queryDatabase(event)">
-						<label>index: <select cv-bind = "queryIndex" cv-each = "queryIndexes:store:s">
-							<option value="[[store]]">[[store]]</option>
+						<label>index: <select cv-bind = "queryIndex" cv-each = "queryIndexes:index:i">
+							<option value="[[index]]">[[index]]</option>
 						</select></label>
 						<label>value: <input cv-bind = "queryValue" /></label>
 						<label>limit: <input type = "number" cv-bind = "queryLimit" /></label>
 						<input type = "hidden" readonly="readonly" cv-bind = "queryStore" />
 						<label class = "buttons">
-							<span cv-if = "?total"> [[total]] record returned. </span>
+							<div>
+								<span cv-if = "?total"> [[total]] record returned. </span>
+							</div>
 							<button>query</button>
 						</label>
 					</form>
-					<div class = "tight scroller">
+					<div class = "tight model-scroller scroller">
 						[[resultScroller]]
 					</div>
 				</div>
@@ -94,6 +104,6 @@
 
 	<h3>events, workers & sync</h3>
 
-	[[editor]]
+	<!-- [[editor]] -->
 
 </div>
