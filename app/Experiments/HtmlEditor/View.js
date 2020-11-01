@@ -1,32 +1,101 @@
 import { View as BaseView } from 'curvature/base/View';
 
+import { Tag } from 'curvature/base/Tag';
+
+import CodeMirror from 'codemirror';
+import 'codemirror/mode/javascript/javascript';
+require('codemirror/addon/lint/lint');
+require('codemirror/addon/lint/json-lint');
+
 export class View extends BaseView
 {
 	constructor()
 	{
 		super();
 
-		this.args.source = "<h1>Hello, world!</h1>\n<p>this is a double-bound HTML editor!</p>\n<p><img src = \"/player-head-180.png\" width = \"180\" height = \"180\" /></p><div><p>Nested tags should auto indent when either field blurs.</p></div>";
-
 		this.template = require('./template.html');
 
 		this.args.selections = [];
-
-		this.args.selected = false;
-
-		this.editorArgs = {xx:0};
-
-		this.onInterval(1, () => this.editorArgs.xx++);
-		// this.onInterval(10, () => this.editorArgs.xx = (new Date).toISOString());
+		this.args.selected   = false;
+		this.editorArgs      = {};
 	}
 
-	attached()
+	postRender()
 	{
-		this.args.bindTo('source', v => {
-			this.args.vv = BaseView.from(v, this.editorArgs, this);
-		});
+		this.args.source = `<h1>[[title]]</h1>
+<p>[[tagline]]</p>
+<p><img src = "/player-head.png" cv-expand = "img" /></p>
+<p>Here is a list of people from <a target = "blank" href = "https://fakerapi.it/">fakerapi.it</a></p>
+<ul cv-each = "persons:person:p">
+	<li>[[person.firstname]] [[person.lastname]]</li>
+</ul>
+`;
+
+		this.args.bindTo(
+			'source'
+			, v => this.args.vv = BaseView.from(v, this.editorArgs, this)
+			, {frame: 1}
+		);
+
+		const editor = this.newEditor();
+
+		editor.on(
+			'beforeChange'
+			, (editor, change) => this.beforeEdit = editor.getValue()
+		);
+
+		editor.on(
+			'change'
+			, (editor, change) => {
+
+				const current = editor.getValue();
+				const input   = {};
+
+				try
+				{
+					Object.assign(input, JSON.parse(current || '{}'));
+				}
+				catch(error)
+				{
+				}
+
+				Object.assign(this.editorArgs, input);
+			}
+		);
+
+		this.editor = editor;
+
+		this.args.jsonEdit = editor.display.wrapper;
+
+		this.sourceData = {
+			title: 'Hello, world!'
+			, img:  {
+				width:    180
+				, height: 180
+				, style:  'image-rendering: pixelated'
+			}
+			, tagline: 'this is a double-bound HTML editor!'
+			, persons: []
+		};
+
+		editor.setValue(JSON.stringify(this.sourceData, null, 4));
 
 		this.blur(event);
+
+		this.args.jsonUrl = 'https://fakerapi.it/api/v1/persons?_quantity=10'
+
+		fetch(this.args.jsonUrl).then(r=>r.json()).then(r=>{
+			if(!r.data)
+			{
+				return;
+			}
+			this.onTimeout(250, () => {
+				this.sourceData.persons = r.data;
+				editor.setValue(JSON.stringify(this.sourceData, null, 4));
+				// editor.refresh();
+				this.blur(event);
+			});
+		});
 	}
 
 	blur()
@@ -90,7 +159,7 @@ export class View extends BaseView
 			}
 		}
 
-		console.log(formatted);
+		// console.log(formatted);
 
 		return formatted.join('');
 	}
@@ -152,8 +221,48 @@ export class View extends BaseView
 
 	removeAttr({name})
 	{
-		this.args.selected.removeAttribute(name);
+		this.args.selected.removeAttribute(name);``
 		this.format();
 		this.click();
+	}
+
+	newEditor()
+	{
+		const textbox = new Tag(`<textarea>`);
+
+		const editor = CodeMirror(textbox, {
+			theme:        'elegant'
+			, autoRefresh: true
+			, mode:        'application/json'
+		});
+
+		this.onNextFrame(()=> editor.refresh());
+
+		return editor;
+	}
+
+	loadJson(event)
+	{
+		event.preventDefault();
+
+		fetch(this.args.jsonUrl).then(r=>r.json()).then(r=>{
+			if(!r.data)
+			{
+				return;
+			}
+			this.onTimeout(250, () => {
+
+				if(!this.args.jsonEdit)
+				{
+					return;
+				}
+
+				this.sourceData.persons = r.data;
+
+				this.editor.setValue(JSON.stringify(this.sourceData, null, 4));
+
+				this.blur(event);
+			});
+		});
 	}
 }

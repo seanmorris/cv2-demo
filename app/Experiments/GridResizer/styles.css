@@ -13,7 +13,6 @@
 
 .drag-drop-frame,
 .grid-resize .box {
-	overflow:         hidden;
 	display:          flex;
 	flex-direction:   column;
 	align-items:      center;
@@ -22,6 +21,7 @@
 }
 
 .grid-resize .box {
+	overflow:         hidden;
 	background-color: #FFF;
 }
 

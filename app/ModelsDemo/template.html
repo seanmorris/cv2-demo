@@ -2,13 +2,13 @@
 
 	<h2>models</h2>
 
+	<span cv-on = "click:abcClick()">[[abc]]</span>
+
 	<p>Models are simple objects, with some light tooling to make them simple to populate. They will also use the <b>class</b> and <b>id</b> properties to ensure that each model only gets a single reference. If you load the same model multiple times, the fields will remain synced.</p>
 
 	<h4>mapping model classes</h4>
 
-	<p>Models may be created with <code>Model.from({...})</code> with any string as the "class" value, but if the value appears in your model mappings, then the modeling system will use the class supplied.</p>
-
-	<p>This way, models can have behaviors, rather than simply serving as passive record objects.</p>
+	<p>Models may be created with <code>Model.from({...})</code> with any string as the "class" value, but if the value appears in your model mappings, then the modeling system will use the class supplied. This way, models can have behaviors, rather than simply serving as passive record objects.</p>
 
 	[[modelEdit]]
 
@@ -32,7 +32,7 @@
 
 		</div>
 		<div cv-each = "models:model:m" cv-ref = "models" class = "contents">
-			<div class = "model-editor [[saving]]">
+			<div class = "model-editor [[saving]]" cv-on = "cvDomAttached:newModelEditor(event, model, $subview)">
 
 				<div class = "model-editor-title">
 					<span class = "title">Model Editor</span>
@@ -44,7 +44,7 @@
 				<div class = "model-editor-eyebrow">When you modify the properties below, the in-memory values will be updated as you type.</div>
 
 				<div class = "model-editor-body">
-<pre><span class = "firstline row">model = { <img src = "/save.svg" cv-on = "click:storeModel(event, model)" data-icon tabindex="-1"></span>
+<pre><span class = "firstline row">model = { <span cv-if = "!saved" class = "contents"><img src = "/save.svg" cv-on = "click:storeModel(event, model)" data-icon tabindex="-1"></span></span>
 <div cv-each = "model:value:property"><div class = "property-edit"><span class = "prop-remove remove-[[property]]" cv-on = "click:removeKey(property, m);">  ✕ </span> [[property]]: <input data-property = "[[property]]" cv-bind = "value" cv-on = "cvDomAttached:fieldAttached(event)" />,
 </div></div>};</pre>
 
@@ -63,6 +63,11 @@
 
 	</div>
 
+	<h3>databases, queries & stores</h3>
+
+	<p>Under the hood, the system uses the browser's IndexedDb system for local persistence. IndexedDb uses <b>stores</b> like an traditional RDBMS would use tables, however there are some differences.</p>
+
+	<p>You can query the stores in the UI below. The fields in the rows are editable, and will sync with the models editors from above.</p>
 
 	<div class = "databases">
 
@@ -115,18 +120,11 @@
 		</div>
 	</div>
 
-	<h3>databases & stores</h3>
-
-	<p>Under the hood, the system uses the browser's IndexedDb system for local persistence. IndexedDb uses <b>stores</b> like an traditional RDBMS would use tables, however there are some differences.</p>
+	<h4>stores aren't tables</h4>
 
 	<p>Stores can hold any data that can be handled by javascript's structured clone algorithm, meaning our models can each hold an arbitrary list of properties, as opposed to the tables in an SQL-based system.</p>
 
 	<p>Here, we'll create a store for each of the types above:</p>
-
-
-	<p>You can query the stores in the UI above. The fields in the rows are editable, and will sync with the models editors from higher up on the page.</p>
-
-	<p>Scroll up and load a model thats visible below and edit it in either place to see this behavior in action.</p>
 
 	[[databaseEdit]]
 

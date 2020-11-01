@@ -28,16 +28,13 @@ export class DragDrop extends View
 		}
 		else
 		{
-			document.documentElement.style.userSelect = null;			
+			document.documentElement.style.userSelect = null;
 		}
 	}
 
 	attached()
 	{
-		this.tags.frame.style({
-			position:    'absolute'
-			, transform: 'translate(-50%,-100%)'
-		});
+		this.tags.frame.style({position: 'absolute'});
 
 		this.tags.stage.style({
 			pointerEvents: 'none'
@@ -73,20 +70,27 @@ export class DragDrop extends View
 		const frame = this.tags.frame;
 
 		frame.style({
-			left:  `${event.x}px`
-			, top: `${event.y}px`
+			transform: `translate(-50%,-100%)`
+			, left:    `${event.x}px`
+			, top:     `${event.y}px`
 		});
 
 		[...nodes].map(node => frame.element.appendChild(node));
-		
+
 		this.stop = this.listen(document, 'mousemove', e => this.drag(e));
 	}
 
 	drag(event)
 	{
+		if(this.grabIndex === false)
+		{
+			return;
+		}
+
 		this.tags.frame.style({
-			left:  `${event.clientX}px`
-			, top: `${event.clientY}px`
+			transition: undefined
+			, left:     `${event.clientX}px`
+			, top:      `${event.clientY}px`
 		});
 
 		const hovering = document.elementFromPoint(event.clientX, event.clientY);
@@ -110,7 +114,7 @@ export class DragDrop extends View
 
 	drop(event, newParent, index)
 	{
-		const frame = this.tags.frame.element;
+		const frame = this.tags.frame;
 
 		if(!this.hovering)
 		{
@@ -126,18 +130,47 @@ export class DragDrop extends View
 			return false;
 		}
 
-		while(frame.firstChild)
-		{
-			this.dragFrom.appendChild(frame.firstChild);
-		}
+		const dragFrom = this.dragFrom;
 
-		this.callback && this.callback(this.grabIndex, index);
+		const newCenter   = this.getCenter(newParent);
+		const frameCenter = this.getCenter(frame);
+		const offset      = this.getOffset(newCenter, frameCenter);
 
-		this.stop && this.stop();
+		const duration    = Math.max(
+			120
+			, Math.min(
+				Math.sqrt(offset.x**2 + offset.y**2)
+				, 360
+			)
+		);
 
-		this.grabIndex = this.stop = this.dragging = false;
+		frame.style({
+			transition:  ['top', 'left', 'transform'].map(
+				p => `${p} ${duration}ms ease-out`
+			).join(', ')
+			, transform: `translate(-50%,-50%)`
+			, top:       `${newCenter.y}px`
+			, left:      `${newCenter.x}px`
+		});
 
-		this.setCursor('');
+		const grabIndex = this.grabIndex;
+
+		this.grabIndex = false;
+
+		this.onTimeout(duration, () => {
+			while(frame.firstChild)
+			{
+				dragFrom.appendChild(frame.firstChild);
+			}
+
+			this.setCursor('');
+
+			this.stop && this.stop();
+
+			this.callback && this.callback(grabIndex, index);
+
+			this.stop = this.dragging = false;
+		});
 
 		return true;
 	}
@@ -185,7 +218,21 @@ export class DragDrop extends View
 		{
 			this.drop(event, this.dragFrom, this.grabIndex);
 		}
-		
+
 		this.setCursor(null);
+	}
+
+	getOffset(a, b)
+	{
+		return {x: a.x - b.x, y: a.y - b.y};
+	}
+
+	getCenter(tag)
+	{
+		const rect = tag.getBoundingClientRect();
+		const x    = rect.width / 2 + rect.x;
+		const y    = rect.height / 2 + rect.y;
+
+		return {x,y};
 	}
 }

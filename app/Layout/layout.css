@@ -72,6 +72,10 @@ body {
 	justify-content: space-between;
 }
 
+pre.wrap {
+	white-space: pre-wrap;
+}
+
 .wrap {
 	flex-wrap: wrap;
 }
@@ -82,8 +86,13 @@ body {
 	flex:       var(--flex);
 }
 */
-.full {
+.full > .content {
 	width: 100%;
+	max-width: 880px;
+}
+
+.col.full {
+	flex: 1;
 }
 
 .row .half {

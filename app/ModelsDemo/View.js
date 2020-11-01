@@ -21,7 +21,9 @@ export class View extends BaseView
 	{
 		super();
 
-		this.template = require('./template');
+		this.template = rawquire('./template.html');
+
+		this.args.abc = 231;
 
 		this.args.newClass = 'Mock';
 		this.args.newId    = 1;
@@ -96,6 +98,19 @@ export class View extends BaseView
 		this.args.databaseEdit = dbEdit.display.wrapper;
 
 		this.listen('focusin', event => event.srcElement.select && event.srcElement.select());
+		this.listen('cvDomAttached', event => {
+			if(!event.target.matches('[data-property=id],[data-property=class]'))
+			{
+				return;
+			}
+
+			if(event.target.tagName !== 'INPUT')
+			{
+				event.target.querySelector('input').setAttribute('disabled', 'disabled');
+			}
+
+			event.target.setAttribute('disabled', 'disabled');
+		});
 	}
 
 	removeKey(key, index)
@@ -131,7 +146,11 @@ export class View extends BaseView
 		this.db.then(db =>{
 			db.select(query).one(record=>{
 
-				this.args.models.push(Model.from(record));
+				const model = Model.from(record);
+
+				model.stored();
+
+				this.args.models.push(model);
 
 			}).then(({index})=> {
 
@@ -189,13 +208,6 @@ export class View extends BaseView
 
 		if(this.args.advancedValue)
 		{
-			console.log(
-				this.isNumeric(this.args.queryValue) ? Number(this.args.queryValue) : this.args.queryValue ?? ''
-				, this.isNumeric(this.args.queryMaxValue) ? Number(this.args.queryMaxValue) : this.args.queryMaxValue ?? ''
-				, false
-				, false
-			);
-
 			query.range = IDBKeyRange.bound(
 				this.isNumeric(this.args.queryValue) ? Number(this.args.queryValue) : this.args.queryValue ?? this.isNumeric(this.args.queryMaxValue) ? 0 : ''
 				, this.isNumeric(this.args.queryMaxValue) ? Number(this.args.queryMaxValue) : this.args.queryMaxValue ?? ''
@@ -203,8 +215,6 @@ export class View extends BaseView
 				, false
 			);
 		}
-
-		console.log(query);
 
 		ExampleDatabase.open('models-db', 1).then(db => {
 			this.args.total = null;
@@ -228,8 +238,6 @@ export class View extends BaseView
 		for(const storeName in this.tags.dbSelectors)
 		{
 			const tag = this.tags.dbSelectors[storeName];
-
-			console.log(storeName);
 
 			if(storeName === selected)
 			{
@@ -262,11 +270,8 @@ export class View extends BaseView
 
 				const newRecord = Object.assign({}, record, model);
 
-				console.log(model, record, newRecord);
-
 				db.update(store, newRecord).then(()=>{
 					model.stored();
-					console.log('!!');
 				});
 
 			}).then(({index})=> {
@@ -317,5 +322,12 @@ export class View extends BaseView
 		}
 
 		return false;
+	}
+
+	newModelEditor(event, model, $subview)
+	{
+		$subview.onRemove( model.bindTo(Model.Saved, v => {
+			$subview.args.saved = !!v;
+		}));
 	}
 }

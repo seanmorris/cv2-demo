@@ -86,7 +86,7 @@ export class View extends BaseView
 				autoScrollEditorIntoView: true
 				, printMargin: false
 				, readOnly: tab.readonly || false
-				, scrollbarWidth: 6
+				// , scrollbarWidth: 6
 			});
 
 			const aceChanged = (newValue) => {

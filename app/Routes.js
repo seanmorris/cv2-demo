@@ -19,12 +19,19 @@ import { View as HtmlEditor   } from 'Experiments/HtmlEditor/View';
 import { View as GridResizer  } from 'Experiments/GridResizer/View';
 import { View as PhpView      } from 'Experiments/Php/View';
 
+import { rawquire } from 'rawquire/rawquire.macro';
+
 export const Routes = {
 	'': () => {
 		return new HomeView;
 	}
 
 	, 'about-sean': () => View.from(require('pages/about.html'))
+
+	, license: () => View.from(`<pre class = "wrap">${rawquire('../node_modules/curvature/NOTICE')}<hr />
+${rawquire('../NOTICE')}<hr />
+${rawquire('../LICENSE')}
+</pre>`)
 
 	, 'github': () => View.from(require('pages/github.html'))
 

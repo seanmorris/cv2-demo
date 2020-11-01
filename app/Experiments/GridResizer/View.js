@@ -9,14 +9,11 @@ export class View extends BaseView
 
 		this.template = require('./template.html');
 
-		this.dragger = new DragDrop({}, this, (start, finish) => {
-			const list = this.args.list;
-
-			const a = this.args.list[start];
-			const b = this.args.list[finish];
-
-			[list[finish], list[start]] = [a, b];
-		});
+		this.dragger = new DragDrop(
+			{}
+			, this
+			, (start, finish) => this.swapElements(start, finish)
+		);
 
 		this.dragger.bindTo('dragging', v => {
 			this.args.dragging = v ? 'dragging' : '';
@@ -26,8 +23,8 @@ export class View extends BaseView
 
 		this.args.trackSize = 16;
 
-		this.args.xsize = this.args.xsize || 7;
-		this.args.ysize = this.args.ysize || 7;
+		this.args.xsize = this.args.xsize || 5;
+		this.args.ysize = this.args.ysize || 5;
 
 		this.args.hGrab = Array(-1 + this.args.xsize).fill(0);
 		this.args.vGrab = Array(-1 + this.args.ysize).fill(0);
@@ -62,7 +59,7 @@ export class View extends BaseView
 				this.args.cols.push('auto');
 				continue;
 			}
-			this.args.cols.push(50);
+			this.args.cols.push(125);
 		}
 
 		for(let y = 0; y < this.args.ysize; y++)
@@ -73,7 +70,7 @@ export class View extends BaseView
 				continue;
 			}
 
-			this.args.rows.push(50);
+			this.args.rows.push(125);
 		}
 
 		this.resizing = false;
@@ -85,9 +82,6 @@ export class View extends BaseView
 
 		timer.onFrame(()=>timer.args.time = (new Date).toISOString());
 
-		// const face = BaseView.from('<img src = "/player-head-180.png" />');
-		// face.preserve = true;
-
 		const list = Array(23).fill('1');
 
 		let fill = [];
@@ -98,17 +92,16 @@ export class View extends BaseView
 		}
 
 		this.args.list = [list, fill].flat().map((v,k)=>{
-
 			if(k === 0)
 			{
+				const label = '<img src = "/player-head.png" />';
 
-				return {label: '<img src = "/player-head.png" />', index: k}
+				return {label, index: k};
 			}
 
-			return {
-				label: v ?? v ? String.fromCharCode(-1 + 0x262F + k) : v
-				, index: k
-			}
+			const label = v ? String.fromCharCode(-1 + 0x262F + k) : v;
+
+			return {label, index: k};
 		});
 	}
 
@@ -295,7 +288,7 @@ export class View extends BaseView
 
 	drop(event, tag, index)
 	{
-		this.dragger.containerMouseup(event, tag, index);		
+		this.dragger.containerMouseup(event, tag, index);
 	}
 
 	hover(event, tag, index)
@@ -327,5 +320,15 @@ export class View extends BaseView
 	trackNumber(x)
 	{
 		return 2 + parseInt(x) * 2;
+	}
+
+	swapElements(start, end)
+	{
+		const list = this.args.list;
+
+		if(start !== end)
+		{
+			[list[end], list[start]] = [list[start], list[end]];
+		}
 	}
 }

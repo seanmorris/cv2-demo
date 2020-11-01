@@ -19,14 +19,17 @@ exports.paths = {
 };
 
 exports.plugins = {
-  babel: {
-  	presets: ['@babel/preset-env', ['minify', {builtIns: false}]],
-  	plugins:   ["@babel/plugin-proposal-class-properties", "macros"]
-  },
-  raw: {
-	pattern: /\.(jss|html|php|tmp\.+?)$/,
-	wrapper: content => `module.exports = ${JSON.stringify(content)}`
-  }
+	babel: {
+		presets: ['@babel/preset-env', ['minify', {builtIns: false}]],
+		plugins:   ["@babel/plugin-proposal-class-properties", "macros"]
+	},
+	'brunch-preval': {
+		log: true
+	},
+	raw: {
+		pattern: /\.(jss|html|php|tmp\.+?)$/,
+		wrapper: content => `module.exports = ${JSON.stringify(content)}`
+	}
 };
 
 exports.watcher = { awaitWriteFinish: true };

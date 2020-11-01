@@ -1,30 +1,47 @@
 .html-editor {
-	width: 100%;
+	display: flex;
+	flex-direction: row;
+	border: 1px solid #333;
+}
+
+.html-editor > .editor {
 	display: flex;
 	flex-direction: column;
+	flex: 2;
 }
 
-[contenteditable=true].editable > * {
-	/*border: 1px solid #888;*/
+.html-editor > .preview {
+	border-right: 1px solid #333;
+	flex: 1;
 }
 
-textarea.editable {
+.html-editor .properties:not(:empty) {
+	border-bottom: 1px solid #333;
+}
+
+.html-editor > * {
+}
+
+[contenteditable=true].editable {
+	border-bottom: 1px solid #333;
+}
+
+.html-editor textarea.editable {
+	overflow: auto;
+	white-space: pre;
+	border: 0;
+	border-bottom: 1px solid #333;
 	resize: vertical;
 	display: block;
+	font-size: 8pt;
 }
 
 .editable {
 	width: 100%;
-	border: 1px solid #888;
 	min-height: 12em;
-	padding: 1em;
+	padding: 0.75em;
 	box-sizing: border-box;
 	tab-size: 4;
-}
-
-
-.editable :focus {
-	background-color: red;
 }
 
 .html-editor > * {
@@ -40,6 +57,95 @@ textarea.editable {
 }
 
 .html-editor-live {
-	border: 1px solid #888;
-	padding: 1em;
+}
+
+.html-editor .json-editor {
+	position: relative;
+	min-height: 30em;
+	flex: 1;
+}
+
+.html-editor .json-editor input {
+	border: 0;
+	border-bottom: 1px black solid;
+}
+
+.html-editor .json-editor input[type="submit"] {
+	background: black;
+	font-weight: bold;
+	padding: 0.25em;
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	color: white;
+}
+
+.html-editor .json-editor input[type="text"] {
+	background: white;
+	flex: 1;
+}
+
+
+.holder {
+	overflow: auto;
+	position: absolute;
+	top: 0; bottom: 0;
+	left: 0; right: 0;
+}
+
+.html-editor .CodeMirror {
+	height: auto;
+	min-height: 30em;
+}
+
+.preview,
+.properties:not(:empty),
+.html.editor,
+.json-editor,
+.text-editor {
+	padding-top: 0;
+	position: relative;
+}
+
+.html-editor :focus {
+	outline: 0;
+}
+
+.html-editor .tag {
+	background: red;
+	color: white;
+	font-weight: bold;
+	font-size: 8pt;
+	z-index: 5;
+	padding: 0.7em;
+	position: absolute;
+	right: 0px;
+	top: 0px;
+}
+
+.html-editor .tag:hover {
+	opacity: 0.25;
+}
+
+.html-editor form {
+	display: flex;
+	flex-direction: row;
+	z-index: 3;
+	position: sticky;
+	top: 0;
+}
+
+.properties:empty {
+	padding:0;
+}
+
+.properties {
+	padding: 0.5em;
+}
+
+.properties button {
+	border-bottom: 0 !important;
+	background: transparent;
+	font-size: 16pt;
+	padding: 0;
+	color: black;
 }
