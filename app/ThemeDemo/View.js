@@ -27,8 +27,6 @@ export class View extends BaseView
 
 		const theme = XyzTheme;
 
-		console.log(theme);
-
 		const alpha = Theme.get('alpha');
 
 		alpha

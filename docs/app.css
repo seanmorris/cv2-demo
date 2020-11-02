@@ -1442,6 +1442,7 @@ iframe {
 	flex: 1;
 	border: 0px;
 	background-color: #FFF;
+	min-width: 100%;
 }
 
 .dcontent {
@@ -1948,6 +1949,219 @@ label.buttons {
 
 .database-editor a {
 	cursor: pointer;
+}
+
+.editor {
+	max-width: 800px;
+	width:     100%;
+	resize:    vertical;
+	overflow:  auto;
+	display:   flex;
+	height:    18em;
+	flex-direction: column;
+}
+
+.editor ::-webkit-scrollbar {
+	width: 6px;
+	height: 6px;
+}
+
+.editor ::-webkit-scrollbar-track-piece {
+	background-color: rgba(0, 0, 0, 0);
+}
+
+.editor ::-webkit-scrollbar-track {
+	background-color: rgba(0, 0, 0, 0);
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	padding: 0px;
+	margin: 1px;
+}
+
+.editor ::-webkit-scrollbar-thumb {
+	border: 1px solid rgba(0, 0, 0, 0);
+	background-clip: padding-box;
+	background-color: rgba(128,128,128,1);
+	border-radius: 10px;
+	position: absolute;
+}
+
+.editor-main-field {
+	position:   relative;
+	border:     1px solid black;
+	/*box-shadow: 0em 0.5em 0.75em rgba(0,0,0,0.25);*/
+	display:    flex;
+	flex:       1;
+	resize:     vertical;
+	scrollbar-width: thin;
+}
+
+.editor-main-field > * {
+	overflow: hidden;
+	flex:     1;
+}
+
+.editor-main-field .filename-label {
+	background:  black;
+	color:       white;
+	font-size:   9.5pt;
+	font-weight: bold;
+	padding:     0.25em;
+}
+
+.editor-main-field .file-content {
+	position: relative;
+	flex: 1;
+}
+
+.editor-main-field > *:not(:last-child) {
+	border-right: 1px solid black;
+}
+
+.editor-main-field > [data-field] {
+	display: flex;
+	flex-direction: column;
+}
+
+.editor-main-field > [data-field="*"] {
+	display: none;
+}
+
+.editor-main-field[data-show-field="*"] {
+	flex-direction: row;
+}
+
+.editor-main-field[data-show-field="*"] > *{
+	width: 20%;
+	flex-direction: column;
+}
+
+.editor[data-orientation="vertical"] .editor-main-field[data-show-field="*"] {
+	flex-direction: column;
+}
+
+.editor[data-orientation="vertical"] .editor-main-field > [data-field] {
+	min-width: 100%;
+}
+
+.radio-bar {
+	position:      relative;
+	user-select:   none;
+	background:    white;
+	--timing:      0.15s;
+	margin-right:  auto;
+	display:       inline-block;
+	font-weight:   bold;
+	font-size:     10pt;
+}
+
+.radio-bar > .button-track {
+	display:        flex;
+	position:       relative;
+	flex-direction: row;
+}
+
+.radio-bar > .button-track > div {
+	text-align:    center;
+	cursor:        pointer;
+	padding:       0.5em;
+	padding-left:  0.75em;
+	padding-right: 0.75em;
+	flex:          1;
+}
+
+.radio-bar > .highlight-track {
+	pointer-events: none;
+}
+
+.editor .CodeMirror,
+.radio-bar > .highlight-track {
+	position: absolute;
+	top:      0;
+	bottom:   0;
+	left:     0;
+	right:    0;
+}
+
+.radio-bar > .highlight-track > :first-child {
+	mix-blend-mode: difference;
+	position:       absolute;
+	background:     rgba(255,255,255,1);
+	box-sizing:     border-box;
+	transition:
+		transform var(--timing) ease-in-out
+		, height  var(--timing) ease-in-out
+		, width   var(--timing) ease-in-out;
+}
+
+.editor .row {
+	align-items: center;
+}
+
+.editor [data-field] {
+	background: white;
+}
+
+.editor .CodeMirror {
+	height: auto;
+}
+
+.editor [data-icon] {
+	background-color: white;
+	filter:           invert(1);
+	margin-left:      0.25em;
+	opacity:          1;
+	width:            1.25em;
+	height:           1.25em;
+	cursor:           pointer;
+}
+
+.editor [data-icon]:active {
+	transform: scale(0.8);
+}
+
+.editor [data-icon=orientation] {
+	background-image: url(/orientation.svg);
+	transition: 0.1s ease-in-out transform;
+}
+
+.editor[data-orientation=""] [data-icon=orientation],
+.editor[data-orientation="horizontal"] [data-icon=orientation] {
+	transform: rotate(90deg);
+}
+
+.editor[data-orientation=""] [data-icon=orientation]:active,
+.editor[data-orientation="horizontal"] [data-icon=orientation]:active {
+	transform: scale(0.8) rotate(90deg);
+}
+
+.editor [data-icon=expand] {
+	background-image: url(/expand.svg);
+	background-size: 80%;
+}
+
+.editor.expanded [data-icon=expand] {
+	background-image: url(/minimize.svg);
+	background-size: 80%;
+}
+
+.editor.expanded {
+	position: fixed;
+	z-index: 1000;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 100vh !important;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	resize: none;
+	background: white;
+	max-width: initial;
+}
+
+.editor.expanded .row {
+	padding-right: 0.5em;
 }
 
 

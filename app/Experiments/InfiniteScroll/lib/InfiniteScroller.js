@@ -299,6 +299,11 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 		const listTag     = this.tags.list;
 		const visibleList = this.viewLists.get(listTag.element);
 
+		if(!visibleList)
+		{
+			return;
+		}
+
 		this.changing = true;
 
 		const visible = visibleList.views;

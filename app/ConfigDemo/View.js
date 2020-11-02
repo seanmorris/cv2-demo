@@ -17,8 +17,6 @@ export class View extends BaseView
 
 		this.args.theme = Config.get('theme');
 
-		console.log(Legacy);
-
 		const editor = new Editor;
 
 		editor.args.tabs.js = {

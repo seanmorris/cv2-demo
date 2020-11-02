@@ -24,7 +24,7 @@ export class View extends BaseView
 	{
 		this.args.source = `<h1>[[title]]</h1>
 <p>[[tagline]]</p>
-<p><img src = "/player-head.png" cv-expand = "img" /></p>
+<p><img cv-expand = "image" src = "/player-head.png" /></p>
 <p>Here is a list of people from <a target = "blank" href = "https://fakerapi.it/">fakerapi.it</a></p>
 <ul cv-each = "persons:person:p">
 	<li>[[person.firstname]] [[person.lastname]]</li>
@@ -65,12 +65,11 @@ export class View extends BaseView
 		this.sourceData = {
 			title: 'Hello, world!'
 			, tagline: 'this is a double-bound HTML editor!'
-			, persons: []
-			, img:  {
+			, image:  {
 				width:    180
-				, height: 180
 				, style:  'image-rendering: pixelated'
 			}
+			, persons: []
 		};
 
 		editor.setValue(JSON.stringify(this.sourceData, null, 4));
@@ -143,7 +142,7 @@ export class View extends BaseView
 					child = child.trim();
 				}
 
-				line = open + child + close + "\n";
+				line = open + child + close;
 			}
 			else
 			{

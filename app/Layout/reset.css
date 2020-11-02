@@ -36,6 +36,7 @@ iframe {
 	flex: 1;
 	border: 0px;
 	background-color: #FFF;
+	min-width: 100%;
 }
 
 .dcontent {

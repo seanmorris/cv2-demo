@@ -36,7 +36,7 @@ export class View extends BaseView
 		this.args.showHtml   = true;
 		this.args.showResult = true;
 
-		this.args.location = location;
+		this.args.location   = location;
 
 		this.args.orientation = this.args.orientation || 'vertical'; //'horizontal';
 

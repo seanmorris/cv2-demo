@@ -116,11 +116,6 @@ export class DragDrop extends View
 	{
 		const frame = this.tags.frame;
 
-		if(!this.hovering)
-		{
-			return false;
-		}
-
 		const cvDragDrop = new CustomEvent('cvDragDrop', {cancelable: true});
 
 		newParent.dispatchEvent(new CustomEvent('cvDragUnhover'));
@@ -139,14 +134,14 @@ export class DragDrop extends View
 		const duration    = Math.max(
 			120
 			, Math.min(
-				Math.sqrt(offset.x**2 + offset.y**2)
-				, 360
+				Math.sqrt(offset.x**2 + offset.y**2) / 2
+				, 240
 			)
 		);
 
 		frame.style({
 			transition:  ['top', 'left', 'transform'].map(
-				p => `${p} ${duration}ms ease-out`
+				p => `${p} ${duration}ms ease-in`
 			).join(', ')
 			, transform: `translate(-50%,-50%)`
 			, top:       `${newCenter.y}px`
