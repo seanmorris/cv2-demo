@@ -39,29 +39,24 @@ export class View extends BaseView
 
 		const editor = this.newEditor();
 
-		editor.on(
-			'beforeChange'
-			, (editor, change) => this.beforeEdit = editor.getValue()
+		editor.on('beforeChange', (editor, change) =>
+			this.beforeEdit = editor.getValue()
 		);
 
-		editor.on(
-			'change'
-			, (editor, change) => {
+		editor.on('change', (editor, change) => {
+			const current = editor.getValue();
+			const input   = {};
 
-				const current = editor.getValue();
-				const input   = {};
-
-				try
-				{
-					Object.assign(input, JSON.parse(current || '{}'));
-				}
-				catch(error)
-				{
-				}
-
-				Object.assign(this.editorArgs, input);
+			try
+			{
+				Object.assign(input, JSON.parse(current || '{}'));
 			}
-		);
+			catch(error)
+			{
+			}
+
+			Object.assign(this.editorArgs, input);
+		});
 
 		this.editor = editor;
 
@@ -69,13 +64,13 @@ export class View extends BaseView
 
 		this.sourceData = {
 			title: 'Hello, world!'
+			, tagline: 'this is a double-bound HTML editor!'
+			, persons: []
 			, img:  {
 				width:    180
 				, height: 180
 				, style:  'image-rendering: pixelated'
 			}
-			, tagline: 'this is a double-bound HTML editor!'
-			, persons: []
 		};
 
 		editor.setValue(JSON.stringify(this.sourceData, null, 4));
@@ -85,10 +80,12 @@ export class View extends BaseView
 		this.args.jsonUrl = 'https://fakerapi.it/api/v1/persons?_quantity=10'
 
 		fetch(this.args.jsonUrl).then(r=>r.json()).then(r=>{
+
 			if(!r.data)
 			{
 				return;
 			}
+
 			this.onTimeout(250, () => {
 				this.sourceData.persons = r.data;
 				editor.setValue(JSON.stringify(this.sourceData, null, 4));

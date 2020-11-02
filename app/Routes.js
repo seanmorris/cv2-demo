@@ -5,6 +5,7 @@ import { View as ViewsView  } from 'ViewDemo/View';
 import { View as FormsView  } from 'FormsDemo/View';
 import { View as ThemeView  } from 'ThemeDemo/View';
 import { View as ConfigView } from 'ConfigDemo/View';
+import { View as RouteView  } from 'RouterDemo/View';
 import { View as CookieView } from 'CookieDemo/View';
 import { View as RulesView  } from 'RulesDemo/View';
 
@@ -46,6 +47,8 @@ ${rawquire('../LICENSE')}
 	, config: () => {
 		return new ConfigView;
 	}
+
+	, routes: () => new RouteView
 
 	, cookies: () => {
 		return new CookieView;

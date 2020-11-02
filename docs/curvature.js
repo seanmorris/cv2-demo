@@ -3848,11 +3848,13 @@ var Router = /*#__PURE__*/function () {
           };
         }
       } else if (routes[selected] instanceof Function) {
-        result = '';
-        var r = routes[selected](args);
-        result = r;
+        result = new Promise(function (accept) {
+          return accept(routes[selected](args));
+        });
       } else if (routes[selected] instanceof Object) {
-        result = new routes[selected](args);
+        result = new Promise(function (accept) {
+          return accept(new routes[selected](args));
+        });
       } else if (typeof routes[selected] == 'string') {
         result = routes[selected];
       }
@@ -3862,11 +3864,11 @@ var Router = /*#__PURE__*/function () {
       }
 
       return result.then(function (result) {
-        return _this3.update(listener, path, result, routes, selected, args, forceRefresh);
+        _this3.update(listener, path, result, routes, selected, args, forceRefresh);
       })["catch"](function (error) {
         console.error(error);
 
-        _this3.update(listener, path, error, routes, selected, args, forceRefresh);
+        _this3.update(listener, path, window['devMode'] ? String(error) : 'Error: 500', routes, selected, args, forceRefresh);
       });
     }
   }, {
@@ -4402,6 +4404,19 @@ var Tag = /*#__PURE__*/function () {
   }
 
   _createClass(Tag, [{
+    key: "attr",
+    value: function attr(attributes) {
+      for (var attribute in attributes) {
+        if (attributes[attribute] === undefined) {
+          this.node.removeAttribute(attribute);
+        } else if (attributes[attribute] === null) {
+          this.node.setAttribute(attribute, '');
+        } else {
+          this.node.setAttribute(attribute, attributes[attribute]);
+        }
+      }
+    }
+  }, {
     key: "remove",
     value: function remove() {
       this.node.remove();
@@ -4505,21 +4520,14 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 var dontParse = Symbol('dontParse');
 var expandBind = Symbol('expandBind');
+var uuid = Symbol('uuid');
 var moveIndex = 0;
 
 var View = /*#__PURE__*/function () {
   _createClass(View, [{
     key: "_id",
     get: function get() {
-      if (!this.__id) {
-        Object.defineProperty(this, '__id', {
-          configurable: false,
-          writable: false,
-          value: this.uuid()
-        });
-      }
-
-      return this.__id;
+      return this[uuid];
     }
   }], [{
     key: "from",
@@ -4543,17 +4551,20 @@ var View = /*#__PURE__*/function () {
     Object.defineProperty(this, 'args', {
       value: _Bindable.Bindable.make(args)
     });
+    Object.defineProperty(this, uuid, {
+      value: this.uuid()
+    });
     Object.defineProperty(this, 'attach', {
       value: new _Bag.Bag(function (i, s, a) {})
     });
     Object.defineProperty(this, 'detach', {
       value: new _Bag.Bag(function (i, s, a) {})
     });
-    Object.defineProperty(this, 'cleanup', {
-      value: []
-    });
     Object.defineProperty(this, '_onRemove', {
       value: new _Bag.Bag(function (i, s, a) {})
+    });
+    Object.defineProperty(this, 'cleanup', {
+      value: []
     });
     Object.defineProperty(this, 'parent', {
       value: mainView
@@ -4569,6 +4580,9 @@ var View = /*#__PURE__*/function () {
     });
     Object.defineProperty(this, 'tags', {
       value: _Bindable.Bindable.make({})
+    });
+    Object.defineProperty(this, 'nodes', {
+      value: _Bindable.Bindable.make([])
     });
     Object.defineProperty(this, 'intervals', {
       value: []
@@ -4588,7 +4602,7 @@ var View = /*#__PURE__*/function () {
     Object.defineProperty(this, 'subBindings', {
       value: {}
     });
-    Object.defineProperty(this, 'subTemplates', {
+    Object.defineProperty(this, 'templates', {
       value: {}
     });
     Object.defineProperty(this, 'eventCleanup', {
@@ -4604,18 +4618,7 @@ var View = /*#__PURE__*/function () {
         });
       })
     });
-
-    if (args._id) {
-      Object.defineProperty(this.args, '_id', {
-        get: function get() {
-          return _this._id;
-        }
-      });
-    }
-
     this.template = "";
-    this.document = "";
-    this.nodes = null;
     this.firstNode = null;
     this.lastNode = null;
     this.viewList = null;
@@ -4850,7 +4853,6 @@ var View = /*#__PURE__*/function () {
       this.mainView || this.preRuleSet.apply(subDoc, this);
       this.mapTags(subDoc);
       this.mainView || this.ruleSet.apply(subDoc, this);
-      this.nodes = [];
 
       if (window.devMode === true) {
         this.firstNode = document.createComment("Template ".concat(this._id, " Start"));
@@ -5267,7 +5269,7 @@ var View = /*#__PURE__*/function () {
 
           tag.parentNode.insertBefore(dynamicNode, tag);
           var debind = proxy.bindTo(property, function (v, k, t) {
-            if (t[k] instanceof View && t[k] !== v) {
+            if ((t[k] instanceof View || t[k] instanceof Node) && t[k] !== v) {
               if (!t[k].preserve) {
                 t[k].remove();
               }
@@ -5790,13 +5792,7 @@ var View = /*#__PURE__*/function () {
         var callbackName = String(a.shift() || eventName).trim();
         var eventFlags = String(a.shift() || '').trim();
         var argList = [];
-        var groups = /(\w+)(?:\(([$\w\s-'",]+)\))?/.exec(callbackName); // if(!groups)
-        // {
-        // 	throw new Error(
-        // 		'Invalid event method referent: '
-        // 		+ tag.getAttribute('cv-on')
-        // 	);
-        // }
+        var groups = /(\w+)(?:\(([$\w\s-'",]+)\))?/.exec(callbackName);
 
         if (groups) {
           callbackName = groups[1].replace(/(^[\s\n]+|[\s\n]+$)/, '');
@@ -5964,10 +5960,6 @@ var View = /*#__PURE__*/function () {
       return function (bindingView) {
         var tag = sourceTag.cloneNode(true);
         tag.setAttribute('href', linkAttr);
-        tag.addEventListener('click', View.linkClicked);
-        bindingView.onRemove(function () {
-          return tag.removeEventListener(View.linkClicked);
-        });
         return tag;
       };
     }
@@ -6390,23 +6382,26 @@ var View = /*#__PURE__*/function () {
       var templateName = tag.getAttribute('cv-template');
       tag.removeAttribute('cv-template');
 
-      this.subTemplates[templateName] = function () {
+      this.templates[templateName] = function () {
         return tag.tagName === 'TEMPLATE' ? tag.content.cloneNode(true) : new DocumentFragment(tag.innerHTML);
       };
 
+      this.rendered.then(function () {
+        return tag.remove();
+      });
       return tag;
     }
   }, {
     key: "mapSlotTag",
     value: function mapSlotTag(tag) {
       var templateName = tag.getAttribute('cv-slot');
-      var getTemplate = this.subTemplates[templateName];
+      var getTemplate = this.templates[templateName];
 
       if (!getTemplate) {
         var parent = this;
 
         while (parent) {
-          getTemplate = parent.subTemplates[templateName];
+          getTemplate = parent.templates[templateName];
 
           if (getTemplate) {
             break;
@@ -6740,25 +6735,10 @@ var View = /*#__PURE__*/function () {
 
 exports.View = View;
 Object.defineProperty(View, 'templates', {
-  enumerable: false,
-  writable: false,
   value: new Map()
 });
 Object.defineProperty(View, 'refClasses', {
-  enumerable: false,
-  writable: false,
   value: new Map()
-});
-Object.defineProperty(View, 'linkClicked', function (event) {
-  event.preventDefault();
-  var href = event.target.getAttribute('href');
-
-  if (href.substring(0, 4) === 'http' || href.substring(0, 2) === '//') {
-    window.open(href);
-    return;
-  }
-
-  _Router.Router.go(href);
 });
   })();
 });
