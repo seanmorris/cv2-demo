@@ -1,0 +1,49 @@
+.lone-scrollbar {
+	display: flex;
+}
+
+.lone-scrollbar[data-orientation=vertical] .lone-scrollbar-scroller {
+	overflow-y: scroll;
+	overflow-x: hidden;
+	height: 200px;
+}
+
+.lone-scrollbar[data-orientation=horizontal] .lone-scrollbar-scroller {
+	overflow-y: hidden;
+	overflow-x: scroll;
+	width: 200px;
+}
+
+.lone-scrollbar .lone-scrollbar-scroller {
+	border: 1px solid #999;
+}
+
+.lone-scrollbar[data-orientation=vertical] .lone-scrollbar-scroller {
+	transform: scaleX(-1);
+}
+
+.lone-scrollbar[data-orientation=horizontal] .lone-scrollbar-scroller {
+	transform: scaleY(-1);
+}
+
+.lone-scrollbar[data-orientation=vertical] .lone-scrollbar-shim {
+	margin-right: -1px;
+	height: 400px;
+	width: 1px;
+}
+
+.lone-scrollbar[data-orientation=horizontal] .lone-scrollbar-shim {
+	margin-bottom: -1px;
+	width: 400px;
+	height: 1px;
+}
+
+.lone-scrollbar .lone-scrollbar-shim {
+	background: red;
+	padding: 0;
+	margin: 0;
+}
+
+.lone-scrollbar::-webkit-scrollbar-track {
+	width: 100%;
+}

@@ -3,5 +3,5 @@ export const Config = {
 	, theme: 'alpha'
 }
 
-// window['devMode'] = true;
+window['devMode'] = true;
 // window['devMode'] = false;

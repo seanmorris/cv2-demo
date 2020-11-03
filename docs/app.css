@@ -1281,6 +1281,14 @@ div.table-row > *:last-child {
 	flex: 3;
 }
 
+.lonebar-value {
+	border: 1px solid #888;
+	margin: 0.25em;
+	padding: 0.25em;
+	width: 4em;
+	text-align: center;
+}
+
 form {
 	display: flex;
 	flex-direction: column;
@@ -1406,6 +1414,15 @@ pre.wrap {
 
 .content > div > .CodeMirror {
 	height: auto;
+}
+
+.centered {
+	align-items: center;
+}
+
+.spaced-out {
+	justify-content: space-around;
+	width: 100%;
 }
 
 html, body {
@@ -1541,7 +1558,6 @@ pre, code {
 	padding-right: 0.5em;
 	background-color: #DDD;
 	width: 0;
-	flex: 1;
 }
 
 .models-demo input[data-property="id"],
@@ -1792,7 +1808,6 @@ label.buttons button,
 
 .database-editor-right > *{
 	padding: 0.5em;
-	flex: 1;
 }
 
 .database-editor-right form {
@@ -1882,6 +1897,15 @@ label.buttons {
 	border-bottom: 1px solid #999;
 }
 
+.model-scroller {
+	min-height: 20em;
+}
+
+.model-scroller input,
+.model-scroller {
+	font-size: 9pt;
+}
+
 .model-scroller .table-row > div {
 	display: flex;
 	flex-direction: row;
@@ -1892,14 +1916,13 @@ label.buttons {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
-	justify-content: center;
 	padding: 0.3em;
 	border-bottom: 1px solid #AAA;
 	border-right: 1px solid #999
 }
 
 .database-editor .table-row [data-property="id"] {
-	flex: 0 0 4em;
+	flex: 0 0 6em;
 	order: -2;
 	min-width: 3em;
 }
@@ -2239,6 +2262,56 @@ label.buttons {
 .sample-editor[data-select="multiselect"] .button-track > *:hover {
 	background: white;
 	filter: invert(1);
+}
+
+.lone-scrollbar {
+	display: flex;
+}
+
+.lone-scrollbar[data-orientation=vertical] .lone-scrollbar-scroller {
+	overflow-y: scroll;
+	overflow-x: hidden;
+	height: 200px;
+}
+
+.lone-scrollbar[data-orientation=horizontal] .lone-scrollbar-scroller {
+	overflow-y: hidden;
+	overflow-x: scroll;
+	width: 200px;
+}
+
+.lone-scrollbar .lone-scrollbar-scroller {
+	border: 1px solid #999;
+}
+
+.lone-scrollbar[data-orientation=vertical] .lone-scrollbar-scroller {
+	transform: scaleX(-1);
+}
+
+.lone-scrollbar[data-orientation=horizontal] .lone-scrollbar-scroller {
+	transform: scaleY(-1);
+}
+
+.lone-scrollbar[data-orientation=vertical] .lone-scrollbar-shim {
+	margin-right: -1px;
+	height: 400px;
+	width: 1px;
+}
+
+.lone-scrollbar[data-orientation=horizontal] .lone-scrollbar-shim {
+	margin-bottom: -1px;
+	width: 400px;
+	height: 1px;
+}
+
+.lone-scrollbar .lone-scrollbar-shim {
+	background: red;
+	padding: 0;
+	margin: 0;
+}
+
+.lone-scrollbar::-webkit-scrollbar-track {
+	width: 100%;
 }
 
 

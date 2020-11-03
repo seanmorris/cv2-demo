@@ -2,6 +2,7 @@ import { View } from 'curvature/base/View';
 
 import { View as HomeView   } from 'Home/View';
 import { View as ViewsView  } from 'ViewDemo/View';
+import { BindableDemoView   } from 'BindableDemo/BindableDemoView';
 import { View as FormsView  } from 'FormsDemo/View';
 import { View as ThemeView  } from 'ThemeDemo/View';
 import { View as ConfigView } from 'ConfigDemo/View';
@@ -39,6 +40,8 @@ ${rawquire('../LICENSE')}
 	, views: () => {
 		return new ViewsView;
 	}
+
+	, bindables: BindableDemoView
 
 	, forms: () => {
 		return new FormsView;

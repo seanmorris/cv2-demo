@@ -37,11 +37,13 @@ import { QuintInOut } from 'curvature/animate/ease/QuintInOut';
 
 import { ElasticOut } from 'curvature/animate/ease/ElasticOut';
 
+import { LoneScrollbar } from '../../control/LoneScrollbar';
+
 export class View extends BaseView
 {
-	constructor()
+	constructor(args, parent)
 	{
-		super();
+		super(args, parent);
 
 		this.template = require('./template');
 
@@ -65,6 +67,13 @@ export class View extends BaseView
 		this.args.arrayScroller  = new InfiniteScroller({rowHeight: 33});
 		this.args.stringScroller = new InfiniteScroller({rowHeight: 33});
 		this.args.viewScroller   = new InfiniteScroller({rowHeight: 33});
+
+		console.log(LoneScrollbar);
+
+		this.args.infiniteVertScroller  = new LoneScrollbar({size: 1000, value: 500});
+
+		this.args.vertScroller  = new LoneScrollbar;
+		this.args.horizScroller = new LoneScrollbar({horizontal: true});
 	}
 
 	attached()

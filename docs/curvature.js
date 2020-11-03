@@ -1603,6 +1603,8 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 var Ref = Symbol('ref');
 var Original = Symbol('original');
 var Deck = Symbol('deck');
@@ -2120,7 +2122,6 @@ var Bindable = /*#__PURE__*/function () {
             }
 
             var objRef = object instanceof Promise || object instanceof EventTarget || object instanceof MutationObserver || object instanceof IntersectionObserver || object instanceof MutationObserver || object instanceof PerformanceObserver || typeof ResizeObserver === 'function' && object instanceof ResizeObserver || object instanceof Map || object instanceof Set ? object : object[Ref];
-            var wasPaused = this.paused;
             var ret = new.target ? _construct(target[key], providedArgs) : target[key].apply(objRef || object, providedArgs);
 
             for (var _i7 in target.___after___) {
@@ -2246,17 +2247,21 @@ var Bindable = /*#__PURE__*/function () {
   }, {
     key: "wrapThrottleCallback",
     value: function wrapThrottleCallback(callback, throttle) {
+      var _this2 = this;
+
+      this.throttles.set(callback, false);
       return function (callback) {
-        var throttle = false;
         return function (v, k, t, d) {
-          if (throttle) {
+          if (_this2.throttles.get(callback, true)) {
             return;
           }
 
           callback(v, k, t, d, t[k]);
-          throttle = true;
+
+          _this2.throttles.set(callback, true);
+
           setTimeout(function () {
-            throttle = false;
+            _this2.throttles.set(callback, false);
           }, throttle);
         };
       }(callback);
@@ -2314,6 +2319,9 @@ var Bindable = /*#__PURE__*/function () {
 }();
 
 exports.Bindable = Bindable;
+
+_defineProperty(Bindable, "throttles", new WeakMap());
+
 Object.defineProperty(Bindable, 'OnGet', {
   configurable: false,
   enumerable: false,
@@ -7117,10 +7125,12 @@ var ViewList = /*#__PURE__*/function () {
       }
 
       if (Array.isArray(this.args.value)) {
+        var localMin = minKey === 0 && finalViews[1] !== undefined && finalViews.length > 1 ? minKey : anteMinKey;
+        console.log(localMin);
+
         var renderRecurse = function renderRecurse() {
           var i = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
           var ii = finalViews.length - i - 1;
-          var localMin = minKey === 0 && finalViews[1] !== undefined ? minKey : anteMinKey;
 
           while (ii > localMin && finalViews[ii] === undefined) {
             ii--;
@@ -7130,26 +7140,24 @@ var ViewList = /*#__PURE__*/function () {
             return Promise.resolve();
           }
 
-          if (finalViews[ii] !== undefined) {
-            if (finalViews[ii] === _this3.views[ii]) {
-              if (!finalViews[ii].firstNode) {
-                finalViews[ii].render(_this3.tag, finalViews[ii + 1]);
-                return finalViews[ii].rendered.then(function () {
-                  return renderRecurse(Number(i) + 1);
-                });
-              }
-
-              return renderRecurse(Number(i) + 1);
+          if (finalViews[ii] === _this3.views[ii]) {
+            if (!finalViews[ii].firstNode) {
+              finalViews[ii].render(_this3.tag, finalViews[ii + 1]);
+              return finalViews[ii].rendered.then(function () {
+                return renderRecurse(Number(i) + 1);
+              });
             }
 
-            finalViews[ii].render(_this3.tag, finalViews[ii + 1]);
-
-            _this3.views.splice(ii, 0, finalViews[ii]);
-
-            return finalViews[ii].rendered.then(function () {
-              return renderRecurse(Number(i) + 1);
-            });
+            return renderRecurse(Number(i) + 1);
           }
+
+          finalViews[ii].render(_this3.tag, finalViews[ii + 1]);
+
+          _this3.views.splice(ii, 0, finalViews[ii]);
+
+          return finalViews[ii].rendered.then(function () {
+            return renderRecurse(Number(i) + 1);
+          });
         };
 
         this.rendered = renderRecurse();

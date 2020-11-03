@@ -1,0 +1,49 @@
+<h2>bindables</h2>
+
+<h3>Bindable.make() & [Object Bindable].bindTo() </h3>
+
+<p>Objects can be made into <b>bindables</b> with the <code>Bindable.make({...})</code> funciton. Just pass almost any object as the only parameter and you'll get back a proxied object. Call <code>.bindTo()</code> on the object to watch for changes to its values.</p>
+
+<pre>
+	class Foobar {};
+
+	const foo = Bindable.make( new Foobar );
+
+	foo.bindTo('x', v => console.log(v));
+
+	foo.x = 5;
+</pre>
+
+<h3>watching all propteries</h3>
+
+<p>Passing a callback as the first parameter without a property name will watch all properties on the object. The second parameter to the callback is the name of the property being set.</p>
+
+<pre>
+	class Foobar {};
+
+	const foo = Bindable.make( new Foobar );
+
+	foo.bindTo((v,k) => console.log(k, v));
+
+	foo.x = 5;
+	foo.y = 6;
+	foo.z = 7;
+</pre>
+
+<h3>callback(v,k,t,d,p,sv,sk,st,sd,sp)</h3>
+
+<h3>bindTo options</h3>
+
+<p>The last parameter to <code>bindTo()</code> is an options object.</p> The following keys may be supplied to alter the way the callback is called.
+
+<h4>now</h4>
+
+<p>By default, the callback will be run once when the bind operation happens. Pass <code>{now: false}</code> in your options to prevent this.</p>
+
+<h4>delay</h4>
+<h4>throttle</h4>
+<h4>wait</h4>
+<h4>idle</h4>
+<h4>frame</h4>
+<h4>removeWith</h4>
+<h4>children</h4>

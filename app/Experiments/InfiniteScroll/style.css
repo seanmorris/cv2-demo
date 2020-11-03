@@ -181,3 +181,11 @@ div.table-row > *:first-child {
 div.table-row > *:last-child {
 	flex: 3;
 }
+
+.lonebar-value {
+	border: 1px solid #888;
+	margin: 0.25em;
+	padding: 0.25em;
+	width: 4em;
+	text-align: center;
+}

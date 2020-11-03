@@ -4,7 +4,6 @@
 	padding-right: 0.5em;
 	background-color: #DDD;
 	width: 0;
-	flex: 1;
 }
 
 .models-demo input[data-property="id"],
@@ -255,7 +254,6 @@ label.buttons button,
 
 .database-editor-right > *{
 	padding: 0.5em;
-	flex: 1;
 }
 
 .database-editor-right form {
@@ -345,6 +343,15 @@ label.buttons {
 	border-bottom: 1px solid #999;
 }
 
+.model-scroller {
+	min-height: 20em;
+}
+
+.model-scroller input,
+.model-scroller {
+	font-size: 9pt;
+}
+
 .model-scroller .table-row > div {
 	display: flex;
 	flex-direction: row;
@@ -355,14 +362,13 @@ label.buttons {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
-	justify-content: center;
 	padding: 0.3em;
 	border-bottom: 1px solid #AAA;
 	border-right: 1px solid #999
 }
 
 .database-editor .table-row [data-property="id"] {
-	flex: 0 0 4em;
+	flex: 0 0 6em;
 	order: -2;
 	min-width: 3em;
 }

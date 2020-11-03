@@ -118,3 +118,12 @@ pre.wrap {
 .content > div > .CodeMirror {
 	height: auto;
 }
+
+.centered {
+	align-items: center;
+}
+
+.spaced-out {
+	justify-content: space-around;
+	width: 100%;
+}
