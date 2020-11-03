@@ -12,6 +12,11 @@ export class SliderRecords extends RecordSet
 		return {id: 'id', title: 'title', value: 'value'};
 	}
 
+	count()
+	{
+		return Number(this.length) + 1;
+	}
+
 	fetch(k)
 	{
 		const id    = k;

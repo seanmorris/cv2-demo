@@ -1404,6 +1404,10 @@ pre.wrap {
 	flex: 0;
 }
 
+.content > div > .CodeMirror {
+	height: auto;
+}
+
 html, body {
 	height: 100%;
 	margin: 0rem;
@@ -1509,6 +1513,26 @@ pre, code {
 }
 
 .CodeMirror pre {
+}
+
+.highlight-bar {
+	background: black;
+	padding: 0.5em;
+	font-size: 11pt;
+	color: white;
+}
+
+.editor .hint {
+	font-size: 9pt;
+	display: flex;
+	margin-bottom: 0.5em;
+}
+
+.editor [data-icon=check] {
+	width: 1em !important;
+	padding: 0;
+	background-color: transparent !important;
+	filter:     invert(0) !important;
 }
 
 .models-demo input,
@@ -1951,27 +1975,27 @@ label.buttons {
 	cursor: pointer;
 }
 
-.editor {
+.sample-editor {
 	max-width: 800px;
 	width:     100%;
 	resize:    vertical;
 	overflow:  auto;
 	display:   flex;
-	height:    18em;
+	height:    400px;
 	flex-direction: column;
 }
 
-.editor ::-webkit-scrollbar {
+.sample-editor ::-webkit-scrollbar {
 	width: 6px;
 	height: 6px;
 }
 
-.editor ::-webkit-scrollbar-track-piece {
+.sample-editor ::-webkit-scrollbar-track-piece {
 	background-color: rgba(0, 0, 0, 0);
 }
 
-.editor ::-webkit-scrollbar-track {
-	background-color: rgba(0, 0, 0, 0);
+.sample-editor ::-webkit-scrollbar-track {
+	background-color: white;
 	position: absolute;
 	width: 100%;
 	height: 100%;
@@ -1979,7 +2003,7 @@ label.buttons {
 	margin: 1px;
 }
 
-.editor ::-webkit-scrollbar-thumb {
+.sample-editor ::-webkit-scrollbar-thumb {
 	border: 1px solid rgba(0, 0, 0, 0);
 	background-clip: padding-box;
 	background-color: rgba(128,128,128,1);
@@ -2005,7 +2029,7 @@ label.buttons {
 .editor-main-field .filename-label {
 	background:  black;
 	color:       white;
-	font-size:   9.5pt;
+	font-size:   10pt;
 	font-weight: bold;
 	padding:     0.25em;
 }
@@ -2037,11 +2061,11 @@ label.buttons {
 	flex-direction: column;
 }
 
-.editor[data-orientation="vertical"] .editor-main-field[data-show-field="*"] {
+.sample-editor[data-orientation="vertical"] .editor-main-field[data-show-field="*"] {
 	flex-direction: column;
 }
 
-.editor[data-orientation="vertical"] .editor-main-field > [data-field] {
+.sample-editor[data-orientation="vertical"] .editor-main-field > [data-field] {
 	min-width: 100%;
 }
 
@@ -2075,7 +2099,7 @@ label.buttons {
 	pointer-events: none;
 }
 
-.editor .CodeMirror,
+.sample-editor .CodeMirror,
 .radio-bar > .highlight-track {
 	position: absolute;
 	top:      0;
@@ -2095,19 +2119,23 @@ label.buttons {
 		, width   var(--timing) ease-in-out;
 }
 
-.editor .row {
+.sample-editor .row {
 	align-items: center;
 }
 
-.editor [data-field] {
+.sample-editor [data-field] {
 	background: white;
 }
 
-.editor .CodeMirror {
+.CodeMirror pre.CodeMirror-line, .CodeMirror pre.CodeMirror-line-like {
+	font-size: 8.5pt !important;
+}
+
+.sample-editor .CodeMirror {
 	height: auto;
 }
 
-.editor [data-icon] {
+.sample-editor [data-icon] {
 	background-color: white;
 	filter:           invert(1);
 	margin-left:      0.25em;
@@ -2117,36 +2145,37 @@ label.buttons {
 	cursor:           pointer;
 }
 
-.editor [data-icon]:active {
-	transform: scale(0.8);
+.sample-editor [data-icon]:active {
+	transform: scale(0.9);
+	box-sizing: border-box;
 }
 
-.editor [data-icon=orientation] {
+.sample-editor [data-icon=orientation] {
 	background-image: url(/orientation.svg);
 	transition: 0.1s ease-in-out transform;
 }
 
-.editor[data-orientation=""] [data-icon=orientation],
-.editor[data-orientation="horizontal"] [data-icon=orientation] {
+.sample-editor[data-orientation=""] [data-icon=orientation],
+.sample-editor[data-orientation="horizontal"] [data-icon=orientation] {
 	transform: rotate(90deg);
 }
 
-.editor[data-orientation=""] [data-icon=orientation]:active,
-.editor[data-orientation="horizontal"] [data-icon=orientation]:active {
-	transform: scale(0.8) rotate(90deg);
+.sample-editor[data-orientation=""] [data-icon=orientation]:active,
+.sample-editor[data-orientation="horizontal"] [data-icon=orientation]:active {
+	transform: scale(0.9) rotate(90deg);
 }
 
-.editor [data-icon=expand] {
+.sample-editor [data-icon=expand] {
 	background-image: url(/expand.svg);
 	background-size: 80%;
 }
 
-.editor.expanded [data-icon=expand] {
+.sample-editor.expanded [data-icon=expand] {
 	background-image: url(/minimize.svg);
 	background-size: 80%;
 }
 
-.editor.expanded {
+.sample-editor.expanded {
 	position: fixed;
 	z-index: 1000;
 	top: 0;
@@ -2160,8 +2189,56 @@ label.buttons {
 	max-width: initial;
 }
 
-.editor.expanded .row {
+.sample-editor.expanded .row {
 	padding-right: 0.5em;
+}
+
+.sample-editor .hint {
+	transition: 0.4s ease-in-out opacity;
+	opacity: 0;
+	border-left: 2px solid black;
+	padding: 0.5em;
+	margin-bottom: 0.25em;
+	font-size: 10pt;
+}
+
+.sample-editor:hover .hint {
+	opacity: 1;
+}
+
+.sample-editor .hint [data-icon=check] {
+	opacity: 0;
+}
+
+.sample-editor[data-select="multiselect"] .hint [data-icon=check] {
+	opacity: 1;
+}
+
+.sample-editor .highlight-track,
+.sample-editor [data-label="*"] {
+	transition: 0.2s opacity, 0.2s background-color;
+}
+
+.sample-editor[data-select="multiselect"] .highlight-track,
+.sample-editor[data-select="multiselect"] [data-label="*"] {
+	pointer-events: none;
+}
+
+.sample-editor .button-track > * {
+	border-top: 1px transparent solid;
+	border-left: 1px transparent solid;
+}
+.sample-editor .button-track > :last-child {
+	border-right: 1px transparent solid;
+}
+
+.sample-editor[data-select="multiselect"] .button-track > * {
+	border-color: #AAA;
+}
+
+.sample-editor[data-select="multiselect"] .button-track > *:hover {
+	background: white;
+	filter: invert(1);
 }
 
 

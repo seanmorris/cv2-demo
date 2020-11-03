@@ -98,9 +98,9 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 
 			const headers = this.header && this.header();
 
-			t[k] = parseInt(v);
-
 			const headerRow = headers ? 1 : 0;
+
+			t[k] = parseInt(v);
 
 			const rows = headerRow + this.args.content ? this.args.content.length : 0;
 
@@ -113,7 +113,6 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 
 		this.contentDebind = this.args.bindTo('content', (v,k,t) => {
 
-
 			const headers = this.header && this.header();
 
 			const headerRow = headers ? 1 : 0;
@@ -124,18 +123,20 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 
 			this.lengthDebind && this.lengthDebind();
 
-
 			if(v)
 			{
 				this.lengthDebind = v.bindTo('length', v => {
 
+					const headers = this.header && this.header();
+
+					const headerRow = headers ? 1 : 0;
+
 					v = Number(v);
 
-					this.args.shimHeight = v * this.args.rowHeight;
+					this.args.shimHeight = (headerRow + v) * this.args.rowHeight;
 
 					this.onNextFrame(() => this.updateViewport());
 				});
-
 			}
 
 			this.onNextFrame(()=> this.updateViewport());
@@ -242,7 +243,7 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 		}
 
 		const snapper = Math.abs(diff) > 3
-			? new ElasticOut(duration * 13, {friction: 0.15})
+			? new ElasticOut(duration * 12, {friction: 0.2})
 			: new GeoIn(duration, {power: 5});
 
 		this.snapperDone && this.snapperDone();

@@ -25,12 +25,14 @@
 
 <div class = "row">
 	<fieldset>
+		+
 		<button cv-on = "click:arrayUnshift">Unshift</button>
-		<button cv-on = "click:arrayShift">Shift</button>
+		<button cv-on = "click:arrayPush">Push</button>
 	</fieldset>
 
 	<fieldset>
-		<button cv-on = "click:arrayPush">Push</button>
+		-
+		<button cv-on = "click:arrayShift">Shift</button>
 		<button cv-on = "click:arrayPop">Pop</button>
 	</fieldset>
 
@@ -41,5 +43,5 @@
 </div>
 
 <div cv-each = "list:item:i">
-	<p>[[item]]</p>
+	<p>[[i]] - [[item]]</p>
 </div>

@@ -13,14 +13,20 @@ export class View extends BaseView
 		this.args.obj  = {a: 1, b: 2, c: 3};
 	}
 
-	splice(position, del, item)
+	splice(position, del, item = undefined)
 	{
+		if(item == undefined)
+		{
+			this.args.list.splice(position, del);
+			return;
+		}
+
 		this.args.list.splice(position, del, item);
 	}
 
 	arrayUnshift()
 	{
-		this.args.list.unshift((this.z++) + 'new_shift' );
+		this.args.list.unshift((this.z++) + ' new_shift' );
 	}
 
 	arrayShift()
@@ -56,5 +62,7 @@ export class View extends BaseView
 	delIndex(key)
 	{
 		delete this.args.list[ key ];
+
+		console.log(this.args.list);
 	}
 }

@@ -1,5 +1,7 @@
 import { View as BaseView } from 'curvature/base/View';
 
+import { Keyboard } from 'curvature/input/Keyboard';
+
 import { SandboxFrame } from '../control/SandboxFrame';
 
 import CodeMirror from 'codemirror';
@@ -54,6 +56,14 @@ export class View extends BaseView
 	attached()
 	{
 		this.observer.observe(this.tags.root.node);
+
+		this.onRemove(Keyboard.get().keys.bindTo('Control', v => {
+			this.multi = v > 0;
+
+			this.args.multiselect = this.multi
+				? 'multiselect'
+				: 'select';
+		}));
 
 		const jsEditor   = this.getEditor('application/javascript');
 		const htmlEditor = this.getEditor('text/html');
@@ -126,8 +136,10 @@ export class View extends BaseView
 	{
 		const theme       = 'elegant';
 		const autoRefresh = true;
+		const lineNumbers = true;
+		const gutter      = true;
 
-		return new CodeMirror(() => {}, {mode, theme, autoRefresh});
+		return new CodeMirror(() => {}, {mode, theme, gutter, lineNumbers, autoRefresh});
 	}
 
 	highlight()
@@ -224,7 +236,7 @@ export class View extends BaseView
 
 		}
 
-		this.resizeEditor(event);
+		// this.resizeEditor(event);
 	}
 
 }

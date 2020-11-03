@@ -59,3 +59,23 @@ pre, code {
 
 .CodeMirror pre {
 }
+
+.highlight-bar {
+	background: black;
+	padding: 0.5em;
+	font-size: 11pt;
+	color: white;
+}
+
+.editor .hint {
+	font-size: 9pt;
+	display: flex;
+	margin-bottom: 0.5em;
+}
+
+.editor [data-icon=check] {
+	width: 1em !important;
+	padding: 0;
+	background-color: transparent !important;
+	filter:     invert(0) !important;
+}

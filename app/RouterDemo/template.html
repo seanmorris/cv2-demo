@@ -1,11 +1,17 @@
 <h2>routes</h2>
 
-<div class = "editor [[expanded]]" cv-ref = "editor" data-orientation = "[[orientation]]">
+<div class = "sample-editor [[expanded]]" cv-ref = "editor" data-orientation = "[[orientation]]" data-select = "[[multiselect]]">
+	<div class = "row">
+		<div class = "hint">
+			hold ctrl / ⌘ to select multiple tabs.
+			<div data-icon = "check"></div>
+		</div>
+	</div>
 	<div class = "row">
 		<div class = "radio-bar" cv-ref = "root">
 
 			<div class = "button-track" cv-each = "buttons:button:b">
-				<div cv-ref = "buttons::b" cv-on = "click(event, button, b)">[[button.label]]</div>
+				<div cv-ref = "buttons::b" cv-on = "click(event, button, b)" data-label = "[[button.label]]">[[button.label]]</div>
 			</div>
 
 			<div class = "highlight-track">

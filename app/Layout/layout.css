@@ -114,3 +114,7 @@ pre.wrap {
 .row .half:empty {
 	flex: 0;
 }
+
+.content > div > .CodeMirror {
+	height: auto;
+}
