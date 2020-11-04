@@ -7125,7 +7125,7 @@ var ViewList = /*#__PURE__*/function () {
       }
 
       if (Array.isArray(this.args.value)) {
-        var localMin = minKey === 0 && finalViews[1] !== undefined && finalViews.length > 1 ? minKey : anteMinKey;
+        var localMin = minKey === 0 && (finalViews[1] !== undefined || finalViews.length <= 1) ? minKey : anteMinKey;
         console.log(localMin);
 
         var renderRecurse = function renderRecurse() {

@@ -30,20 +30,54 @@
 	foo.z = 7;
 </pre>
 
-<h3>callback(v,k,t,d,p,sv,sk,st,sd,sp)</h3>
+<h3>callback(v,k,t,d,p)</h3>
+
+The function supplied to bindTo will be called with the following parameters when the value changes.
+
+<pre>
+	<b>v</b>alue    - the new value being set
+	<b>k</b>ey      - the property being set
+	<b>t</b>arget   - the target object
+	<b>d</b>elete   - true if the property is being deleted, false otherwise.
+	<b>p</b>revious - the previous value of the property
+</pre>
 
 <h3>bindTo options</h3>
 
-<p>The last parameter to <code>bindTo()</code> is an options object.</p> The following keys may be supplied to alter the way the callback is called.
+<p>The last parameter to <code>bindTo()</code> is an options object.</p>
+
+<p>The following keys may be supplied to alter the way the callback is called.</p>
 
 <h4>now</h4>
 
-<p>By default, the callback will be run once when the bind operation happens. Pass <code>{now: false}</code> in your options to prevent this.</p>
+<p>Pass <code>{now: false}</code> in your options to prevent your callback from being called on the initial bind.</p>
+
+<p>By default, the callback will be run once when the bind operation happens.</p>
 
 <h4>delay</h4>
+
+<p>Delay before callback, in milliseconds. <b>Note</b> This is NOT a throttle, this will simply offset the callback's execution to a later time.</p>
+
 <h4>throttle</h4>
+
+<p>Prevent the callback from running more than once every X milliseconds.</p>
+
 <h4>wait</h4>
+
+<p>Wait for an oft-changing value to "settle" before running the callback. If the changes, then stops changing for at least X milliseconds, the callback will run once.</p> 
+
 <h4>idle</h4>
+
+<p>Rather than executing the callback immediately, defer to requestIdleCallback(). Falls back to requestAnimationFrame() if requestIdleCallback is unavailable.</p>
+
 <h4>frame</h4>
+
+<p>Rather than executing the callback immediately, defer to requestAnimationFrame().</p>
+
 <h4>removeWith</h4>
+
+<p>Rather than executing the callback immediately, defer to requestAnimationFrame().</p>
+
 <h4>children</h4>
+
+<p>Run the callback both when the property is written or when ANY the child object's proprties change. 5 parameters will be supplied to the callback in addition to the original <code>v,k,t,d,p</code> to represent changes to the child object.</p>
