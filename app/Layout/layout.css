@@ -38,9 +38,15 @@ code, pre {
 	margin: 0;
 }
 
-.header ul li{
+.header ul li {
 	margin-left: 1em;
 	white-space: nowrap;
+	display: flex;
+	align-items: center;
+}
+
+.header ul li a {
+	display: flex;
 }
 
 .layout {
@@ -126,4 +132,19 @@ pre.wrap {
 .spaced-out {
 	justify-content: space-around;
 	width: 100%;
+}
+
+.article-box p {
+	margin-left: 0.5em;
+	margin-right: 0.5em;
+}
+
+.sub-box {
+	position: relative;
+	width:  100%;
+	height: 100%;
+}
+
+button {
+	margin-right: 0.5em;
 }

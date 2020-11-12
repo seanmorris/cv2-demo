@@ -1,6 +1,9 @@
 import { View as BaseView } from 'curvature/base/View';
 
-import { View as Editor } from '../Editor/View';
+import { CurvatureFrame } from '../control/CurvatureFrame';
+import { rawquire } from 'rawquire/rawquire.macro';
+
+import { Editor } from '../component/editor/Editor';
 
 export class View extends BaseView
 {
@@ -10,104 +13,192 @@ export class View extends BaseView
 
 		this.template = require('./template');
 
-		const globalRules = new Editor;
+		const basicSandbox     = new CurvatureFrame;
+		const basicEditor      = new Editor;
 
-		globalRules.args.tabs.js   = {
-			title:  'js'
-			, file: 'DemoView.js'
-			, body: require('./Samples/Static.jss')
-			, mode: 'ace/mode/javascript'
-		};
+		basicSandbox.editor    = basicEditor;
 
-		globalRules.args.tabs.html = {
-			title:  'html'
-			, file: 'template.html'
-			, body: require('./Samples/Static.html')
-			, mode: 'ace/mode/html'
-		};
+		this.args.basicSandbox = basicSandbox;
+		this.args.basicEditor  = basicEditor;
 
-		globalRules.refreshCode();
+		basicEditor.args.files = [
+			{ filename: '*', label:  '*' }
+			, {
+				filename: 'BasicRuleView.js'
+				, label:  'BasicRuleView.js'
+				, value:  rawquire('./Samples/BasicRuleView.js')
+				, type:   'application/javascript'
+			}
+			, {
+				filename: 'basic-rules-example.html'
+				, label:  'basic-rules-example.html'
+				, value:  rawquire('./Samples/basic-rules-example.html')
+				, type:   'text/html'
+			}
+			, {
+				filename: 'initialize.js'
+				, label:  'initialize.js'
+				, value:  rawquire('./Samples/basic-initialize.js')
+				, type:   'application/javascript'
+			}
+		];
 
-		this.args.globalRules = globalRules;
+		basicEditor.addEventListener('execute', ()=>{
+			basicSandbox.buildPage();
+		});
 
-		const basic = new Editor;
+		const globalSandbox  = new CurvatureFrame;
+		const globalEditor   = new Editor;
 
-		basic.args.tabs.js   = {
-			title:  'js'
-			, file: 'DemoView.js'
-			, body: require('./Samples/BasicRule.jss')
-			, mode: 'ace/mode/javascript'
-		};
+		globalSandbox.editor = globalEditor;
 
-		basic.args.tabs.html = {
-			title:  'html'
-			, file: 'template.html'
-			, body: require('./Samples/BasicRule.html')
-			, mode: 'ace/mode/html'
-		};
+		globalEditor.args.files = [
+			{ filename: '*', label:  '*' }
+			, {
+				filename: 'GlobalRuleView.js'
+				, label:  'GlobalRuleView.js'
+				, value:  rawquire('./Samples/GlobalRuleView.js')
+				, type:   'application/javascript'
+			}
+			, {
+				filename: 'global-rules-example.html'
+				, label:  'global-rules-example.html'
+				, value:  rawquire('./Samples/global-rules-example.html')
+				, type:   'text/html'
+			}
+			, {
+				filename: 'initialize.js'
+				, label:  'initialize.js'
+				, value:  rawquire('./Samples/global-initialize.js')
+				, type:   'application/javascript'
+			}
+		];
 
-		basic.refreshCode();
+		this.args.globalSandbox = globalSandbox;
+		this.args.globalEditor  = globalEditor;
 
-		this.args.basic = basic;
+		globalEditor.addEventListener('execute', ()=>{
+			globalSandbox.buildPage();
+		});
 
-		const preproc = new Editor;
+		const preprocSandbox  = new CurvatureFrame;
+		const preprocEditor   = new Editor;
 
-		preproc.args.tabs.js   = {
-			title:  'js'
-			, file: 'DemoView.js'
-			, body: require('./Samples/Preproc.jss')
-			, mode: 'ace/mode/javascript'
-		};
+		preprocSandbox.editor = preprocEditor;
 
-		preproc.args.tabs.html = {
-			title:  'html'
-			, file: 'template.html'
-			, body: require('./Samples/Preproc.html')
-			, mode: 'ace/mode/html'
-		};
+		preprocEditor.args.files = [
+			{ filename: '*', label:  '*' }
+			, {
+				filename: 'PreprocessRulesExample.js'
+				, label:  'PreprocessRulesExample.js'
+				, value:  rawquire('./Samples/PreprocessRulesExample.js')
+				, type:   'application/javascript'
+			}
+			, {
+				filename: 'preprocess-example.html'
+				, label:  'preprocess-example.html'
+				, value:  rawquire('./Samples/preprocess-example.html')
+				, type:   'text/html'
+			}
+			, {
+				filename: 'initialize.js'
+				, label:  'initialize.js'
+				, value:  rawquire('./Samples/preprocess-initialize.js')
+				, type:   'application/javascript'
+			}
+		];
 
-		preproc.refreshCode();
+		this.args.preprocSandbox = preprocSandbox;
+		this.args.preprocEditor  = preprocEditor;
 
-		this.args.preproc = preproc;
+		preprocEditor.addEventListener('execute', ()=>{
+			preprocSandbox.buildPage();
+		});
 
-		const mapper = new Editor;
+		const tagMappingSandbox = new CurvatureFrame;
+		const tagMappingEditor  = new Editor;
 
-		mapper.args.tabs.js   = {
-			title:  'js'
-			, file: 'DemoView.js'
-			, body: require('./Samples/Mapper.jss')
-			, mode: 'ace/mode/javascript'
-		};
+		tagMappingSandbox.editor = tagMappingEditor;
 
-		mapper.args.tabs.html = {
-			title:  'html'
-			, file: 'template.html'
-			, body: require('./Samples/Mapper.html')
-			, mode: 'ace/mode/html'
-		};
+		tagMappingEditor.args.files = [
+			{ filename: '*', label:  '*' }
+			, {
+				filename: 'TagMappingExample.js'
+				, label:  'TagMappingExample.js'
+				, value:  rawquire('./Samples/TagMappingExample.js')
+				, type:   'application/javascript'
+			}
+			, {
+				filename: 'tag-mapping-example.html'
+				, label:  'tag-mapping-example.html'
+				, value:  rawquire('./Samples/tag-mapping-example.html')
+				, type:   'text/html'
+			}
+			, {
+				filename: 'initialize.js'
+				, label:  'initialize.js'
+				, value:  rawquire('./Samples/tag-mapping-initialize.js')
+				, type:   'application/javascript'
+			}
+		];
 
-		mapper.refreshCode();
+		tagMappingEditor.addEventListener('execute', ()=>{
+			tagMappingSandbox.buildPage();
+		});
 
-		this.args.mapper = mapper;
+		this.args.tagMappingSandbox = tagMappingSandbox;
+		this.args.tagMappingEditor  = tagMappingEditor;
 
-		const viewMapper = new Editor;
+		const viewMappingSandbox = new CurvatureFrame;
+		const viewMappingEditor  = new Editor;
 
-		viewMapper.args.tabs.js   = {
-			title:  'js'
-			, file: 'DemoView.js'
-			, body: require('./Samples/ViewMapper.jss')
-			, mode: 'ace/mode/javascript'
-		};
+		viewMappingSandbox.editor = viewMappingEditor;
 
-		viewMapper.args.tabs.html = {
-			title:  'html'
-			, file: 'template.html'
-			, body: require('./Samples/ViewMapper.html')
-			, mode: 'ace/mode/html'
-		};
+		viewMappingEditor.args.files = [
+			{ filename: '*', label:  '*' }
+			, {
+				filename: 'ViewMappingExample.js'
+				, label:  'ViewMappingExample.js'
+				, value:  rawquire('./Samples/ViewMappingExample.js')
+				, type:   'application/javascript'
+			}
+			, {
+				filename: 'view-mapping-example.html'
+				, label:  'view-mapping-example.html'
+				, value:  rawquire('./Samples/view-mapping-example.html')
+				, type:   'text/html'
+			}
+			, {
+				filename: 'initialize.js'
+				, label:  'initialize.js'
+				, value:  rawquire('./Samples/view-mapping-initialize.js')
+				, type:   'application/javascript'
+			}
+		];
 
-		viewMapper.refreshCode();
+		viewMappingEditor.addEventListener('execute', ()=>{
+			viewMappingSandbox.buildPage();
+		});
 
-		this.args.viewMapper = viewMapper;
+		this.args.viewMappingSandbox = viewMappingSandbox;
+		this.args.viewMappingEditor  = viewMappingEditor;
+
+		// const viewMapper = new Editor;
+		// viewMapper.args.files = [
+		// 	{ filename: '*', label:  '*' }
+		// 	, {
+		// 		filename: 'DemoView.js'
+		// 		, label:  'DemoView.js'
+		// 		, value:  require('./Samples/ViewMapper.jss')
+		// 		, type:   'application/javascript'
+		// 	}
+		// 	, {
+		// 		filename: 'template.html'
+		// 		, label:  'template.html'
+		// 		, value:  require('./Samples/ViewMapper.html')
+		// 		, type:   'text/html'
+		// 	}
+		// ];
+		// this.args.viewMapper = viewMapper;
 	}
 }

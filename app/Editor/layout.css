@@ -175,3 +175,12 @@
 .editor-window[data-orientation="horizontal"] .row.editors {
 	flex-direction: column !important;
 }
+
+.article-box {
+	position: relative;
+	border: 1px solid black;
+	min-height: 12em;
+	width: 100%;
+	overflow: hidden;
+	resize: vertical;
+}

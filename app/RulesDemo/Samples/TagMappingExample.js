@@ -1,12 +1,12 @@
 const View = require('curvature/base/View').View;
 
-class DemoView extends View
+export class TagMappingExample extends View
 {
 	constructor()
 	{
 		super();
 
-		this.template = require('template');
+		this.template = require('./tag-mapping-example.html');
 
 		this.ruleSet.add('custom-tag', tag => {
 

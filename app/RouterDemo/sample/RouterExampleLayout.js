@@ -1,6 +1,6 @@
 import { View } from 'curvature/base/View';
 
-export class SampleLayoutView extends View
+export class RouterExampleLayout extends View
 {
 	constructor(args, parent)
 	{
@@ -17,10 +17,11 @@ export class SampleLayoutView extends View
 			, nonexistent: '/something-fake'
 		};
 
-		this.template =
-		`<ul cv-each = "links:link:label">
-			<li><a cv-link = "[[link]]">[[label]]</a></li>
-		</ul>
+		this.template = `<div cv-each = "links:link:label" style = "margin-bottom: 1em;">
+			<span style = "margin-right: 1em;">
+            	<a cv-link = "[[link]]">[[label]]</a>
+            </span>
+		</div>
 		[[content]]`;
 	}
 }

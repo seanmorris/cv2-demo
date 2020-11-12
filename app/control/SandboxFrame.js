@@ -20,8 +20,7 @@ export class SandboxFrame extends View
 				, `'unsafe-eval'`
 			]
 			, 'connect-src': [
-				, `ws://${location.hostname}:9485`
-				, 'http://unpkg.com'
+				`ws://${location.hostname}:9485`
 				, 'https://unpkg.com'
 			]
 		};

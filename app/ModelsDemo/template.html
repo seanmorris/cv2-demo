@@ -2,8 +2,6 @@
 
 	<h2>models</h2>
 
-	<span cv-on = "click:abcClick()">[[abc]]</span>
-
 	<p>Models are simple objects, with some light tooling to make them simple to populate. They will also use the <b>class</b> and <b>id</b> properties to ensure that each model only gets a single reference. If you load the same model multiple times, the fields will remain synced.</p>
 
 	<h4>mapping model classes</h4>
@@ -120,7 +118,7 @@
 		</div>
 	</div>
 
-	<h4>stores aren't tables</h4>
+	<h4>stores aren't tables, models aren't rows</h4>
 
 	<p>Stores can hold any data that can be handled by javascript's structured clone algorithm, meaning our models can each hold an arbitrary list of properties, as opposed to the tables in an SQL-based system.</p>
 

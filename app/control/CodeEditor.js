@@ -31,6 +31,8 @@ export class CodeEditor extends View
 		this.args.bindTo(options, (v,k) => {
 			if(k === 'value')
 			{
+				v = String(v);
+
 				if(editor.getValue() !== v)
 				{
 					editor.setValue(v);
@@ -50,10 +52,10 @@ export class CodeEditor extends View
 		this.resizeTimer = false;
 
 		this.args.editor = editorTag;
-		this.editor = editor;
+		this.editorHtml = editor;
 
 		editor.on('change', (editor, change) => {
-			this.onTimeout(1000, ()=>this.args.value = editor.getValue());
+			this.args.value = editor.getValue();
 		});
 	}
 
@@ -61,7 +63,7 @@ export class CodeEditor extends View
 	{
 		this.observer = new ResizeObserver(
 			() => {
-				this.onNextFrame(() => this.editor.refresh())
+				this.onNextFrame(() => this.editorHtml.refresh())
 			}
 		);
 

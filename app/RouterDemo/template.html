@@ -1,3 +1,71 @@
 <h2>routes</h2>
 
-[[editor]]
+<p>Routes are just objects, where the keys are URLS and the values are strings, functions, promises, or <code>View</code> classes. A function can also return a promise, which will then be evaluated to generate the resulting page.</p>
+
+<p>Routing will execute whenever the <code>locationchange</code> event fires.</p>
+
+<p>Once a route is selected & executed, the results will be passed into the <code>[[content]]</code> variable in the <code>View</code> that is defined as the <code>layout</code></p>
+
+<p>Pass the <code>layout</code> and <code>routes</code> into <code>Router.listen</code> and you can start routing!</p>
+
+<h4>try it!</h4>
+
+[[routeEditor]]
+
+<div class = "article-box">
+	[[routeSandbox]]
+</div>
+
+<h3>wildcard replacements</h3>
+
+<p>Segments of the URL may be substitured by replacement tokens. The actual values from the URL will be passed into the routing function as arguments.</p>
+
+<p>They may be anonymous:</p> <code>foo/%</code>
+
+<p>or named:</p> <code>bar/%tokenname</code>
+
+<p>If the <b>anonymous</b> form is used, they will be provided as positional arguments.</p>
+
+<p>If the tokens are <b>named</b> they will be wrapped into an object that will be passed to the routing function as the first parameter, with positional args following.</p>
+
+<h4>optional replacement tokens</h4>
+
+<p>Append a <code>?</code> to the end of your token name to mark it as optional. If this is used, it must be at the end of a URL.</p>
+
+<code>foo/%tokenname?</code>
+
+<h4>variadic routes</h4>
+
+<p>Append a <code>*</code> as the last section of your URL to consume all segments as variadic parameters to the routing fucntion. If this is used,  it must be at the end of a URL.</p>
+
+<code>bar/*</code>
+
+<p>This would still require at least one segment to appear after <code>foo/</code>. Use <code>*?</code> to mark this as optional</p>
+
+<code>baz/*?</code>
+
+<h4>try it!</h4>
+
+[[wildcardEditor]]
+
+<div class = "article-box">
+	[[wildcardSandbox]]
+</div>
+
+<h3>returning "page not found", and other errors</h3>
+
+<h4>[Router.NotFoundError]</h4>
+
+<p>Use <code>[Router.NotFoundError]</code> as the key to a route to use it as the 404 page. Note the square brackets, <code>Router.NotFoundError</code> resolves to a symbol which the square brakets will be caused to use as the key. This allows us to define a "page not found" route without having to pollute the space of string paths.</p>
+
+<h4>[Router.InternalError]</h4>
+
+<p>Use <code>[Router.InternalError]</code> to catch errors thrown inside other routes.</p>
+
+<p>...</p>
+
+[[errorEditor]]
+
+<div class = "article-box">
+	[[errorSandbox]]
+</div>

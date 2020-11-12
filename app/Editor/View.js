@@ -25,7 +25,6 @@ export class View extends BaseView
 			this.args.multiselect = this.multi
 				? 'multiselect'
 				: 'select';
-
 		});
 
 		this.onRemove(kbDebind);
@@ -132,14 +131,6 @@ export class View extends BaseView
 		});
 	}
 
-	attached()
-	{
-	}
-
-	frameLoaded(event)
-	{
-	}
-
 	refreshCode(event)
 	{
 		let resultTemplate = require('./results');
@@ -226,8 +217,6 @@ export class View extends BaseView
 
 				tag.classList.add('hide');
 			}
-
-
 		}
 
 		if(this.multi
@@ -425,4 +414,6 @@ export class View extends BaseView
 	{
 		return String(input).replace(/"/g, '&quot;');
 	}
+
+	frameLoaded(){}
 }

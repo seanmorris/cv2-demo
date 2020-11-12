@@ -29,9 +29,9 @@ export class RadioBar extends View
 			return;
 		}
 
-
 		this.args.selected = this.args.selected || 0;
 
+		this.highlight();
 	}
 
 	click(event, button, index)

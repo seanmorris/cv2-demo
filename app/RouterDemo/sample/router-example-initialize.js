@@ -2,14 +2,16 @@ import { View    } from 'curvature/base/View';
 import { Router  } from 'curvature/base/Router';
 import { RuleSet } from 'curvature/base/RuleSet';
 
-import { SampleLayoutView } from './SampleLayoutView';
+import { RouterExampleLayout } from './RouterExampleLayout';
 
-const layout = new SampleLayoutView;
+const layout = new RouterExampleLayout;
+
+layout.render(document.body);
 
 Router.listen(layout, {
 
 	'': class extends View{
-		template = '<p>This is the index page.</p><hr /><p>The time is [[time]].<p>';
+		template = '<p>This is the index page.</p><hr /><p>The current date and time is [[time]].<p>';
 		onAttached(){ this.onFrame(()=>this.args.time = String(new Date)) }
 	}
 
@@ -27,11 +29,6 @@ Router.listen(layout, {
 		setTimeout(()=>reject('Fake internal error!'), 500);
 	})
 
-	, [false]: '404 - Page not found.'
+	, [Router.NotFoundError]: '404 - Page not found!'
 
 });
-
-RuleSet.add('body', tag => layout.render(tag));
-RuleSet.apply();
-
-Router.go('/');

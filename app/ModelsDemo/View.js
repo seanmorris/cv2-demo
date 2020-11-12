@@ -23,8 +23,6 @@ export class View extends BaseView
 
 		this.template = rawquire('./template.html');
 
-		this.args.abc = 231;
-
 		this.args.newClass = 'Mock';
 		this.args.newId    = 1;
 

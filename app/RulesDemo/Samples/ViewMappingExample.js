@@ -1,12 +1,12 @@
 const View = require('curvature/base/View').View;
 
-class DemoView extends View
+export class ViewMappingExample extends View
 {
 	constructor()
 	{
 		super();
 
-		this.template = require('template');
+		this.template = require('./view-mapping-example.html');
 
 		this.ruleSet.add('[data-class]', Clock);
 

@@ -91,12 +91,12 @@ RuleSet.add('define', tag => {
 	return final;
 });
 
-class DemoView extends View
+export class GlobalRuleView extends View
 {
 	constructor()
 	{
 		super();
 
-		this.template = require('template');
+		this.template = require('./global-rules-example.html');
 	}
 }

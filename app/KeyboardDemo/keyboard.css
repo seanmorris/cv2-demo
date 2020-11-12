@@ -1,7 +1,24 @@
+.row.keyboard .glyphs path {
+	fill: #888;
+	stroke: #988;
+	stroke-width: 0.5 !important;
+}
+
+.row.keyboard .glyphs path {
+	fill: #000;
+	stroke: #232;
+	stroke-width: 0.5 !important;
+}
+
 .keyboard .key {
-	stroke-width: 3;
-	stroke: #BBB;
-	fill:   #BBB;
+	transition: fill 0.125s ease-out, stroke 0.125s ease-out;
+	stroke-width: 1;
+}
+
+.keyboard .key {
+	transition: fill 0.125s ease-out, stroke 0.125s ease-out;
+	stroke: #333;
+	fill:   #EEE;
 }
 
 .keyboard .pressed {
@@ -9,5 +26,5 @@
 }
 
 .keyboard .released {
-	stroke: #deada5;
+	stroke: #800;
 }

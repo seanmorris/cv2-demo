@@ -2,8 +2,8 @@ import { Bindable } from 'curvature/base/Bindable';
 import { View as BaseView } from 'curvature/base/View';
 
 import { Keyboard } from 'curvature/input/Keyboard';
-
 import { Keyboard as KeyboardView } from './Keyboard'
+
 import { CursorKeys } from './CursorKeys'
 import { Numpad } from './Numpad'
 
@@ -30,6 +30,16 @@ export class View extends BaseView
 		this.args.keyboard   = new KeyboardView;
 		this.args.numpad     = new Numpad;
 
+		Keyboard.get().focusElement = false;
+
+		this.args.bindTo('listening', v => {
+			Keyboard.get().listening = v;
+		});
+
+		this.onRemove(()=>Keyboard.get().listening = false);
+
+		this.args.listening = true;
+
 		Keyboard.get().codes.bindTo((v,k,t,d) => {
 
 			const key = Keyboard.get().getKeyRef(k);
@@ -49,6 +59,8 @@ export class View extends BaseView
 		});
 
 		this.onFrame(()=>Keyboard.get().update());
+
+		document.body.focus();
 	}
 
 	join(x)

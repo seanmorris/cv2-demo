@@ -1,12 +1,12 @@
 const View = require('curvature/base/View').View;
 
-class DemoView extends View
+export class PreprocessRulesExample extends View
 {
 	constructor()
 	{
 		super();
 
-		this.template = require('template');
+		this.template = require('./preprocess-example.html');
 
 		const selector = 'h1,p';
 

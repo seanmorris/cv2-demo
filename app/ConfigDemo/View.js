@@ -1,9 +1,13 @@
 import { Config } from 'curvature/base/Config';
 import { Import } from 'curvature/base/Import';
 
+import { CurvatureFrame } from '../control/CurvatureFrame';
+
 import { View as BaseView } from 'curvature/base/View';
 
-import { View as Editor } from '../Editor/View';
+import { Editor } from '../component/editor/Editor';
+
+import { rawquire } from 'rawquire/rawquire.macro';
 
 const Legacy = require('Config');
 
@@ -17,24 +21,48 @@ export class View extends BaseView
 
 		this.args.theme = Config.get('theme');
 
-		const editor = new Editor;
+		const sandbox = new CurvatureFrame;
+		const editor  = new Editor;
 
-		editor.args.tabs.js = {
-			title:  'js'
-			, file: 'DemoView.js'
-			, body: require('./Samples/Config.jss')
-			, mode: 'ace/mode/javascript'
-		};
+		sandbox.editor = editor;
 
-		editor.args.tabs.html = {
-			title:  'html'
-			, file: 'template.html'
-			, body: require('./Samples/template.html')
-			, mode: 'ace/mode/html'
-		};
+		editor.args.files = [
+			{
+				filename: '*'
+				, label:  '*'
+			}
+			, {
+				filename: 'ConfigExampleLayout.js'
+				, label:  'ConfigExampleLayout.js'
+				, value:  rawquire('./sample/ConfigExampleLayout.js')
+				, type:   'application/javascript'
 
-		editor.refreshCode();
+			}
+			, {
+				filename: 'config-example-template.html'
+				, label:  'config-example-template.html'
+				, value:   rawquire('./sample/config-example-template.html')
+				, type:   'text/html'
+			}
+			, {
+				filename: 'config-example-initialize.js'
+				, label:  'config-example-initialize.js'
+				, value:  rawquire('./sample/config-example-initialize.js')
+				, type:   'application/javascript'
 
-		this.args.editor = editor;
+			}
+			// , {
+			// 	filename: 'result'
+			// 	, label:  'result'
+			// 	, control: sandbox
+			// }
+		];
+
+		this.args.editor  = editor;
+		this.args.sandbox = sandbox;
+
+		editor.addEventListener('execute', ()=>{
+			sandbox.buildPage();
+		});
 	}
 }

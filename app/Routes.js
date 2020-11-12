@@ -37,7 +37,9 @@ ${rawquire('../NOTICE')}<hr />
 ${rawquire('../LICENSE')}
 </pre>`)
 
-	, 'github': () => View.from(require('pages/github.html'))
+	, github: () => View.from(require('pages/github.html'))
+
+	, 'style-guide': View.from(require('pages/style-guide.html'))
 
 	, views: () => {
 		return new ViewsView;

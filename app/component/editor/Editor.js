@@ -2,7 +2,6 @@ import { View as BaseView } from 'curvature/base/View';
 
 import { Keyboard } from 'curvature/input/Keyboard';
 
-import { SandboxFrame } from '../../control/SandboxFrame';
 import { CodeEditor   } from '../../control/CodeEditor';
 import { RadioBar     } from '../../control/RadioBar';
 
@@ -31,6 +30,10 @@ export class Editor extends BaseView
 		this.args.status    = ``;
 		this.args.showField = `*`;
 
+	}
+
+	onAttached()
+	{
 		this.args.bindTo('files', v => {
 
 			const radioBarArgs = this.args.radioBar.args;
@@ -58,6 +61,7 @@ export class Editor extends BaseView
 					|| file !== radioBarArgs.buttons[i].file
 				)){
 					file.editor.args.bindTo('value', v =>{
+						this.dispatchEvent(new CustomEvent('input'));
 						this.args.changed = true;
 						this.args.status  = '';
 						this.onTimeout(10, () => this.args.status = this.args.status = `Code updated at ${(new Date).toISOString()}.`);
@@ -70,10 +74,11 @@ export class Editor extends BaseView
 			radioBarArgs.buttons.length = v.length;
 
 		}, {children: true});
-	}
 
-	postRender()
-	{
+		this.buildPage();
+
+		this.args.selected = this.args.selected || 0;
+
 		this.onRemove(Keyboard.get().keys.bindTo('Control', v => {
 			this.multi = v > 0;
 
@@ -81,14 +86,12 @@ export class Editor extends BaseView
 				? 'multiselect'
 				: 'select';
 		}));
-
-		this.args.selected = this.args.selected || 0;
 	}
 
 	showField(name)
 	{
-		const fields    = this.findTags('[data-field]');
 		const showField = this.findTag(`[data-field="${name}"]`);
+		const fields    = this.findTags('[data-field]');
 
 		if(name !== '*')
 		{
@@ -140,5 +143,20 @@ export class Editor extends BaseView
 		{
 			document.body.classList.remove('no-scroll');
 		}
+	}
+
+	buildPage()
+	{
+		for(const i in this.args.files)
+		{
+			const file = this.args.files[i];
+
+			if(file.control && typeof file.control.buildPage === 'function')
+			{
+				file.control.buildPage();
+			}
+		}
+
+		this.dispatchEvent(new CustomEvent('execute'));
 	}
 }
