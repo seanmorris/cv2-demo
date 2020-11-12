@@ -21,13 +21,17 @@ exports.paths = {
 exports.plugins = {
 	babel: {
 		presets: ['@babel/preset-env', ['minify', {builtIns: false}]],
-		plugins:   ["@babel/plugin-proposal-class-properties", "macros"]
+		plugins: ["@babel/plugin-proposal-class-properties", "macros"]
 	},
-	'brunch-preval': {
-		log: true
+	preval: {
+		tokens: {
+			BUILD_TIME:  ()=> (new Date).getTime() / 1000
+			, BUILD_TAG: 'notag'
+		}
+		, log: true
 	},
 	raw: {
-		pattern: /\.(jss|html|php|tmp\.+?)$/,
+		pattern: /\.(jss|html|php|tmp|svg)/,
 		wrapper: content => `module.exports = ${JSON.stringify(content)}`
 	}
 };

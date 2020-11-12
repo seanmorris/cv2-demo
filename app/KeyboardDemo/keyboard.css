@@ -1,0 +1,13 @@
+.keyboard .key {
+	stroke-width: 3;
+	stroke: #BBB;
+	fill:   #BBB;
+}
+
+.keyboard .pressed {
+	fill:   #b31515;
+}
+
+.keyboard .released {
+	stroke: #deada5;
+}

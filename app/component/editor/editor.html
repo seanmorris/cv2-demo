@@ -1,0 +1,33 @@
+<div class = "sample-editor [[expanded]]" cv-ref = "editor" data-orientation = "[[orientation]]" data-select = "[[multiselect]]" data-floating = "[[floating]]" data-changed = "[[changed]]" data-show-field = "[[showField]]">
+
+	<!-- <div class = "row hint">
+		hold ctrl / ⌘ to select multiple tabs.
+		<div data-icon = "check"></div>
+	</div> -->
+
+	<div class = "row">
+		[[radioBar]]
+		<div cv-on = "click:changeOrientation(event)" data-icon="orientation"></div>
+		<div cv-on = "click:expand(event)" data-icon="expand"></div>
+	</div>
+
+	<div
+		data-show-field = "[[showField]]"
+		class   = "editor-main-field"
+		cv-ref  = "editorMain"
+		cv-each = "files:file"
+	>
+		<div data-field = "[[file.label]]">
+			<div class = "filename-label">[[file.filename]]</div>
+			<div class = "file-content">[[file.control]]</div>
+		</div>
+	</div>
+
+	<div class = "row full status">
+		<div class = "[[editorRefresh]]">
+			<span>[[status]]</span>
+			<button cv-on = "click:buildPage(event)">⟳</button>
+		</div>
+	</div>
+
+</div>

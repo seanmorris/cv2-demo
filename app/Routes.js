@@ -10,6 +10,8 @@ import { View as RouteView  } from 'RouterDemo/View';
 import { View as CookieView } from 'CookieDemo/View';
 import { View as RulesView  } from 'RulesDemo/View';
 
+import { View as KeyboardView } from 'KeyboardDemo/View';
+
 import { View as ScalarView } from 'ScalarDemo/View';
 import { View as ChainView  } from 'ChainDemo/View';
 import { View as ArrayView  } from 'ArrayDemo/View';
@@ -84,6 +86,8 @@ ${rawquire('../LICENSE')}
 	, models: () => {
 		return new ModelsView;
 	}
+
+	, keyboard: () => new KeyboardView
 
 	, 'php': () => {
 		return new PhpView;

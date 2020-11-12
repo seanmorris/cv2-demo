@@ -1,16 +1,10 @@
 import { View as BaseView } from 'curvature/base/View';
 
-import { Keyboard } from 'curvature/input/Keyboard';
-
 import { SandboxFrame } from '../control/SandboxFrame';
 
-import CodeMirror from 'codemirror';
-
-import 'codemirror/mode/css/css';
-import 'codemirror/mode/htmlmixed/htmlmixed';
-import 'codemirror/mode/javascript/javascript';
-
 import { rawquire } from 'rawquire/rawquire.macro';
+
+import { Editor } from '../component/editor/Editor';
 
 export class View extends BaseView
 {
@@ -19,224 +13,87 @@ export class View extends BaseView
 		super(args, parent)
 
 		this.template = require('./template');
-		this.args.orientation = 'horizontal';
-		this.args.buttons = [];
-
-		this.args.bindTo('files', v => {
-
-			if(!v)
-			{
-				this.args.buttons = [];
-				return;
-			}
-
-			for(const i in v)
-			{
-				const file     = v[i];
-				const callback = () => {
-					this.showField(file.label)
-					this.onNextFrame(
-						()=> file.editor.refresh()
-					);
-				};
-				const label = file.filename;
-
-				this.args.buttons[i] = ({label, callback});
-			}
-
-			this.args.buttons.length = v ? v.length : 0;
-
-		}, {children: true, wait: 0});
-
-		this.observer = new ResizeObserver(
-			() => this.onNextFrame(()=>this.highlight())
-		);
 	}
 
-	attached()
+	onAttached()
 	{
-		this.observer.observe(this.tags.root.node);
+		this.buildPage();
+	}
 
-		this.onRemove(Keyboard.get().keys.bindTo('Control', v => {
-			this.multi = v > 0;
-
-			this.args.multiselect = this.multi
-				? 'multiselect'
-				: 'select';
-		}));
-
-		const jsEditor   = this.getEditor('application/javascript');
-		const htmlEditor = this.getEditor('text/html');
-		const cssEditor  = this.getEditor('text/css');
-		const jsonEditor = this.getEditor('application/json');
-
-		jsEditor.setValue(rawquire('./View.js'));
-		cssEditor.setValue(rawquire('./style.css'));
-		htmlEditor.setValue(rawquire('./template.html'));
-
+	onRendered()
+	{
 		const sandbox = new SandboxFrame;
-		const jsTag   = jsEditor.getWrapperElement();
 
-		this.args.files = [
+		this.sandbox = sandbox;
+
+		this.args.editor = new Editor({},this);
+
+		this.args.editor.args.files = [
 			{
-				filename:  '*'
-				, label:   '*'
+				filename: '*'
+				, label:  '*'
 			}
 			, {
-				filename:  'View.js'
-				, label:   'javascript'
-				, type:    'application/javascript'
-				, control: jsTag
-				, editor:  jsEditor
+				filename: 'SampleLayoutView.js'
+				, value:   rawquire('./sample/SampleLayoutView.js')
+				, type:   'application/javascript'
+				, label:  'SampleLayoutView'
 			}
 			, {
-				filename:  'template.html'
-				, label:   'html'
-				, type:    'text/html'
-				, control: htmlEditor.getWrapperElement()
-				, editor:  htmlEditor
+				filename: 'sample-initialize.js'
+				, value:   rawquire('./sample/sample-initialize.js')
+				, type:   'application/javascript'
+				, label:  'sample-initialize'
 			}
-			, {
-				filename:  'style.css'
-				, label:   'css'
-				, type:    'text/css'
-				, control: cssEditor.getWrapperElement()
-				, editor:  cssEditor
-			}
-			// , {
-			// 	filename:  'persons.json'
-			// 	, label:   'json'
-			// 	, type:    'application/json'
-			// 	, control: jsonEditor.getWrapperElement()
-			// 	, editor:  jsonEditor
-			// }
 			, {
 				filename:  'result.html'
-				, label:   'result'
 				, control: sandbox
+				, label:   'result'
 			}
 		];
-
-		this.args.selected = this.args.selected || 0;
-
-		this.listen(jsTag, 'cvDomAttached', event => {
-
-			jsEditor.refresh();
-			htmlEditor.refresh();
-			cssEditor.refresh();
-			jsonEditor.refresh();
-
-			this.showField('*');
-
-		}, {once:true});
-
 	}
 
-	getEditor(mode)
+	buildPage()
 	{
-		const theme       = 'elegant';
-		const autoRefresh = true;
-		const lineNumbers = true;
-		const gutter      = true;
+		const sampleHtml = (
+			'<'+'html><'+'head>'
+				+ '<'+`script >const exports = {};<`+'/script>'
+				+ '<'+'script src="https://unpkg.com/@babel/standalone@7.12.6/babel.js"><'+'/script>'
+				+ '<'+`script src="${location.origin}/vendor.js"><`+'/script>'
+				+ '<'+`script src="${location.origin}/curvature.js"><`+'/script>'
+				+ this.args.editor.args.files
+					.filter(file=>file.type === 'text/html')
+					.map(file=>`<`
+						+`script type = "text/babel" data-presets = "es2015" data-module = "${file.filename}">`
+						+ `require.register('./'+${JSON.stringify(file.filename)}, (_exports, require, module) => module.exports = ${JSON.stringify(file.editor.args.value)});`
+						+ `<` + `/script>`)
+					.join('')
+				+ '<'+'/script>'
+				+ this.args.editor.args.files
+					.filter(file=>file.type === 'application/javascript')
+					.map(file=>`<`+`script type = "text/babel" data-presets = "es2015" data-module = "${file.filename.replace(/\..+/,'')}">`
+						+ file.editor.args.value + `;`
+						+ `require.register('./'+${JSON.stringify(file.filename.replace(/\..+/,''))}, (_exports, require, module) => _exports[${JSON.stringify(file.filename.replace(/\..+/,''))}] = exports[${JSON.stringify(file.filename.replace(/\..+/,''))}])`
+						+ `<`+`/script>`
+					)
+					.join('')
+				+ this.args.editor.args.files
+					.filter(file=>file.type === 'text/css')
+					.map(file=>`<`+`style type = "${file.type}">${file.editor.args.value}<`+`/style>`)
+					.join('')
+				+ this.args.editor.args.files
+					.filter(file=>file.type === 'application/json')
+					.map(file=>`<`+`script type = "${file.type}" data-values = "${file.filename.replace(/\..*/, '')}">${file.editor.args.value}<`+`/script>`)
+					.join('')
+				+ '<'+'/head><'+'body></'+'body>'
+				+ '<'+'/html>'
+		);
 
-		return new CodeMirror(() => {}, {mode, theme, gutter, lineNumbers, autoRefresh});
+
+		this.sandbox.args.source = sampleHtml;
+
+		this.args.editor.args.changed = false;
+		this.args.editor.args.status  = '';
+		this.onTimeout(100, () => this.args.editor.args.status = `Code evaluated at ${(new Date).toISOString()}.`);
 	}
-
-	highlight()
-	{
-		const index = this.args.selected;
-
-		if(index < 0)
-		{
-			this.tags.highlight.style({
-				height:   0
-				, width:  0
-				, top:    0
-				, left:   0
-			});
-		}
-
-		if(!this.tags.buttons || !this.tags.buttons[index])
-		{
-			return;
-		}
-
-		const button = this.tags.buttons[index];
-
-		this.tags.highlight.style({
-			transform: `translate(${button.offsetLeft}px, ${button.offsetTop}px)`
-			, width:   `${button.offsetWidth}px`
-			, height:  `${button.offsetHeight}px`
-		});
-	}
-
-	click(event, button, index)
-	{
-		this.args.selected = index;
-
-		this.highlight();
-
-		button.callback(event);
-	}
-
-	showField(name)
-	{
-		const fields    = this.findTags('[data-field]');
-		const showField = this.findTag(`[data-field="${name}"]`);
-
-		if(name !== '*')
-		{
-			for(const field of fields)
-			{
-				field.style.display = 'none';
-			}
-		}
-		else
-		{
-			for(const field of fields)
-			{
-				field.style.display = '';
-			}
-
-			this.args.showField = name;
-
-			return;
-		}
-
-
-		if(showField)
-		{
-			showField.style.display = '';
-		}
-
-		this.args.showField = name;
-	}
-
-	changeOrientation()
-	{
-		this.args.orientation = this.args.orientation == 'horizontal'
-			? 'vertical'
-			: 'horizontal';
-	}
-
-	expand(event)
-	{
-		this.args.expanded = this.args.expanded
-			? ''
-			: 'expanded';
-
-		if(this.args.expanded)
-		{
-			document.body.classList.add('no-scroll');
-
-		}
-		else
-		{
-			document.body.classList.remove('no-scroll');
-
-		}
-
-		// this.resizeEditor(event);
-	}
-
 }

@@ -1,8 +1,8 @@
 <h2>bindables</h2>
 
-<h3>Bindable.make() & [Object Bindable].bindTo() </h3>
+<h3>watching properties</h3>
 
-<p>Objects can be made into <b>bindables</b> with the <code>Bindable.make({...})</code> funciton. Just pass almost any object as the only parameter and you'll get back a proxied object. Call <code>.bindTo()</code> on the object to watch for changes to its values.</p>
+<p>Objects can be made into <b>bindables</b> with the <code>Bindable.make({...})</code> funciton. Just pass (almost) any object as the only parameter and you'll get back a proxied object. Call <code>[object].bindTo()</code> on the object to watch for changes to its values.</p>
 
 <pre>
 	class Foobar {};
@@ -14,7 +14,41 @@
 	foo.x = 5;
 </pre>
 
-<h3>watching all propteries</h3>
+<h3>debinding</h3>
+
+<p>[object].bindTo() will return a callback. When this function is called, the binding will be removed:</p>
+
+<pre>
+	class Foobar {};
+
+	const foo = Bindable.make( new Foobar );
+
+	const debind = foo.bindTo('x', v => console.log(v));
+
+	foo.x = 5;
+
+	debind();
+
+	foo.x = 6;
+</pre>
+
+<h3>watching multiple properties</h3>
+
+Pass an array of property names as the first parameter to bind to more than one property.
+
+<pre>
+	class Foobar {};
+
+	const foo = Bindable.make( new Foobar );
+
+	foo.bindTo(['x', 'y', 'z'], (v,k) => console.log(k, v));
+
+	foo.x = 5;
+	foo.y = 6;
+	foo.z = 7;
+</pre>
+
+<h3>watching all properties</h3>
 
 <p>Passing a callback as the first parameter without a property name will watch all properties on the object. The second parameter to the callback is the name of the property being set.</p>
 
@@ -30,9 +64,9 @@
 	foo.z = 7;
 </pre>
 
-<h3>callback(v,k,t,d,p)</h3>
+<h3>parameters: v, k, t, d, p</h3>
 
-The function supplied to bindTo will be called with the following parameters when the value changes.
+The callback will be invoked with the following parameters when there are updates to the value(s) in question.
 
 <pre>
 	<b>v</b>alue    - the new value being set
@@ -41,6 +75,20 @@ The function supplied to bindTo will be called with the following parameters whe
 	<b>d</b>elete   - true if the property is being deleted, false otherwise.
 	<b>p</b>revious - the previous value of the property
 </pre>
+
+<h3>lifecycle</h3>
+
+<p>The callback will be invoked once when the initial binding happens, and then again whenever the property or properties in question are <b>changed</b>. Setting the property to the same value multiple times will <b>not</b> invoke the callback more than once.</p>
+
+<p>Unless one of the options: <code>delay</code>, <code>wait</code>, <code>throttle</code>, <code>idle</code>, or <code>frame</code> are supplied, the callback will execute <b>before</b> the property is set on the target object.
+
+<p>If these options are <b>not</b> set, the following statement is true of the parameters when the callback is invoked <code>t[k] === p</code>.</p>
+
+<p>If one of the options <code>wait</code>, <code>throttle</code>, <code>idle</code>, or <code>frame</code> <b>is</b> set, the following statement is true of the parameters when the callback is invoked <code>t[k] === v</code>.</p>
+
+<p>If the options <code>delay</code> <b>is</b> set, the <code>v</code> and <code>p</code> parameters will represent the "next" and "previous" values of the property at the time the delay way <b>started</b>. <code>t[k]</code> will still represent the current value.</p>
+
+<p>Once the debind callback (return value of [object].bindTo()) is invoked, the callbacks above will no longer be executed, excluding any timeouts already scheduled.</p>
 
 <h3>bindTo options</h3>
 
@@ -64,7 +112,7 @@ The function supplied to bindTo will be called with the following parameters whe
 
 <h4>wait</h4>
 
-<p>Wait for an oft-changing value to "settle" before running the callback. If the changes, then stops changing for at least X milliseconds, the callback will run once.</p> 
+<p>Wait for an oft-changing value to "settle" before running the callback. If the changes, then stops changing for at least X milliseconds, the callback will run once.</p>
 
 <h4>idle</h4>
 
@@ -76,8 +124,18 @@ The function supplied to bindTo will be called with the following parameters whe
 
 <h4>removeWith</h4>
 
-<p>Rather than executing the callback immediately, defer to requestAnimationFrame().</p>
+<p>Pass a View object as the value of this key to automatically remove the binding when the View is cleaned up.</p>
 
 <h4>children</h4>
 
-<p>Run the callback both when the property is written or when ANY the child object's proprties change. 5 parameters will be supplied to the callback in addition to the original <code>v,k,t,d,p</code> to represent changes to the child object.</p>
+<p>Run the callback both when the property is written or when ANY of the child object's proprties change.</p>
+
+<p>5 parameters will be supplied to the callback in addition to the original <code>v,k,t,d,p</code> to represent changes to the child object.</p>
+
+<h3>wrapping methods</h3>
+
+<h4>[object].___before() & [object].___after()</h4>
+
+
+
+

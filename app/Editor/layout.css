@@ -2,14 +2,14 @@
 	overflow: hidden !important;
 }
 
-.status {
+.editor-window .status {
 	padding: 0.25em;
 	user-select: none;
 	justify-content: flex-end;
 	font-size: 0.75em;
 }
 
-.row.tabs, .status {
+.editor-window .row.tabs, .status {
 	justify-content: flex-start;
 	margin-bottom: 0em;
 }
@@ -18,14 +18,13 @@
 	margin-top: auto;
 }
 
-.row.status, .editors {
+.editor-window .row.status, .editors {
 	margin-top: -1px !important;
 	margin-bottom: 0em !important;
-	border: 1px solid #555;
 	box-sizing: border-box;
 }
 
-.status button {
+.editor-window .status button {
 	font-weight: bold;
 	border: none;
 	padding: 0.5em;

@@ -15,4 +15,12 @@ export class ModelScroller extends InfiniteScroller
 
 		return JSON.stringify(x);
 	}
+
+	focus(event)
+	{
+		if(event.target.matches('[data-property="id"],[data-property="class"]'))
+		{
+			event.target.blur();
+		}
+	}
 }

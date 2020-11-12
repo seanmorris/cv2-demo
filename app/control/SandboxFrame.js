@@ -9,55 +9,80 @@ export class SandboxFrame extends View
 
 		this.template = require('./sandboxFrame');
 
-		this.args.source = 'Hello, world!';
+		this.args.source = '';
 
 		this.args.csp = this.args.csp || {
-
-			'default-src': [
-				`${location.origin}/curvature.js`
+			'script-src': [
+				'https://unpkg.com/@babel/standalone@7.12.6/babel.js'
 				, `${location.origin}/vendor.js`
+				, `${location.origin}/curvature.js`
 				, `'unsafe-inline'`
+				, `'unsafe-eval'`
 			]
-
 			, 'connect-src': [
-				`https://api.dictionaryapi.dev`
 				, `ws://${location.hostname}:9485`
+				, 'http://unpkg.com'
+				, 'https://unpkg.com'
 			]
 		};
+
+		this.frameTag = false;
+		this.debind   = false;
+		this.cspTag   = false;
 	}
 
-	attached()
+	onAttached()
 	{
-		const cspTag = new Tag(`<meta http-equiv = "Content-Security-Policy">`);
+		this.cspTag   && this.cspTag.remove();
+		this.frameTag && this.frameTag.remove();
+		this.debind   && this.debind();
+
+		const cspTag = new Tag(`<meta http-equiv = "Content-Security-Policy"/>`);
 
 		this.args.csp.bindTo((v,k,t,d) => {
-			const content = Object.keys(this.args.csp).map(
-				v => `${v} ${this.args.csp[v].join(' ')}`
-			).join('; ');
+			const content = Object.keys(this.args.csp)
+				.map(v => `${v} ${this.args.csp[v].join(' ')}`)
+				.join('; ');
 
 			cspTag.attr({content});
 		});
 
-		this.tags.sandbox.contentDocument.head.append(cspTag.node);
+		const frameDoc = this.tags.sandbox.contentDocument;
+
+		frameDoc.head.append(cspTag.node);
 
 		const frameTag = new Tag(`<iframe sandbox = "allow-scripts"/>`);
 
-		this.args.bindTo('source', v => frameTag.attr({'srcdoc': v}));
+		this.debind = this.args.bindTo('source', v => frameTag.attr({'srcdoc': v}));
+
+		frameDoc.body.append(frameTag.node);
 
 		frameTag.style({
 			position: 'absolute'
+			, width:  '100%'
+			, height: '100%'
 			, top:    0
-			, bottom: 0
 			, left:   0
-			, right:  0
 			, border: 0
 		});
 
-		this.tags.sandbox.contentDocument.body.append(frameTag.node);
+		this.tags.sandbox.style({
+			position: 'absolute'
+			, width:  '100%'
+			, height: '100%'
+			, top:    0
+			, left:   0
+			, border: 0
+		});
+
+		this.frameTag = frameTag;
+		this.cspTag   = cspTag;
 	}
 
 	frameLoaded()
 	{
-
+		this.dispatchEvent(new CustomEvent('SandboxLoaded', {
+			detail: { view: this }
+		}));
 	}
 }

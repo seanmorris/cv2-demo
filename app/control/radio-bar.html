@@ -1,0 +1,15 @@
+<div class = "radio-bar" cv-ref = "root">
+
+	<div class = "button-track" cv-each = "buttons:button:b">
+		<div
+			data-label = "[[button.label]]"
+			cv-ref = "buttons::b"
+			cv-on  = "click(event, button, b)"
+		>[[button.label]]</div>
+	</div>
+
+	<div class = "highlight-track">
+		<div cv-ref = "highlight"></div>
+	</div>
+
+</div>

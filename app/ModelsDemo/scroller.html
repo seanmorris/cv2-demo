@@ -4,7 +4,8 @@
 
 		<div cv-each = "row:val:key">
 			<label data-property = "[[key]]" title = "[[key]]">
-				[[key]]: <input cv-bind = "val">
+				<div>[[key]]:</div>
+				<input cv-bind = "val" cv-on = "focus($event)" data-property = "[[key]]" />
 			</label>
 		</div>
 

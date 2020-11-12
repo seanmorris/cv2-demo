@@ -1,0 +1,14 @@
+.row.keyboard {
+	justify-content: flex-start;
+	align-items: flex-end;
+	flex-wrap: wrap;
+}
+
+.row.keyboard > * {
+	margin-bottom: 1em;
+}
+
+.row.keyboard > *:not(:last-child) {
+	margin-right: 1em;
+} 
+

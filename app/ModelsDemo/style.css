@@ -367,13 +367,13 @@ label.buttons {
 	border-right: 1px solid #999
 }
 
-.database-editor .table-row [data-property="id"] {
+.database-editor .table-row label[data-property="id"] {
 	flex: 0 0 6em;
 	order: -2;
 	min-width: 3em;
 }
 
-.database-editor  .table-row [data-property="class"] {
+.database-editor  .table-row label[data-property="class"] {
 	flex: 0 0 8em;
 	order: -1;
 }
@@ -414,8 +414,8 @@ label.buttons {
 	color: #333;
 }
 
-.database-editor .scroller .table .table-row [data-property="id"] input,
-.database-editor .scroller .table .table-row [data-property="class"] input {
+.database-editor .scroller .table .table-row label[data-property="id"] input,
+.database-editor .scroller .table .table-row label[data-property="class"] input {
 	border: 0;
 	text-decoration: none;
 }

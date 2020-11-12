@@ -32,12 +32,13 @@
 	background-color: #444;
 }
 
-.status, .editors {
+.editor-window .status, .editors {
 	border: 1px solid #555;
 	position: relative;
 }
 
-.row.status {
+.editor-window .row.status {
+	border: 1px solid #555;
 	border-top: 1px solid #000;
 	background-color: #333;
 	color: white;
@@ -45,14 +46,14 @@
 	justify-content: flex-end;
 }
 
-.status button {
+.editor-window .status button {
 	color: #333;
 	font-weight: bold;
 	background-color: #FFF;
 	border: none;
 }
 
-.status button:active {
+.editor-window .status button:active {
 	background-color: #888;
 	color: #FFF;
 }

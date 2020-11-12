@@ -10,6 +10,20 @@ h1 {
 
 h2:first-child {
 	margin-top: 0;
+	border-left: 2px solid black;
+	padding-left: 0.3em;
+}
+
+h2 {
+	font-size: 1.75rem;
+}
+
+h3 {
+	font-size: 1.4rem;
+}
+
+h4 {
+	font-size: 1.3rem;
 }
 
 .navigation ul li {
@@ -55,9 +69,6 @@ html {
 
 pre, code {
 	font-family: 'Courier Prime', monospace;
-}
-
-.CodeMirror pre {
 }
 
 .highlight-bar {

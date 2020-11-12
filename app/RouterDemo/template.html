@@ -1,35 +1,3 @@
 <h2>routes</h2>
 
-<div class = "sample-editor [[expanded]]" cv-ref = "editor" data-orientation = "[[orientation]]" data-select = "[[multiselect]]">
-	<div class = "row">
-		<div class = "hint">
-			hold ctrl / ⌘ to select multiple tabs.
-			<div data-icon = "check"></div>
-		</div>
-	</div>
-	<div class = "row">
-		<div class = "radio-bar" cv-ref = "root">
-
-			<div class = "button-track" cv-each = "buttons:button:b">
-				<div cv-ref = "buttons::b" cv-on = "click(event, button, b)" data-label = "[[button.label]]">[[button.label]]</div>
-			</div>
-
-			<div class = "highlight-track">
-				<div cv-ref = "highlight"></div>
-			</div>
-
-		</div>
-
-		<div cv-on = "click:changeOrientation(event)" data-icon="orientation"></div>
-		<div cv-on = "click:expand(event)" data-icon="expand"></div>
-
-	</div>
-
-	<div class = "editor-main-field" cv-ref = "editorMain" cv-each = "files:file:" data-show-field = "[[showField]]">
-		<div data-field = "[[file.label]]">
-			<div class = "filename-label">[[file.filename]]</div>
-			<div class = "file-content">[[file.control]]</div>
-		</div>
-
-	</div>
-</div>
+[[editor]]

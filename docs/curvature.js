@@ -3739,12 +3739,6 @@ var Router = /*#__PURE__*/function () {
 
       var routes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
       this.routes = routes;
-      var route = location.pathname + location.search;
-
-      if (location.hash) {
-        route += location.hash;
-      }
-
       Object.assign(this.query, this.queryOver({}));
 
       var listen = function listen(event) {
@@ -3766,7 +3760,11 @@ var Router = /*#__PURE__*/function () {
           }
         }
 
-        _this2.match(location.pathname, listener);
+        if (location.origin !== 'null') {
+          _this2.match(location.pathname, listener);
+        } else {
+          _this2.match(_this2.nextPath, listener);
+        }
 
         for (var i in _this2.query) {
           delete _this2.query[i];
@@ -3777,7 +3775,13 @@ var Router = /*#__PURE__*/function () {
 
       window.addEventListener('popstate', listen);
       window.addEventListener('cvUrlChanged', listen);
-      this.go(route);
+      var route = location.origin !== 'null' ? location.pathname + location.search : false;
+
+      if (location.origin && location.hash) {
+        route += location.hash;
+      }
+
+      this.go(route !== false ? route : '/');
     }
   }, {
     key: "go",
@@ -3788,7 +3792,9 @@ var Router = /*#__PURE__*/function () {
         document.title = configTitle;
       }
 
-      if (silent === 2 && location.pathname !== path) {
+      if (location.origin === 'null') {
+        this.nextPath = path;
+      } else if (silent === 2 && location.pathname !== path) {
         history.replaceState({
           routedId: this.routeCount,
           prev: this.prevPath,
@@ -3840,6 +3846,7 @@ var Router = /*#__PURE__*/function () {
       var routes = this.routes || listener.routes || _Routes.Routes.dump();
 
       var query = new URLSearchParams(location.search);
+      console.log(path, routes);
 
       for (var i in this.query) {
         delete this.query[i];
@@ -3899,11 +3906,6 @@ var Router = /*#__PURE__*/function () {
         break;
       }
 
-      if (!forceRefresh && listener && current && result instanceof Object && current instanceof result && !(result instanceof Promise) && current.update(args)) {
-        listener.args.content = current;
-        return true;
-      }
-
       var eventStart = new CustomEvent('cvRouteStart', {
         cancelable: true,
         detail: {
@@ -3919,37 +3921,67 @@ var Router = /*#__PURE__*/function () {
         return;
       }
 
-      if (selected in routes && routes[selected] instanceof Object && routes[selected].isView && routes[selected].isView()) {
-        result = new routes[selected](args);
+      console.log(routes[selected]); // if(!forceRefresh
+      // 	&& listener
+      // 	&& current
+      // 	&& (result instanceof Object)
+      // 	&& (current instanceof result)
+      // 	&& !(result instanceof Promise)
+      // 	&& current.update(args)
+      // ) {
+      // 	listener.args.content = current;
+      // 	return true;
+      // }
 
-        if (listener) {
-          result.root = function () {
-            return listener;
-          };
+      try {
+        if (typeof routes[selected] === 'function') {
+          if (routes[selected].prototype instanceof _View.View) {
+            result = new routes[selected](args);
+          } else {
+            result = routes[selected](args);
+          }
+        } else {
+          result = routes[selected];
         }
-      } else if (routes[selected] instanceof Function) {
-        result = new Promise(function (accept) {
-          return accept(routes[selected](args));
-        });
-      } else if (routes[selected] instanceof Object) {
-        result = new Promise(function (accept) {
-          return accept(new routes[selected](args));
-        });
-      } else if (typeof routes[selected] == 'string') {
-        result = routes[selected];
+
+        if (result instanceof Promise) {
+          return result.then(function (realResult) {
+            console.log(realResult);
+
+            _this3.update(listener, path, realResult, routes, selected, args, forceRefresh);
+          })["catch"](function (error) {
+            document.dispatchEvent(new CustomEvent('cvRouteError', {
+              detail: {
+                error: error,
+                path: path,
+                prev: prev,
+                view: listener,
+                routes: routes,
+                selected: selected
+              }
+            }));
+
+            _this3.update(listener, path, window['devMode'] ? String(error) : 'Error: 500', routes, selected, args, forceRefresh);
+
+            throw error;
+          });
+        } else {
+          return this.update(listener, path, result, routes, selected, args, forceRefresh);
+        }
+      } catch (error) {
+        document.dispatchEvent(new CustomEvent('cvRouteError', {
+          detail: {
+            error: error,
+            path: path,
+            prev: prev,
+            view: listener,
+            routes: routes,
+            selected: selected
+          }
+        }));
+        this.update(listener, path, window['devMode'] ? String(error) : 'Error: 500', routes, selected, args, forceRefresh);
+        throw error;
       }
-
-      if (!(result instanceof Promise)) {
-        result = Promise.resolve(result);
-      }
-
-      return result.then(function (result) {
-        _this3.update(listener, path, result, routes, selected, args, forceRefresh);
-      })["catch"](function (error) {
-        console.error(error);
-
-        _this3.update(listener, path, window['devMode'] ? String(error) : 'Error: 500', routes, selected, args, forceRefresh);
-      });
     }
   }, {
     key: "update",
@@ -4570,6 +4602,14 @@ var _Bag = require("./Bag");
 
 var _RuleSet = require("./RuleSet");
 
+var _Mixin = require("./Mixin");
+
+var _PromiseMixin = require("../mixin/PromiseMixin");
+
+var _EventTargetMixin = require("../mixin/EventTargetMixin");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -4598,12 +4638,30 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
 var dontParse = Symbol('dontParse');
 var expandBind = Symbol('expandBind');
 var uuid = Symbol('uuid');
 var moveIndex = 0;
 
-var View = /*#__PURE__*/function () {
+var View = /*#__PURE__*/function (_Mixin$with) {
+  _inherits(View, _Mixin$with);
+
+  var _super = _createSuper(View);
+
   _createClass(View, [{
     key: "_id",
     get: function get() {
@@ -4621,91 +4679,92 @@ var View = /*#__PURE__*/function () {
   }]);
 
   function View() {
-    var _this = this;
+    var _this;
 
     var args = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     var mainView = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
     _classCallCheck(this, View);
 
-    Object.defineProperty(this, 'args', {
+    _this = _super.call(this);
+    Object.defineProperty(_assertThisInitialized(_this), 'args', {
       value: _Bindable.Bindable.make(args)
     });
-    Object.defineProperty(this, uuid, {
-      value: this.uuid()
+    Object.defineProperty(_assertThisInitialized(_this), uuid, {
+      value: _this.uuid()
     });
-    Object.defineProperty(this, 'attach', {
+    Object.defineProperty(_assertThisInitialized(_this), 'attach', {
       value: new _Bag.Bag(function (i, s, a) {})
     });
-    Object.defineProperty(this, 'detach', {
+    Object.defineProperty(_assertThisInitialized(_this), 'detach', {
       value: new _Bag.Bag(function (i, s, a) {})
     });
-    Object.defineProperty(this, '_onRemove', {
+    Object.defineProperty(_assertThisInitialized(_this), '_onRemove', {
       value: new _Bag.Bag(function (i, s, a) {})
     });
-    Object.defineProperty(this, 'cleanup', {
+    Object.defineProperty(_assertThisInitialized(_this), 'cleanup', {
       value: []
     });
-    Object.defineProperty(this, 'parent', {
+    Object.defineProperty(_assertThisInitialized(_this), 'parent', {
       value: mainView
     });
-    Object.defineProperty(this, 'views', {
+    Object.defineProperty(_assertThisInitialized(_this), 'views', {
       value: new Map()
     });
-    Object.defineProperty(this, 'viewLists', {
+    Object.defineProperty(_assertThisInitialized(_this), 'viewLists', {
       value: new Map()
     });
-    Object.defineProperty(this, 'withViews', {
+    Object.defineProperty(_assertThisInitialized(_this), 'withViews', {
       value: new Map()
     });
-    Object.defineProperty(this, 'tags', {
+    Object.defineProperty(_assertThisInitialized(_this), 'tags', {
       value: _Bindable.Bindable.make({})
     });
-    Object.defineProperty(this, 'nodes', {
+    Object.defineProperty(_assertThisInitialized(_this), 'nodes', {
       value: _Bindable.Bindable.make([])
     });
-    Object.defineProperty(this, 'intervals', {
+    Object.defineProperty(_assertThisInitialized(_this), 'intervals', {
       value: []
     });
-    Object.defineProperty(this, 'timeouts', {
+    Object.defineProperty(_assertThisInitialized(_this), 'timeouts', {
       value: []
     });
-    Object.defineProperty(this, 'frames', {
+    Object.defineProperty(_assertThisInitialized(_this), 'frames', {
       value: []
     });
-    Object.defineProperty(this, 'ruleSet', {
+    Object.defineProperty(_assertThisInitialized(_this), 'ruleSet', {
       value: new _RuleSet.RuleSet()
     });
-    Object.defineProperty(this, 'preRuleSet', {
+    Object.defineProperty(_assertThisInitialized(_this), 'preRuleSet', {
       value: new _RuleSet.RuleSet()
     });
-    Object.defineProperty(this, 'subBindings', {
+    Object.defineProperty(_assertThisInitialized(_this), 'subBindings', {
       value: {}
     });
-    Object.defineProperty(this, 'templates', {
+    Object.defineProperty(_assertThisInitialized(_this), 'templates', {
       value: {}
     });
-    Object.defineProperty(this, 'eventCleanup', {
+    Object.defineProperty(_assertThisInitialized(_this), 'eventCleanup', {
       value: []
     });
-    Object.defineProperty(this, 'interpolateRegex', {
+    Object.defineProperty(_assertThisInitialized(_this), 'interpolateRegex', {
       value: /(\[\[((?:\$+)?[\w\.\|-]+)\]\])/g
     });
-    Object.defineProperty(this, 'rendered', {
+    Object.defineProperty(_assertThisInitialized(_this), 'rendered', {
       value: new Promise(function (accept, reject) {
-        return Object.defineProperty(_this, 'renderComplete', {
+        return Object.defineProperty(_assertThisInitialized(_this), 'renderComplete', {
           value: accept
         });
       })
     });
-    this.template = "";
-    this.firstNode = null;
-    this.lastNode = null;
-    this.viewList = null;
-    this.mainView = null;
-    this.preserve = false;
-    this.removed = false;
-    return _Bindable.Bindable.make(this);
+    _this.template = "";
+    _this.firstNode = null;
+    _this.lastNode = null;
+    _this.viewList = null;
+    _this.mainView = null;
+    _this.preserve = false;
+    _this.removed = false;
+    return _possibleConstructorReturn(_this, _Bindable.Bindable.make(_assertThisInitialized(_this)));
   }
 
   _createClass(View, [{
@@ -4906,7 +4965,8 @@ var View = /*#__PURE__*/function () {
   }, {
     key: "render",
     value: function render() {
-      var _this$nodes;
+      var _this$nodes,
+          _this4 = this;
 
       var parentNode = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
       var insertPoint = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
@@ -4923,6 +4983,7 @@ var View = /*#__PURE__*/function () {
         return this.reRender(parentNode, insertPoint);
       }
 
+      this.dispatchEvent(new CustomEvent('render'));
       var templateParsed = this.template instanceof DocumentFragment ? this.template.cloneNode(true) : View.templates.has(this.template);
       var subDoc = templateParsed ? this.template instanceof DocumentFragment ? templateParsed : View.templates.get(this.template).cloneNode(true) : document.createRange().createContextualFragment(this.template);
 
@@ -4943,6 +5004,13 @@ var View = /*#__PURE__*/function () {
       }
 
       (_this$nodes = this.nodes).push.apply(_this$nodes, [this.firstNode].concat(_toConsumableArray(Array.from(subDoc.childNodes)), [this.lastNode]));
+
+      this.postRender(parentNode);
+      this.dispatchEvent(new CustomEvent('rendered'));
+
+      if (!this.dispatchAttach()) {
+        return;
+      }
 
       if (parentNode) {
         var rootNode = parentNode.getRootNode();
@@ -4967,43 +5035,75 @@ var View = /*#__PURE__*/function () {
 
         if (toRoot) {
           this.attached(rootNode, parentNode);
-          var attach = this.attach.items();
+          this.dispatchAttached(rootNode, parentNode);
+        } else {
+          parentNode.addEventListener('cvDomAttached', function () {
+            _this4.attached(rootNode, parentNode);
 
-          for (var _i6 in attach) {
-            attach[_i6](rootNode, parentNode);
-          }
-
-          this.nodes.filter(function (n) {
-            return n.nodeType !== Node.COMMENT_NODE;
-          }).map(function (child) {
-            if (!child.matches) {
-              return;
-            }
-
-            _Dom.Dom.mapTags(child, false, function (tag, walker) {
-              if (!tag.matches) {
-                return;
-              }
-
-              tag.dispatchEvent(new Event('cvDomAttached', {
-                target: tag
-              }));
-            });
-
-            child.dispatchEvent(new Event('cvDomAttached', {
-              target: child
-            }));
+            _this4.dispatchAttached(rootNode, parentNode);
+          }, {
+            once: true
           });
         }
       }
 
       this.renderComplete(this.nodes);
-      this.postRender(parentNode);
       return this.nodes;
+    }
+  }, {
+    key: "dispatchAttach",
+    value: function dispatchAttach() {
+      return this.dispatchEvent(new CustomEvent('attach', {
+        cancelable: true,
+        target: this
+      }));
+    }
+  }, {
+    key: "dispatchAttached",
+    value: function dispatchAttached(rootNode, parentNode) {
+      this.dispatchEvent(new CustomEvent('attached', {
+        target: this
+      }));
+      var attach = this.attach.items();
+
+      for (var _i6 in attach) {
+        attach[_i6](rootNode, parentNode);
+      }
+
+      this.nodes.filter(function (n) {
+        return n.nodeType !== Node.COMMENT_NODE;
+      }).map(function (child) {
+        if (!child.matches) {
+          return;
+        }
+
+        _Dom.Dom.mapTags(child, false, function (tag, walker) {
+          if (!tag.matches) {
+            return;
+          }
+
+          tag.dispatchEvent(new Event('cvDomAttached', {
+            target: tag
+          }));
+        });
+
+        child.dispatchEvent(new Event('cvDomAttached', {
+          target: child
+        }));
+      });
     }
   }, {
     key: "reRender",
     value: function reRender(parentNode, insertPoint) {
+      var willReRender = this.dispatchEvent(new CustomEvent('reRender'), {
+        cancelable: true,
+        target: this
+      });
+
+      if (!willReRender) {
+        return;
+      }
+
       var subDoc = new DocumentFragment();
 
       if (this.firstNode.isConnected) {
@@ -5014,8 +5114,7 @@ var View = /*#__PURE__*/function () {
         }
       }
 
-      subDoc.append.apply(subDoc, _toConsumableArray(this.nodes)); // subDoc.appendChild(this.firstNode);
-      // subDoc.appendChild(this.lastNode);
+      subDoc.append.apply(subDoc, _toConsumableArray(this.nodes));
 
       if (parentNode) {
         if (insertPoint) {
@@ -5027,27 +5126,15 @@ var View = /*#__PURE__*/function () {
         }
 
         parentNode.insertBefore(subDoc, this.lastNode);
+        this.dispatchEvent(new CustomEvent('reRendered'), {
+          cancelable: true,
+          target: this
+        });
         var rootNode = parentNode.getRootNode();
 
         if (rootNode.isConnected) {
-          this.nodes.filter(function (n) {
-            return n.nodeType === Node.ELEMENT_NODE;
-          }).map(function (child) {
-            child.dispatchEvent(new Event('cvDomAttached', {
-              target: child
-            }));
-
-            _Dom.Dom.mapTags(child, false, function (tag, walker) {
-              child.dispatchEvent(new Event('cvDomAttached', {
-                target: tag
-              }));
-            });
-          });
-          var attach = this.attach.items();
-
-          for (var _i8 in attach) {
-            attach[_i8](rootNode, parentNode);
-          }
+          this.attached(rootNode, parentNode);
+          this.dispatchAttached(rootNode, parentNode);
         }
       }
 
@@ -5056,7 +5143,7 @@ var View = /*#__PURE__*/function () {
   }, {
     key: "mapTags",
     value: function mapTags(subDoc) {
-      var _this4 = this;
+      var _this5 = this;
 
       _Dom.Dom.mapTags(subDoc, false, function (tag, walker) {
         if (tag[dontParse]) {
@@ -5064,22 +5151,22 @@ var View = /*#__PURE__*/function () {
         }
 
         if (tag.matches) {
-          tag = _this4.mapInterpolatableTag(tag);
-          tag = tag.matches('[cv-template]') && _this4.mapTemplateTag(tag) || tag;
-          tag = tag.matches('[cv-slot]') && _this4.mapSlotTag(tag) || tag;
-          tag = tag.matches('[cv-prerender]') && _this4.mapPrendererTag(tag) || tag;
-          tag = tag.matches('[cv-link]') && _this4.mapLinkTag(tag) || tag;
-          tag = tag.matches('[cv-attr]') && _this4.mapAttrTag(tag) || tag;
-          tag = tag.matches('[cv-expand]') && _this4.mapExpandableTag(tag) || tag;
-          tag = tag.matches('[cv-ref]') && _this4.mapRefTag(tag) || tag;
-          tag = tag.matches('[cv-on]') && _this4.mapOnTag(tag) || tag;
-          tag = tag.matches('[cv-each]') && _this4.mapEachTag(tag) || tag;
-          tag = tag.matches('[cv-bind]') && _this4.mapBindTag(tag) || tag;
-          tag = tag.matches('[cv-with]') && _this4.mapWithTag(tag) || tag;
-          tag = tag.matches('[cv-if]') && _this4.mapIfTag(tag) || tag;
-          tag = tag.matches('[cv-view]') && _this4.mapViewTag(tag) || tag;
+          tag = _this5.mapInterpolatableTag(tag);
+          tag = tag.matches('[cv-template]') && _this5.mapTemplateTag(tag) || tag;
+          tag = tag.matches('[cv-slot]') && _this5.mapSlotTag(tag) || tag;
+          tag = tag.matches('[cv-prerender]') && _this5.mapPrendererTag(tag) || tag;
+          tag = tag.matches('[cv-link]') && _this5.mapLinkTag(tag) || tag;
+          tag = tag.matches('[cv-attr]') && _this5.mapAttrTag(tag) || tag;
+          tag = tag.matches('[cv-expand]') && _this5.mapExpandableTag(tag) || tag;
+          tag = tag.matches('[cv-ref]') && _this5.mapRefTag(tag) || tag;
+          tag = tag.matches('[cv-on]') && _this5.mapOnTag(tag) || tag;
+          tag = tag.matches('[cv-each]') && _this5.mapEachTag(tag) || tag;
+          tag = tag.matches('[cv-bind]') && _this5.mapBindTag(tag) || tag;
+          tag = tag.matches('[cv-with]') && _this5.mapWithTag(tag) || tag;
+          tag = tag.matches('[cv-if]') && _this5.mapIfTag(tag) || tag;
+          tag = tag.matches('[cv-view]') && _this5.mapViewTag(tag) || tag;
         } else {
-          tag = _this4.mapInterpolatableTag(tag);
+          tag = _this5.mapInterpolatableTag(tag);
         }
 
         if (tag !== walker.currentNode) {
@@ -5162,16 +5249,16 @@ var View = /*#__PURE__*/function () {
 
         tag.removeAttribute('cv-expand');
 
-        var _loop = function _loop(_i9) {
-          if (_i9 === 'name' || _i9 === 'type') {
+        var _loop = function _loop(_i8) {
+          if (_i8 === 'name' || _i8 === 'type') {
             return "continue";
           }
 
-          var debind = expandArg.bindTo(_i9, function (tag, i) {
+          var debind = expandArg.bindTo(_i8, function (tag, i) {
             return function (v) {
               tag.setAttribute(i, v);
             };
-          }(tag, _i9));
+          }(tag, _i8));
           bindingView.onRemove(function () {
             debind();
 
@@ -5181,8 +5268,8 @@ var View = /*#__PURE__*/function () {
           });
         };
 
-        for (var _i9 in expandArg) {
-          var _ret = _loop(_i9);
+        for (var _i8 in expandArg) {
+          var _ret = _loop(_i8);
 
           if (_ret === "continue") continue;
         }
@@ -5244,15 +5331,15 @@ var View = /*#__PURE__*/function () {
       return function (bindingView) {
         var tag = sourceTag.cloneNode(true);
 
-        var _loop2 = function _loop2(_i10) {
-          var bindProperty = attrs[_i10][1] || attrs[_i10][0];
+        var _loop2 = function _loop2(_i9) {
+          var bindProperty = attrs[_i9][1] || attrs[_i9][0];
 
           var _Bindable$resolve3 = _Bindable.Bindable.resolve(bindingView.args, bindProperty, true),
               _Bindable$resolve4 = _slicedToArray(_Bindable$resolve3, 2),
               proxy = _Bindable$resolve4[0],
               property = _Bindable$resolve4[1];
 
-          var attrib = attrs[_i10][0];
+          var attrib = attrs[_i9][0];
           bindingView.onRemove(proxy.bindTo(property, function (v, k, t, d) {
             if (d || v === undefined) {
               tag.removeAttribute(attrib, v);
@@ -5268,8 +5355,8 @@ var View = /*#__PURE__*/function () {
           }));
         };
 
-        for (var _i10 in attrs) {
-          _loop2(_i10);
+        for (var _i9 in attrs) {
+          _loop2(_i9);
         }
 
         return tag;
@@ -5278,7 +5365,7 @@ var View = /*#__PURE__*/function () {
   }, {
     key: "mapInterpolatableTag",
     value: function mapInterpolatableTag(tag) {
-      var _this5 = this;
+      var _this6 = this;
 
       var regex = this.interpolateRegex;
 
@@ -5300,7 +5387,7 @@ var View = /*#__PURE__*/function () {
           var transformer = false;
 
           if (propertySplit.length > 1) {
-            transformer = _this5.stringTransformer(propertySplit.slice(1));
+            transformer = _this6.stringTransformer(propertySplit.slice(1));
             bindProperty = propertySplit[0];
           }
 
@@ -5335,11 +5422,11 @@ var View = /*#__PURE__*/function () {
           }
 
           dynamicNode[dontParse] = true;
-          var proxy = _this5.args;
+          var proxy = _this6.args;
           var property = bindProperty;
 
           if (bindProperty.match(/\./)) {
-            var _Bindable$resolve5 = _Bindable.Bindable.resolve(_this5.args, bindProperty, true);
+            var _Bindable$resolve5 = _Bindable.Bindable.resolve(_this6.args, bindProperty, true);
 
             var _Bindable$resolve6 = _slicedToArray(_Bindable$resolve5, 2);
 
@@ -5359,16 +5446,23 @@ var View = /*#__PURE__*/function () {
 
             if (unsafeView && !(v instanceof View)) {
               var unsafeTemplate = v;
-              v = new View(_this5.args, _this5);
+              v = new View(_this6.args, _this6);
               v.template = unsafeTemplate;
+            }
+
+            if (transformer) {
+              v = transformer(v);
             }
 
             if (v instanceof View) {
               var onAttach = function onAttach(parentNode) {
-                v.attached(parentNode);
+                if (v.dispatchAttach()) {
+                  v.attached(parentNode);
+                  v.dispatchAttached();
+                }
               };
 
-              _this5.attach.add(onAttach);
+              _this6.attach.add(onAttach);
 
               v.render(tag.parentNode, dynamicNode);
 
@@ -5378,43 +5472,41 @@ var View = /*#__PURE__*/function () {
                 }
               };
 
-              _this5.onRemove(cleanup);
+              _this6.onRemove(cleanup);
 
               v.onRemove(function () {
-                _this5.attach.remove(onAttach);
+                _this6.attach.remove(onAttach);
 
-                _this5._onRemove.remove(cleanup);
+                _this6._onRemove.remove(cleanup);
+              });
+            } else if (v instanceof Node) {
+              tag.parentNode.insertBefore(v, dynamicNode);
+
+              _this6.onRemove(function () {
+                return v.remove();
+              });
+            } else if (v instanceof _Tag.Tag) {
+              tag.parentNode.insertBefore(v.node, dynamicNode);
+
+              _this6.onRemove(function () {
+                return v.remove();
               });
             } else {
-              if (transformer) {
-                v = transformer(v);
+              if (v instanceof Object && v.__toString instanceof Function) {
+                v = v.__toString();
               }
 
-              if (v instanceof Node) {
-                tag.parentNode.insertBefore(v, tag);
+              if (unsafeHtml) {
+                dynamicNode.innerHTML = v;
               } else {
-                if (v instanceof Object && v.__toString instanceof Function) {
-                  v = v.__toString();
-                }
-
-                if (unsafeHtml) {
-                  dynamicNode.innerHTML = v;
-                } else {
-                  dynamicNode.nodeValue = v;
-                }
+                dynamicNode.nodeValue = v;
               }
-
-              dynamicNode[dontParse] = true;
             }
+
+            dynamicNode[dontParse] = true;
           });
 
-          _this5.onRemove(function () {
-            debind();
-
-            if (!proxy.isBound()) {
-              _Bindable.Bindable.clearBindings(proxy);
-            }
-          });
+          _this6.onRemove(debind);
         };
 
         while (match = regex.exec(original)) {
@@ -5431,17 +5523,15 @@ var View = /*#__PURE__*/function () {
       }
 
       if (tag.nodeType === Node.ELEMENT_NODE) {
-        var _loop4 = function _loop4(_i11) {
-          if (!_this5.interpolatable(tag.attributes[_i11].value)) {
-            // console.log('!!', tag.attributes[i].value);
+        var _loop4 = function _loop4(_i10) {
+          if (!_this6.interpolatable(tag.attributes[_i10].value)) {
             return "continue";
-          } // console.log(tag.attributes[i].value);
-
+          }
 
           var header = 0;
           var match = void 0;
-          var original = tag.attributes[_i11].value;
-          var attribute = tag.attributes[_i11];
+          var original = tag.attributes[_i10].value;
+          var attribute = tag.attributes[_i10];
           var bindProperties = {};
           var segments = [];
 
@@ -5460,19 +5550,19 @@ var View = /*#__PURE__*/function () {
           segments.push(original.substring(header));
 
           var _loop5 = function _loop5(j) {
-            var proxy = _this5.args;
+            var proxy = _this6.args;
             var property = j;
             var propertySplit = j.split('|');
             var transformer = false;
             var longProperty = j;
 
             if (propertySplit.length > 1) {
-              transformer = _this5.stringTransformer(propertySplit.slice(1));
+              transformer = _this6.stringTransformer(propertySplit.slice(1));
               property = propertySplit[0];
             }
 
             if (property.match(/\./)) {
-              var _Bindable$resolve7 = _Bindable.Bindable.resolve(_this5.args, property, true);
+              var _Bindable$resolve7 = _Bindable.Bindable.resolve(_this6.args, property, true);
 
               var _Bindable$resolve8 = _slicedToArray(_Bindable$resolve7, 2);
 
@@ -5493,14 +5583,14 @@ var View = /*#__PURE__*/function () {
             var bindProperty = j;
             var matchingSegments = bindProperties[longProperty];
 
-            _this5.onRemove(proxy.bindTo(property, function (v, k, t, d) {
+            _this6.onRemove(proxy.bindTo(property, function (v, k, t, d) {
               if (transformer) {
                 v = transformer(v);
               }
 
-              for (var _i12 in bindProperties) {
+              for (var _i11 in bindProperties) {
                 for (var _j in bindProperties[longProperty]) {
-                  segments[bindProperties[longProperty][_j]] = t[_i12];
+                  segments[bindProperties[longProperty][_j]] = t[_i11];
 
                   if (k === property) {
                     segments[bindProperties[longProperty][_j]] = v;
@@ -5511,7 +5601,7 @@ var View = /*#__PURE__*/function () {
               tag.setAttribute(attribute.name, segments.join(''));
             }));
 
-            _this5.onRemove(function () {
+            _this6.onRemove(function () {
               if (!proxy.isBound()) {
                 _Bindable.Bindable.clearBindings(proxy);
               }
@@ -5523,8 +5613,8 @@ var View = /*#__PURE__*/function () {
           }
         };
 
-        for (var _i11 = 0; _i11 < tag.attributes.length; _i11++) {
-          var _ret3 = _loop4(_i11);
+        for (var _i10 = 0; _i10 < tag.attributes.length; _i10++) {
+          var _ret3 = _loop4(_i10);
 
           if (_ret3 === "continue") continue;
         }
@@ -5604,7 +5694,7 @@ var View = /*#__PURE__*/function () {
   }, {
     key: "mapBindTag",
     value: function mapBindTag(tag) {
-      var _this6 = this;
+      var _this7 = this;
 
       var bindArg = tag.getAttribute('cv-bind');
       var proxy = this.args;
@@ -5624,8 +5714,8 @@ var View = /*#__PURE__*/function () {
       if (proxy !== this.args) {
         this.subBindings[bindArg] = this.subBindings[bindArg] || [];
         this.onRemove(this.args.bindTo(top, function () {
-          while (_this6.subBindings.length) {
-            _this6.subBindings.shift()();
+          while (_this7.subBindings.length) {
+            _this7.subBindings.shift()();
           }
         }));
       }
@@ -5638,7 +5728,7 @@ var View = /*#__PURE__*/function () {
       }
 
       var debind = proxy.bindTo(property, function (v, k, t, d, p) {
-        if (p instanceof View && p !== v) {
+        if ((p instanceof View || p instanceof Node || p instanceof _Tag.Tag) && p !== v) {
           p.remove();
         }
 
@@ -5676,7 +5766,7 @@ var View = /*#__PURE__*/function () {
                 }
               };
 
-              _this6.attach.add(onAttach);
+              _this7.attach.add(onAttach);
             } else {
               tag.value = v == null ? '' : v;
             }
@@ -5700,15 +5790,22 @@ var View = /*#__PURE__*/function () {
             }
 
             var _onAttach = function _onAttach(parentNode) {
-              v.attached(parentNode);
+              if (v.dispatchAttach()) {
+                v.attached(parentNode);
+                v.dispatchAttached();
+              }
             };
 
-            _this6.attach.add(_onAttach);
+            _this7.attach.add(_onAttach);
 
             v.render(tag);
             v.onRemove(function () {
-              return _this6.attach.remove(_onAttach);
+              return _this7.attach.remove(_onAttach);
             });
+          } else if (v instanceof Node) {
+            tag.insert(v);
+          } else if (v instanceof _Tag.Tag) {
+            tag.append(v.node);
           } else if (unsafeHtml) {
             if (tag.innerHTML !== v) {
               v = String(v);
@@ -5790,24 +5887,24 @@ var View = /*#__PURE__*/function () {
           if (!current || !files.length) {
             proxy[property] = files;
           } else {
-            var _loop6 = function _loop6(_i13) {
-              if (files[_i13] !== current[_i13]) {
-                files[_i13].toJSON = function () {
+            var _loop6 = function _loop6(_i12) {
+              if (files[_i12] !== current[_i12]) {
+                files[_i12].toJSON = function () {
                   return {
-                    name: file[_i13].name,
-                    size: file[_i13].size,
-                    type: file[_i13].type,
-                    date: file[_i13].lastModified
+                    name: file[_i12].name,
+                    size: file[_i12].size,
+                    type: file[_i12].type,
+                    date: file[_i12].lastModified
                   };
                 };
 
-                current[_i13] = files[_i13];
+                current[_i12] = files[_i12];
                 return "break";
               }
             };
 
-            for (var _i13 in files) {
-              var _ret4 = _loop6(_i13);
+            for (var _i12 in files) {
+              var _ret4 = _loop6(_i12);
 
               if (_ret4 === "break") break;
             }
@@ -5858,7 +5955,7 @@ var View = /*#__PURE__*/function () {
   }, {
     key: "mapOnTag",
     value: function mapOnTag(tag) {
-      var _this7 = this;
+      var _this8 = this;
 
       var referents = String(tag.getAttribute('cv-on'));
       referents.split(';').map(function (a) {
@@ -5893,7 +5990,7 @@ var View = /*#__PURE__*/function () {
         }
 
         var eventMethod;
-        var parent = _this7;
+        var parent = _this8;
 
         while (parent) {
           if (typeof parent[callbackName] === 'function') {
@@ -5931,11 +6028,11 @@ var View = /*#__PURE__*/function () {
             } else if (arg === '$tag') {
               return tag;
             } else if (arg === '$parent') {
-              return _this7.parent;
+              return _this8.parent;
             } else if (arg === '$subview') {
-              return _this7;
-            } else if (arg in _this7.args) {
-              return _this7.args[arg];
+              return _this8;
+            } else if (arg in _this8.args) {
+              return _this8.args[arg];
             } else if (match = /^['"]([\w-]+?)["']$/.exec(arg)) {
               return match[1];
             }
@@ -5974,19 +6071,19 @@ var View = /*#__PURE__*/function () {
             break;
 
           case '_attach':
-            _this7.attach.add(eventListener);
+            _this8.attach.add(eventListener);
 
             break;
 
           case '_detach':
-            _this7.detach.add(eventListener);
+            _this8.detach.add(eventListener);
 
             break;
 
           default:
             tag.addEventListener(eventName, eventListener, eventOptions);
 
-            _this7.onRemove(function () {
+            _this8.onRemove(function () {
               tag.removeEventListener(eventName, eventListener, eventOptions);
             });
 
@@ -6062,7 +6159,7 @@ var View = /*#__PURE__*/function () {
   }, {
     key: "mapWithTag",
     value: function mapWithTag(tag) {
-      var _this8 = this;
+      var _this9 = this;
 
       var withAttr = tag.getAttribute('cv-with');
       var carryAttr = tag.getAttribute('cv-carry');
@@ -6086,17 +6183,17 @@ var View = /*#__PURE__*/function () {
       }
 
       var debind = this.args.bindTo(withAttr, function (v, k, t, d) {
-        if (_this8.withViews.has(tag)) {
-          _this8.withViews["delete"](tag);
+        if (_this9.withViews.has(tag)) {
+          _this9.withViews["delete"](tag);
         }
 
         while (tag.firstChild) {
           tag.removeChild(tag.firstChild);
         }
 
-        var view = new viewClass({}, _this8);
+        var view = new viewClass({}, _this9);
 
-        _this8.onRemove(function (view) {
+        _this9.onRemove(function (view) {
           return function () {
             view.remove();
           };
@@ -6104,32 +6201,32 @@ var View = /*#__PURE__*/function () {
 
         view.template = subTemplate;
 
-        var _loop7 = function _loop7(_i14) {
-          var debind = _this8.args.bindTo(carryProps[_i14], function (v, k) {
+        var _loop7 = function _loop7(_i13) {
+          var debind = _this9.args.bindTo(carryProps[_i13], function (v, k) {
             view.args[k] = v;
           });
 
           view.onRemove(debind);
 
-          _this8.onRemove(function () {
+          _this9.onRemove(function () {
             debind();
             view.remove();
           });
         };
 
-        for (var _i14 in carryProps) {
-          _loop7(_i14);
+        for (var _i13 in carryProps) {
+          _loop7(_i13);
         }
 
-        var _loop8 = function _loop8(_i15) {
-          var debind = v.bindTo(_i15, function (vv, kk) {
+        var _loop8 = function _loop8(_i14) {
+          var debind = v.bindTo(_i14, function (vv, kk) {
             view.args[kk] = vv;
           });
-          var debindUp = view.args.bindTo(_i15, function (vv, kk) {
+          var debindUp = view.args.bindTo(_i14, function (vv, kk) {
             v[kk] = vv;
           });
 
-          _this8.onRemove(function () {
+          _this9.onRemove(function () {
             debind();
 
             if (!v.isBound()) {
@@ -6148,16 +6245,16 @@ var View = /*#__PURE__*/function () {
           });
         };
 
-        for (var _i15 in v) {
-          _loop8(_i15);
+        for (var _i14 in v) {
+          _loop8(_i14);
         }
 
         view.render(tag);
 
-        _this8.withViews.set(tag, view);
+        _this9.withViews.set(tag, view);
       });
       this.onRemove(function () {
-        _this8.withViews["delete"](tag);
+        _this9.withViews["delete"](tag);
 
         debind();
       });
@@ -6166,7 +6263,7 @@ var View = /*#__PURE__*/function () {
   }, {
     key: "mapViewTag",
     value: function mapViewTag(tag) {
-      var _this9 = this;
+      var _this10 = this;
 
       var viewAttr = tag.getAttribute('cv-view');
       tag.removeAttribute('cv-view');
@@ -6190,9 +6287,9 @@ var View = /*#__PURE__*/function () {
         return function () {
           view.remove();
 
-          _this9.views["delete"](tag);
+          _this10.views["delete"](tag);
 
-          _this9.views["delete"](viewName);
+          _this10.views["delete"](viewName);
         };
       }(view));
       view.template = subTemplate;
@@ -6202,7 +6299,7 @@ var View = /*#__PURE__*/function () {
   }, {
     key: "mapEachTag",
     value: function mapEachTag(tag) {
-      var _this10 = this;
+      var _this11 = this;
 
       var eachAttr = tag.getAttribute('cv-each');
       var viewAttr = tag.getAttribute('cv-view');
@@ -6221,23 +6318,23 @@ var View = /*#__PURE__*/function () {
           keyProp = _eachAttr$split2[2];
 
       var debind = this.args.bindTo(eachProp, function (v, k, t, d, p) {
-        if (_this10.viewLists.has(tag)) {
-          _this10.viewLists.get(tag).remove();
+        if (_this11.viewLists.has(tag)) {
+          _this11.viewLists.get(tag).remove();
         }
 
-        var viewList = new _ViewList.ViewList(subTemplate, asProp, v, _this10, keyProp, viewClass);
+        var viewList = new _ViewList.ViewList(subTemplate, asProp, v, _this11, keyProp, viewClass);
 
         var viewListRemover = function viewListRemover() {
           return viewList.remove();
         };
 
-        _this10.onRemove(viewListRemover);
+        _this11.onRemove(viewListRemover);
 
         viewList.onRemove(function () {
-          return _this10._onRemove.remove(viewListRemover);
+          return _this11._onRemove.remove(viewListRemover);
         });
 
-        var debindA = _this10.args.bindTo(function (v, k, t, d) {
+        var debindA = _this11.args.bindTo(function (v, k, t, d) {
           if (k === '_id') {
             return;
           }
@@ -6255,25 +6352,25 @@ var View = /*#__PURE__*/function () {
           }
 
           if (d) {
-            delete _this10.args[k];
+            delete _this11.args[k];
           }
 
-          if (k in _this10.args) {
-            _this10.args[k] = v;
+          if (k in _this11.args) {
+            _this11.args[k] = v;
           }
         });
         viewList.onRemove(debindA);
         viewList.onRemove(debindB);
 
-        _this10.onRemove(debindA);
+        _this11.onRemove(debindA);
 
-        _this10.onRemove(debindB);
+        _this11.onRemove(debindB);
 
         while (tag.firstChild) {
           tag.removeChild(tag.firstChild);
         }
 
-        _this10.viewLists.set(tag, viewList);
+        _this11.viewLists.set(tag, viewList);
 
         viewList.render(tag);
       });
@@ -6517,7 +6614,7 @@ var View = /*#__PURE__*/function () {
   }, {
     key: "syncBind",
     value: function syncBind(subView) {
-      var _this11 = this;
+      var _this12 = this;
 
       var debindA = this.args.bindTo(function (v, k, t, d) {
         if (k === '_id') {
@@ -6556,16 +6653,16 @@ var View = /*#__PURE__*/function () {
           p.remove();
         }
 
-        if (k in _this11.args) {
-          _this11.args[k] = v;
+        if (k in _this12.args) {
+          _this12.args[k] = v;
         }
       });
       this.onRemove(debindA);
       this.onRemove(debindB);
       subView.onRemove(function () {
-        _this11._onRemove.remove(debindA);
+        _this12._onRemove.remove(debindA);
 
-        _this11._onRemove.remove(debindB);
+        _this12._onRemove.remove(debindB);
       });
     }
   }, {
@@ -6589,17 +6686,17 @@ var View = /*#__PURE__*/function () {
   }, {
     key: "remove",
     value: function remove() {
-      var _this12 = this;
+      var _this13 = this;
 
       var now = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
       var remover = function remover() {
-        for (var _i16 in _this12.nodes) {
-          _this12.nodes[_i16] && _this12.nodes[_i16].dispatchEvent(new Event('cvDomDetached'));
-          _this12.nodes[_i16] && _this12.nodes[_i16].remove();
+        for (var _i15 in _this13.nodes) {
+          _this13.nodes[_i15] && _this13.nodes[_i15].dispatchEvent(new Event('cvDomDetached'));
+          _this13.nodes[_i15] && _this13.nodes[_i15].remove();
         }
 
-        _this12.firstNode = _this12.lastNode = undefined;
+        _this13.firstNode = _this13.lastNode = undefined;
       };
 
       if (now) {
@@ -6652,9 +6749,9 @@ var View = /*#__PURE__*/function () {
 
       this.viewLists.clear();
 
-      for (var _i17 in this.timeouts) {
-        clearTimeout(this.timeouts[_i17].timeout);
-        delete this.timeouts[_i17];
+      for (var _i16 in this.timeouts) {
+        clearTimeout(this.timeouts[_i16].timeout);
+        delete this.timeouts[_i16];
       }
 
       for (var i in this.intervals) {
@@ -6672,18 +6769,18 @@ var View = /*#__PURE__*/function () {
   }, {
     key: "findTag",
     value: function findTag(selector) {
-      for (var _i18 in this.nodes) {
+      for (var _i17 in this.nodes) {
         var result = void 0;
 
-        if (!this.nodes[_i18].querySelector) {
+        if (!this.nodes[_i17].querySelector) {
           continue;
         }
 
-        if (this.nodes[_i18].matches(selector)) {
-          return new _Tag.Tag(this.nodes[_i18], this, undefined, undefined, this);
+        if (this.nodes[_i17].matches(selector)) {
+          return new _Tag.Tag(this.nodes[_i17], this, undefined, undefined, this);
         }
 
-        if (result = this.nodes[_i18].querySelector(selector)) {
+        if (result = this.nodes[_i17].querySelector(selector)) {
           return new _Tag.Tag(result, this, undefined, undefined, this);
         }
       }
@@ -6691,14 +6788,14 @@ var View = /*#__PURE__*/function () {
   }, {
     key: "findTags",
     value: function findTags(selector) {
-      var _this13 = this;
+      var _this14 = this;
 
       return this.nodes.filter(function (n) {
         return n.querySelectorAll;
       }).map(function (n) {
         return _toConsumableArray(n.querySelectorAll(selector));
       }).flat().map(function (n) {
-        return new _Tag.Tag(n, _this13, undefined, undefined, _this13);
+        return new _Tag.Tag(n, _this14, undefined, undefined, _this14);
       });
     }
   }, {
@@ -6718,11 +6815,11 @@ var View = /*#__PURE__*/function () {
   }, {
     key: "stringTransformer",
     value: function stringTransformer(methods) {
-      var _this14 = this;
+      var _this15 = this;
 
       return function (x) {
         for (var m in methods) {
-          var parent = _this14;
+          var parent = _this15;
           var method = methods[m];
 
           while (parent && !parent[method]) {
@@ -6769,7 +6866,7 @@ var View = /*#__PURE__*/function () {
   }, {
     key: "listen",
     value: function listen(node, eventName, callback, options) {
-      var _this15 = this;
+      var _this16 = this;
 
       if (typeof node === 'string') {
         options = callback;
@@ -6784,7 +6881,7 @@ var View = /*#__PURE__*/function () {
 
       if (Array.isArray(node)) {
         var removers = node.map(function (n) {
-          return _this15.listen(n, eventName, callback, options);
+          return _this16.listen(n, eventName, callback, options);
         });
         return function () {
           return removers.map(function (r) {
@@ -6822,7 +6919,7 @@ var View = /*#__PURE__*/function () {
   }]);
 
   return View;
-}();
+}(_Mixin.Mixin["with"](_EventTargetMixin.EventTargetMixin));
 
 exports.View = View;
 Object.defineProperty(View, 'templates', {
@@ -7125,8 +7222,7 @@ var ViewList = /*#__PURE__*/function () {
       }
 
       if (Array.isArray(this.args.value)) {
-        var localMin = minKey === 0 && (finalViews[1] !== undefined || finalViews.length <= 1) ? minKey : anteMinKey;
-        console.log(localMin);
+        var localMin = minKey === 0 && finalViews[1] !== undefined && finalViews.length > 1 || anteMinKey === Infinity ? minKey : anteMinKey;
 
         var renderRecurse = function renderRecurse() {
           var i = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
@@ -7751,10 +7847,10 @@ var Form = /*#__PURE__*/function (_View) {
 
     _this2.args.bindTo('classes', function (v) {
       _this2.args._classes = v.join(' ');
-    });
+    }); // this._onSubmit   = [];
+    // this._onRender   = [];
 
-    _this2._onSubmit = [];
-    _this2._onRender = [];
+
     _this2.action = '';
     _this2.template = "\n\t\t\t<form\n\t\t\t\tclass     = \"[[_classes]]\"\n\t\t\t\tmethod    = \"[[method]]\"\n\t\t\t\tenctype   = \"multipart/form-data\"\n\t\t\t\tcv-on     = \"submit:submit(event)\"\n\t\t\t\tcv-ref    = \"formTag:curvature/base/Tag\"\n\t\t\t\tcv-each   = \"fields:field\"\n\t\t\t\tcv-expand = \"attrs\"\n\t\t\t>\n\t\t\t\t[[field]]\n\t\t\t</form>\n\t\t";
     _this2.args.fields = Form.renderFields(skeleton, _assertThisInitialized(_this2), customFields);
@@ -7774,39 +7870,40 @@ var Form = /*#__PURE__*/function (_View) {
   }
 
   _createClass(Form, [{
-    key: "submitHandler",
-    value: function submitHandler(event) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-  }, {
     key: "submit",
     value: function submit(event) {
       this.args.valueString = JSON.stringify(this.args.value, null, 4);
 
-      for (var i in this._onSubmit) {
-        this._onSubmit[i](this, event);
-      }
+      if (!this.dispatchEvent(new CustomEvent('submit', {
+        details: {
+          view: this
+        }
+      }))) {
+        event.preventDefault();
+        event.stopPropagation();
+      } // for(let i in this._onSubmit)
+      // {
+      // 	this._onSubmit[i](this, event);
+      // }
+
     }
   }, {
     key: "buttonClick",
     value: function buttonClick(event) {// console.log(event);
-    }
-  }, {
-    key: "onSubmit",
-    value: function onSubmit(callback) {
-      this._onSubmit.push(callback);
-    }
-  }, {
-    key: "onRender",
-    value: function onRender(callback) {
-      if (this.nodes) {
-        callback(this);
-        return;
-      }
+    } // onSubmit(callback)
+    // {
+    // 	this._onSubmit.push(callback);
+    // }
+    // onRender(callback)
+    // {
+    // 	if(this.nodes)
+    // 	{
+    // 		callback(this);
+    // 		return;
+    // 	}
+    // 	this._onRender.push(callback);
+    // }
 
-      this._onRender.push(callback);
-    }
   }, {
     key: "formData",
     value: function formData() {
@@ -7888,14 +7985,14 @@ var Form = /*#__PURE__*/function (_View) {
     key: "hasChildren",
     value: function hasChildren() {
       return !!Object.keys(this.args.fields).length;
-    }
-  }, {
-    key: "postRender",
-    value: function postRender() {
-      for (var i in this._onRender) {
-        this._onRender[i](this);
-      }
-    }
+    } // postRender()
+    // {
+    // 	for(let i in this._onRender)
+    // 	{
+    // 		this._onRender[i](this);
+    // 	}
+    // }
+
   }], [{
     key: "renderFields",
     value: function renderFields(skeleton) {
@@ -8104,7 +8201,8 @@ var HiddenField = /*#__PURE__*/function (_Field) {
     values.type = 'hidden';
     _this = _super.call(this, values, form, parent, key);
     var attrs = _this.args.attrs || {};
-    _this.args.type = attrs.type = attrs.type || _this.args.type || 'hidden';
+    _this.args.type = attrs.type = 'hidden'; // this.args.type = attrs.type = attrs.type || this.args.type || 'hidden';
+
     _this.args.name = attrs.name = attrs.name || _this.args.name || key;
     _this.template = "\n\t\t\t<label\n\t\t\t\tfor       = \"".concat(_this.getName(), "\"\n\t\t\t\tdata-type = \"").concat(attrs.type, "\"\n\t\t\t\tstyle     = \"display:none\"\n\t\t\t\tcv-ref    = \"label:curvature/base/Tag\">\n\t\t\t\t<input\n\t\t\t\t\t\tname      = \"").concat(_this.getName(), "\"\n\t\t\t\t\t\ttype      = \"hidden\"\n\t\t\t\t\t\tcv-bind   = \"value\"\n\t\t\t\t\t\tcv-ref    = \"input:curvature/base/Tag\"\n\t\t\t\t\t\tcv-expand = \"attrs\"\n\t\t\t\t/>\n\t\t\t</label>\n\t\t");
     return _this;
@@ -8667,11 +8765,7 @@ var FormWrapper = /*#__PURE__*/function (_View) {
       var _this2 = this;
 
       this.args.form = form;
-      this.args.form.onSubmit(function (form, event) {
-        if (_this2.onSubmit(form, event) === false) {
-          return;
-        }
-
+      this.args.form.addEventListener('submit', function (event) {
         if (event) {
           event.preventDefault();
           event.stopPropagation();
@@ -8805,21 +8899,21 @@ var FormWrapper = /*#__PURE__*/function (_View) {
       for (var i in this._onLoad) {
         this._onLoad[i](this, form, model);
       }
-    }
-  }, {
-    key: "onSubmit",
-    value: function onSubmit(form, event) {
-      for (var i in this._onSubmit) {
-        this._onSubmit[i](this, event);
-      }
-    }
-  }, {
-    key: "postRender",
-    value: function postRender() {
-      for (var i in this._onRender) {
-        this._onRender[i](this.args.form);
-      }
-    }
+    } // onSubmit(form, event)
+    // {
+    // 	for(let i in this._onSubmit)
+    // 	{
+    // 		this._onSubmit[i](this, event);
+    // 	}
+    // }
+    // postRender()
+    // {
+    // 	for(let i in this._onRender)
+    // 	{
+    // 		this._onRender[i](this.args.form);
+    // 	}
+    // }
+
   }, {
     key: "customFields",
     value: function customFields() {
@@ -9103,10 +9197,14 @@ var View = /*#__PURE__*/function (_FieldSet) {
     _this.dropping = false;
 
     for (var i in _this.args.fields) {
-      _this.args._fields[i] = _this.wrapSubfield(_this.args.fields[i]);
+      _this.args._fields[Number(i) + 1] = _this.wrapSubfield(_this.args.fields[i]);
     }
 
     _this.args.fields[-1].disable();
+
+    _this.args._fields[0].addEventListener('attach', function (event) {
+      return event.preventDefault();
+    });
 
     _this.args.creating = '';
     _this.args.fieldType = '';
@@ -9196,6 +9294,7 @@ var View = /*#__PURE__*/function (_FieldSet) {
         newField.args.value["class"] = record[i]["class"] || '';
         newField.args.value.title = record[i].title || '';
         newField.args.value.key = this.args._fields.length;
+        console.log(this.args._fields);
 
         this.args._fields.push(newWrap);
 
@@ -9612,7 +9711,7 @@ var Keyboard = /*#__PURE__*/function () {
   _createClass(Keyboard, null, [{
     key: "get",
     value: function get() {
-      return this.instance = this.instance || new this();
+      return this.instance = this.instance || _Bindable.Bindable.make(new this());
     }
   }]);
 
@@ -9623,32 +9722,150 @@ var Keyboard = /*#__PURE__*/function () {
 
     this.maxDecay = 120;
     this.listening = true;
-    this.keys = _Bindable.Bindable.makeBindable({});
+    this.focusElement = false; // document.body;
+
+    this.whichs = _Bindable.Bindable.makeBindable({});
     this.codes = _Bindable.Bindable.makeBindable({});
+    this.keys = _Bindable.Bindable.makeBindable({});
+    this.pressedWhich = {};
+    this.pressedCode = {};
+    this.pressedKey = {};
+    this.releasedWhich = {};
+    this.releasedCode = {};
+    this.releasedKey = {};
+    this.keyRefs = {};
     document.addEventListener('keyup', function (event) {
-      _this.keys[event.key] = -1;
+      if (_this.focusElement && document.activeElement !== _this.focusElement) {
+        return;
+      }
+
+      event.preventDefault();
+      _this.releasedWhich[event.which] = Date.now();
+      _this.releasedCode[event.code] = Date.now();
+      _this.releasedKey[event.key] = Date.now();
+      _this.whichs[event.which] = -1;
       _this.codes[event.code] = -1;
+      _this.keys[event.key] = -1;
     });
     document.addEventListener('keydown', function (event) {
+      if (_this.focusElement && document.activeElement !== _this.focusElement) {
+        return;
+      }
+
+      event.preventDefault();
+
+      if (event.repeat) {
+        return;
+      }
+
+      _this.pressedWhich[event.which] = Date.now();
+      _this.pressedCode[event.code] = Date.now();
+      _this.pressedKey[event.key] = Date.now();
+
       if (_this.keys[event.key] > 0) {
         return;
       }
 
-      _this.keys[event.key] = 1;
+      _this.whichs[event.which] = 1;
       _this.codes[event.code] = 1;
+      _this.keys[event.key] = 1;
     });
-    window.addEventListener('blur', function (event) {
+
+    var windowBlur = function windowBlur(event) {
       for (var i in _this.keys) {
+        if (_this.keys[i] < 0) {
+          continue;
+        }
+
+        _this.releasedKey[i] = Date.now();
         _this.keys[i] = -1;
       }
 
       for (var _i in _this.codes) {
+        if (_this.codes[_i] < 0) {
+          continue;
+        }
+
+        _this.releasedCode[_i] = Date.now();
         _this.codes[_i] = -1;
       }
+
+      for (var _i2 in _this.whichs) {
+        if (_this.whichs[_i2] < 0) {
+          continue;
+        }
+
+        _this.releasedWhich[_i2] = Date.now();
+        _this.whichs[_i2] = -1;
+      }
+    };
+
+    window.addEventListener('blur', windowBlur);
+    window.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'visible') {
+        return;
+      }
+
+      windowBlur();
     });
   }
 
   _createClass(Keyboard, [{
+    key: "getKeyRef",
+    value: function getKeyRef(keyCode) {
+      var keyRef = this.keyRefs[keyCode] = this.keyRefs[keyCode] || _Bindable.Bindable.make({});
+
+      return keyRef;
+    }
+  }, {
+    key: "getKeyTime",
+    value: function getKeyTime(key) {
+      var released = this.releasedKey[key];
+      var pressed = this.pressedKey[key];
+
+      if (!pressed) {
+        return 0;
+      }
+
+      if (!released || released < pressed) {
+        return Date.now() - pressed;
+      }
+
+      return (Date.now() - released) * -1;
+    }
+  }, {
+    key: "getCodeTime",
+    value: function getCodeTime(code) {
+      var released = this.releasedCode[code];
+      var pressed = this.pressedCode[code];
+
+      if (!pressed) {
+        return 0;
+      }
+
+      if (!released || released < pressed) {
+        return Date.now() - pressed;
+      }
+
+      return (Date.now() - released) * -1;
+    }
+  }, {
+    key: "getWhichTime",
+    value: function getWhichTime(code) {
+      var released = this.releasedWhich[code];
+      var pressed = this.pressedWhich[code];
+
+      if (!pressed) {
+        return 0;
+      }
+
+      if (!released || released < pressed) {
+        return Date.now() - pressed;
+      }
+
+      return (Date.now() - released) * -1;
+    }
+  }, {
     key: "getKey",
     value: function getKey(key) {
       if (!this.keys[key]) {
@@ -9672,24 +9889,47 @@ var Keyboard = /*#__PURE__*/function () {
       for (var i in this.keys) {
         if (this.keys[i] > 0) {
           this.keys[i]++;
-        } else {
+        } else if (this.keys[i] > -this.maxDecay) {
           this.keys[i]--;
-
-          if (this.keys[i] < -this.maxDecay) {
-            delete this.keys[i];
-          }
+        } else {
+          delete this.keys[i];
         }
       }
 
       for (var i in this.codes) {
-        if (this.codes[i] > 0) {
-          this.codes[i]++;
-        } else {
-          this.codes[i]--;
+        var released = this.releasedCode[i];
+        var pressed = this.pressedCode[i];
+        var keyRef = this.getKeyRef(i);
 
-          if (this.codes[i] < -this.maxDecay) {
-            delete this.keys[i];
+        if (this.codes[i] > 0) {
+          keyRef.frames = this.codes[i]++;
+          keyRef.time = pressed ? Date.now() - pressed : 0;
+          keyRef.down = true;
+
+          if (!released || released < pressed) {
+            return;
           }
+
+          return (Date.now() - released) * -1;
+        } else if (this.codes[i] > -this.maxDecay) {
+          keyRef.frames = this.codes[i]--;
+          keyRef.time = released - Date.now();
+          keyRef.down = false;
+        } else {
+          keyRef.frames = 0;
+          keyRef.time = 0;
+          keyRef.down = false;
+          delete this.codes[i];
+        }
+      }
+
+      for (var i in this.whichs) {
+        if (this.whichs[i] > 0) {
+          this.whichs[i]++;
+        } else if (this.whichs[i] > -this.maxDecay) {
+          this.whichs[i]--;
+        } else {
+          delete this.whichs[i];
         }
       }
     }
@@ -9699,6 +9939,61 @@ var Keyboard = /*#__PURE__*/function () {
 }();
 
 exports.Keyboard = Keyboard;
+  })();
+});
+
+require.register("curvature/mixin/EventTargetMixin.js", function(exports, require, module) {
+  require = __makeRelativeRequire(require, {}, "curvature");
+  (function() {
+    "use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.EventTargetMixin = void 0;
+
+var _Mixin = require("../base/Mixin");
+
+var _EventTargetMixin;
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _EventTarget = Symbol('Target');
+
+var EventTargetMixin = (_EventTargetMixin = {}, _defineProperty(_EventTargetMixin, _Mixin.Mixin.Constructor, function () {
+  try {
+    this[_EventTarget] = new EventTarget();
+  } catch (error) {
+    this[_EventTarget] = document.createDocumentFragment();
+  }
+}), _defineProperty(_EventTargetMixin, "dispatchEvent", function dispatchEvent() {
+  var _this$_EventTarget;
+
+  for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+    args[_key] = arguments[_key];
+  }
+
+  var event = args[0];
+
+  (_this$_EventTarget = this[_EventTarget]).dispatchEvent.apply(_this$_EventTarget, args);
+
+  var defaultHandler = "on".concat(event.type[0].toUpperCase() + event.type.slice(1));
+
+  if (typeof this[defaultHandler] === 'function') {
+    this[defaultHandler](event);
+  }
+
+  return event.returnValue;
+}), _defineProperty(_EventTargetMixin, "addEventListener", function addEventListener() {
+  var _this$_EventTarget2;
+
+  (_this$_EventTarget2 = this[_EventTarget]).addEventListener.apply(_this$_EventTarget2, arguments);
+}), _defineProperty(_EventTargetMixin, "removeEventListener", function removeEventListener() {
+  var _this$_EventTarget3;
+
+  (_this$_EventTarget3 = this[_EventTarget]).removeEventListener.apply(_this$_EventTarget3, arguments);
+}), _EventTargetMixin);
+exports.EventTargetMixin = EventTargetMixin;
   })();
 });
 
@@ -9714,34 +10009,41 @@ exports.PromiseMixin = void 0;
 
 var _Mixin = require("../base/Mixin");
 
-var _Bindable = require("../base/Bindable");
-
 var _PromiseMixin;
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var PromiseSymbol = Symbol('Promise');
+var _Promise = Symbol('Promise');
+
 var Accept = Symbol('Accept');
 var Reject = Symbol('Reject');
-var PromiseMixin = (_PromiseMixin = {
-  Promise: PromiseSymbol,
-  Accept: Accept,
-  Reject: Reject
-}, _defineProperty(_PromiseMixin, _Mixin.Mixin.Constructor, function () {
+var PromiseMixin = (_PromiseMixin = {}, _defineProperty(_PromiseMixin, _Mixin.Mixin.Constructor, function () {
   var _this = this;
 
-  this[PromiseSymbol] = new Promise(function (accept, reject) {
+  this[_Promise] = new Promise(function (accept, reject) {
     _this[Accept] = accept;
     _this[Reject] = reject;
   });
-}), _defineProperty(_PromiseMixin, "then", function then(callback) {
-  return this[PromiseSymbol].then(callback);
-}), _defineProperty(_PromiseMixin, "catch", function _catch(callback) {
-  return this[PromiseSymbol]["catch"](callback);
-}), _defineProperty(_PromiseMixin, "finally", function _finally(callback) {
-  return this[PromiseSymbol]["finally"](callback);
+}), _defineProperty(_PromiseMixin, "then", function then() {
+  var _this$_Promise;
+
+  return (_this$_Promise = this[_Promise]).then.apply(_this$_Promise, arguments);
+}), _defineProperty(_PromiseMixin, "catch", function _catch() {
+  var _this$_Promise2;
+
+  return (_this$_Promise2 = this[_Promise])["catch"].apply(_this$_Promise2, arguments);
+}), _defineProperty(_PromiseMixin, "finally", function _finally() {
+  var _this$_Promise3;
+
+  return (_this$_Promise3 = this[_Promise])["finally"].apply(_this$_Promise3, arguments);
 }), _PromiseMixin);
 exports.PromiseMixin = PromiseMixin;
+Object.defineProperty(PromiseMixin, 'Reject', {
+  value: Reject
+});
+Object.defineProperty(PromiseMixin, 'Accept', {
+  value: Accept
+});
   })();
 });
 
