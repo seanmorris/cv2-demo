@@ -50,34 +50,41 @@ export class View extends BaseView
 
 			this.args.queryStore = this.args.stores[0] ?? null;
 
-			db.addEventListener(
-				'write'
-				, event => {
+			db.addEventListener('read', event => {
+				// const model = event.detail.record;
 
-					const model = event.detail.record;
+				// if(model.id % 2 === 0)
+				// {
+				// 	event.preventDefault();
 
-					if(model.id % 2 === 0)
-					{
-						event.preventDefault();
-					}
+				// 	return;
+				// }
+
+				// console.log(model);
+			});
+
+			db.addEventListener('write', event => {
+				const model = event.detail.record;
+
+				if(model.id % 2 === 0)
+				{
+					// event.preventDefault();
 				}
-			);
+			});
 
 			db.addEventListener(
 				'highWaterMoved'
 				, event => {
 
-					console.log(event.detail.value);
-
 					switch(event.detail.origin)
 					{
 						case 'server':
-							// console.log(`Got model ${event.detail.record.id} from server!`, event);
+							console.log(`[ ${event.detail.value} ] Got model ${event.detail.record.id} from server!`);
 							break;
 
 						case 'user':
 						default:
-							// console.log(`Send model ${event.detail.record.id} server!`, event);
+							console.log(`[  ${event.detail.value}  ] Send model ${event.detail.record.id} server!`);
 							break;
 					}
 				}
@@ -94,11 +101,15 @@ export class View extends BaseView
 						return;
 					}
 
-					return db.insert(
-						store
-						, MockModel.from({class: 'Mock', id:  id})
-						, 'user'
-					);
+					return new Promise(accept=>{
+						this.onTimeout(id * 5, () => {
+							accept(db.insert(
+								store
+								, MockModel.from({class: 'Mock', id:  id})
+								, 'user'
+							));
+						});
+					});
 				});
 			}))
 		});
@@ -110,7 +121,7 @@ export class View extends BaseView
 		});
 	}
 
-	postRender()
+	onRender()
 	{
 		const modelEdit = this.newEditor();
 
@@ -282,8 +293,11 @@ export class View extends BaseView
 
 	storeModel(event, model)
 	{
-		const store = `${model.class}-store`
-		const query = {store, index: 'id', range: model.id, type: MockModel};
+		event.preventDefault();
+
+		const origin = 'user';
+		const store  = `${model.class}-store`
+		const query  = {store, index: 'id', range: model.id, type: MockModel};
 
 		this.db.then(db => {
 			db.select(query).one(record=>{
@@ -299,17 +313,37 @@ export class View extends BaseView
 
 				const newRecord = Object.assign(record, model);
 
-				db.update(store, newRecord).then(()=>{
+
+				db.update(store, newRecord, origin).then(()=>{
 					model.stored();
 				});
 
 			}).then(({index})=> {
 				if(index === 0)
 				{
-					db.insert(store, model).then(()=>{
+					db.insert(store, model, origin).then(()=>{
 						model.stored();
 					});
 				}
+			});
+		});
+	}
+
+	deleteModel(event, model)
+	{
+		event.preventDefault();
+
+		const origin = 'user';
+		const store  = `${model.class}-store`
+		const query  = {store, index: 'id', range: model.id, type: MockModel};
+
+		this.db.then(db => {
+			db.select(query).one(record=>{
+
+				db.delete(store, model, origin).then(()=>{
+					model.changed();
+				});
+
 			});
 		});
 	}

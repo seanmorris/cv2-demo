@@ -10461,19 +10461,29 @@ var Database = /*#__PURE__*/function (_Mixin$with) {
         var trans = _this5[Connection].transaction([storeName], 'readwrite');
 
         var store = trans.objectStore(storeName);
+        var detail = {
+          database: _this5[Name],
+          original: event,
+          record: record,
+          key: Database.getPrimaryKey(record),
+          store: storeName,
+          type: 'write',
+          subType: 'delete',
+          origin: origin
+        };
+        var beforeDeleteResult = record[Database.beforeDelete] ? record[Database.beforeDelete](detail) : null;
+
+        if (beforeDeleteResult === false) {
+          return;
+        }
+
         var request = store["delete"](Number(record[PrimaryKey].description));
+        record[PrimaryKey] = undefined;
+        record[Database.AfterDelete] && record[Database.AfterDelete](detail);
 
         request.onerror = function (error) {
           var deleteEvent = new CustomEvent('writeError', {
-            detail: {
-              database: _this5[Name],
-              original: event,
-              key: Database.getPrimaryKey(record),
-              store: storeName,
-              type: 'write',
-              subType: 'delete',
-              origin: origin
-            }
+            detail: detail
           });
 
           _this5.dispatchEvent(deleteEvent);
@@ -10483,15 +10493,7 @@ var Database = /*#__PURE__*/function (_Mixin$with) {
 
         request.onsuccess = function (event) {
           var writeEvent = new CustomEvent('write', {
-            detail: {
-              database: _this5[Name],
-              original: event,
-              key: Database.getPrimaryKey(record),
-              store: storeName,
-              type: 'write',
-              subType: 'delete',
-              origin: origin
-            }
+            detail: detail
           });
 
           _this5.dispatchEvent(writeEvent);
@@ -10533,44 +10535,57 @@ var Database = /*#__PURE__*/function (_Mixin$with) {
               });
             }
 
-            if (offset > i++) {
-              return cursor["continue"]();
-            }
-
-            var source = cursor.source;
-            var storeName = source.objectStore ? source.objectStore.name : index.name;
             _this6[Bank][storeName] = _this6[Bank][storeName] || {};
             var bank = _this6[Bank][storeName];
             var pk = cursor.primaryKey;
             var value = type ? type.from(cursor.value) : cursor.value;
 
+            var bindableValue = _Bindable.Bindable.makeBindable(value);
+
+            var detail = {
+              database: _this6[Name],
+              key: Database.getPrimaryKey(bindableValue),
+              record: value,
+              store: index.name,
+              type: 'read',
+              subType: 'select',
+              origin: origin
+            };
+            var beforeReadResult = value[Database.BeforeRead] ? value[Database.BeforeRead](detail) : null;
+
+            if (offset > i++ || beforeReadResult === false) {
+              return cursor["continue"]();
+            }
+
             if (bank[pk]) {
               Object.assign(bank[pk], value);
             } else {
               value[PrimaryKey] = Symbol["for"](pk);
-              bank[pk] = _Bindable.Bindable.makeBindable(value);
+              bank[pk] = value;
             }
 
-            _this6.dispatchEvent(new CustomEvent('read', {
-              detail: {
-                database: _this6[Name],
-                record: value,
-                store: storeName,
-                type: 'read',
-                subType: 'select',
-                origin: origin
-              }
+            var source = cursor.source;
+            var storeName = source.objectStore ? source.objectStore.name : index.name;
+            bank[pk][Database.AfterRead] && bank[pk][Database.AfterRead](detail);
+            detail.record = value;
+            var cancelable = true;
+
+            var eventResult = _this6.dispatchEvent(new CustomEvent('read', {
+              detail: detail,
+              cancelable: cancelable
             }));
 
-            var result = callback ? callback(bank[pk], i) : bank[pk];
+            if (eventResult) {
+              var result = callback ? callback(bank[pk], i) : bank[pk];
 
-            if (limit && i - offset >= limit) {
-              offset += limit;
-              return accept({
-                record: bank[pk],
-                result: result,
-                index: i
-              });
+              if (limit && i - offset >= limit) {
+                offset += limit;
+                return accept({
+                  record: bank[pk],
+                  result: result,
+                  index: i
+                });
+              }
             }
 
             cursor["continue"]();
@@ -10605,22 +10620,8 @@ var Database = /*#__PURE__*/function (_Mixin$with) {
     key: "checkHighWaterMark",
     value: function checkHighWaterMark(storeName, record) {
       var origin = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
-      // if(!this[Metadata][storeName])
-      // {
-      // 	this[Metadata][storeName] = this.getStoreMeta(storeName, 'store', {});
-      // }
-      // if(!this[Metadata][storeName])
-      // {
-      // 	return;
-      // }
       var currentMark = this.getStoreMeta(storeName, 'highWater', 0);
-      return currentMark; // const metadata    = this[Metadata][storeName];
-      // const currentMark = this.getStoreMeta(storeName, 'highWater', 0);
-      // const recordMark  = record[metadata.highWater];
-      // if(currentMark < recordMark)
-      // {
-      // 	this.setHighWaterMark(storeName, record, origin);
-      // }
+      return currentMark;
     }
   }, {
     key: "setHighWaterMark",
@@ -10823,8 +10824,7 @@ var Model = /*#__PURE__*/function () {
     Object.defineProperty(this, Saved, {
       writable: true,
       value: false
-    });
-    return _Bindable.Bindable.makeBindable(this);
+    }); // return Bindable.makeBindable(this);
   }
 
   _createClass(Model, [{
@@ -10867,6 +10867,11 @@ var Model = /*#__PURE__*/function () {
 
         setProp(property, skeleton[property]);
       }
+    }
+  }, {
+    key: "changed",
+    value: function changed() {
+      this[Saved] = false;
     }
   }, {
     key: "stored",

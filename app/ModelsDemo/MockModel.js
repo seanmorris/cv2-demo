@@ -7,18 +7,40 @@ export class MockModel extends Model
 	{
 		super();
 
-		this.created = 0;
-		this.updated = 0;
-		this.deleted = 0;
+		this.created = null;
+		this.updated = null;
+		this.deleted = null;
+	}
+
+	[Database.BeforeRead](detail)
+	{
+	}
+
+	[Database.AfterRead](detail)
+	{
 	}
 
 	[Database.BeforeUpdate](detail)
 	{
-		this.updated = Date.now();
 	}
 
 	[Database.BeforeInsert](detail)
 	{
-		this.created = this.updated = Date.now();
+		this.created = this.updated = Date.now() / 1000;
+	}
+
+	[Database.BeforeWrite](detail)
+	{
+		this.deleted = null;
+		this.updated = Date.now() / 1000;
+	}
+
+	[Database.BeforeDelete](detail)
+	{
+	}
+
+	[Database.AfterDelete](detail)
+	{
+		this.deleted = Date.now() / 1000;
 	}
 }

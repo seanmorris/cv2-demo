@@ -1735,10 +1735,14 @@ pre, code {
 
 .models-demo pre img[data-icon] {
 	cursor: pointer;
-	margin-left: auto;
 	margin-right: 0.5em;
 	display: inline;
 	opacity: 1;
+	background-color: transparent;
+}
+
+.models-demo pre span.firstline img:first-child {
+	margin-left: auto;
 }
 
 .models-demo pre img[data-icon]:focus {
