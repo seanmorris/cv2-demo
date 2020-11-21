@@ -11,8 +11,6 @@ export class ModelScroller extends InfiniteScroller
 
 	toJson(x)
 	{
-		console.log(x);
-
 		return JSON.stringify(x);
 	}
 

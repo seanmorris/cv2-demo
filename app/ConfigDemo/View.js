@@ -1,12 +1,11 @@
 import { Config } from 'curvature/base/Config';
 import { Import } from 'curvature/base/Import';
 
-import { CurvatureFrame } from '../control/CurvatureFrame';
 
 import { View as BaseView } from 'curvature/base/View';
 
-import { Editor } from '../component/editor/Editor';
-
+import { CurvatureFrame } from '../control/CurvatureFrame';
+import { Editor   } from '../component/editor/Editor';
 import { rawquire } from 'rawquire/rawquire.macro';
 
 const Legacy = require('Config');
@@ -49,7 +48,6 @@ export class View extends BaseView
 				, label:  'config-example-initialize.js'
 				, value:  rawquire('./sample/config-example-initialize.js')
 				, type:   'application/javascript'
-
 			}
 			// , {
 			// 	filename: 'result'

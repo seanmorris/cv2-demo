@@ -4377,6 +4377,12 @@ var RuleSet = /*#__PURE__*/function () {
           }
         }
 
+        if (parentView) {
+          parentView.onRemove(function () {
+            return element.___cvApplied___.splice(0);
+          });
+        }
+
         var tag = new _Tag.Tag(element, parentView, null, undefined, direct);
         var parent = tag.element.parentNode;
         var sibling = tag.element.nextSibling;
@@ -4483,16 +4489,16 @@ var Tag = /*#__PURE__*/function () {
         return _this2[name];
       }
 
-      if (typeof _this2.element[name] === 'function') {
+      if (_this2.node && typeof _this2.node[name] === 'function') {
         return function () {
-          var _this2$element;
+          var _this2$node;
 
-          return (_this2$element = _this2.element)[name].apply(_this2$element, arguments);
+          return (_this2$node = _this2.node)[name].apply(_this2$node, arguments);
         };
       }
 
-      if (name in _this2.element) {
-        return _this2.element[name];
+      if (_this2.node && name in _this2.node) {
+        return _this2.node[name];
       }
 
       return _this2[name];
@@ -4554,7 +4560,9 @@ var Tag = /*#__PURE__*/function () {
   }, {
     key: "remove",
     value: function remove() {
-      this.node.remove();
+      if (this.node) {
+        this.node.remove();
+      }
 
       _Bindable.Bindable.clearBindings(this);
 
@@ -4571,7 +4579,8 @@ var Tag = /*#__PURE__*/function () {
       }
 
       var detachEvent = new Event('cvDomDetached');
-      this.node = this.element = this.ref = this.parent = null;
+      this.node.dispatchEvent(detachEvent);
+      this.node = this.element = this.ref = this.parent = undefined;
     }
   }, {
     key: "clear",
@@ -4591,6 +4600,29 @@ var Tag = /*#__PURE__*/function () {
     key: "pause",
     value: function pause() {
       var paused = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+    }
+  }, {
+    key: "listen",
+    value: function listen(eventName, callback, options) {
+      var node = this.node;
+      node.addEventListener(eventName, callback, options);
+
+      var remove = function remove() {
+        node.removeEventListener(eventName, callback, options);
+      };
+
+      var remover = function remover() {
+        remove();
+
+        remove = function remove() {
+          return console.warn('Already removed!');
+        };
+      };
+
+      this.parent.onRemove(function () {
+        return remover();
+      });
+      return remover;
     }
   }]);
 
@@ -5958,20 +5990,15 @@ var View = /*#__PURE__*/function (_Mixin$with) {
         tag.addEventListener('value-changed', inputListener);
       }
 
-      this.onRemove(function (tag, eventListener) {
-        return function () {
-          if (type === 'file' || type === 'radio') {
-            tag.removeEventListener('change', inputListener);
-          } else {
-            tag.removeEventListener('input', inputListener);
-            tag.removeEventListener('change', inputListener);
-            tag.removeEventListener('value-changed', inputListener);
-          }
-
-          tag = undefined;
-          eventListener = undefined;
-        };
-      }(tag, inputListener));
+      this.onRemove(function () {
+        if (type === 'file' || type === 'radio') {
+          tag.removeEventListener('change', inputListener);
+        } else {
+          tag.removeEventListener('input', inputListener);
+          tag.removeEventListener('change', inputListener);
+          tag.removeEventListener('value-changed', inputListener);
+        }
+      });
       tag.removeAttribute('cv-bind');
       return tag;
     }
@@ -6403,6 +6430,8 @@ var View = /*#__PURE__*/function (_Mixin$with) {
   }, {
     key: "mapIfTag",
     value: function mapIfTag(tag) {
+      var _this12 = this;
+
       /*/
       const tagCompiler = this.compileIfTag(tag);
       	const newTag = tagCompiler(this);
@@ -6496,6 +6525,13 @@ var View = /*#__PURE__*/function (_Mixin$with) {
       };
 
       bindingView.onRemove(viewDebind);
+      this.onRemove(function () {
+        view.remove();
+
+        if (bindingView !== _this12) {
+          bindingView.remove();
+        }
+      });
       return tag; //*/
     }
   }, {
@@ -6637,7 +6673,7 @@ var View = /*#__PURE__*/function (_Mixin$with) {
   }, {
     key: "syncBind",
     value: function syncBind(subView) {
-      var _this12 = this;
+      var _this13 = this;
 
       var debindA = this.args.bindTo(function (v, k, t, d) {
         if (k === '_id') {
@@ -6676,16 +6712,16 @@ var View = /*#__PURE__*/function (_Mixin$with) {
           p.remove();
         }
 
-        if (k in _this12.args) {
-          _this12.args[k] = v;
+        if (k in _this13.args) {
+          _this13.args[k] = v;
         }
       });
       this.onRemove(debindA);
       this.onRemove(debindB);
       subView.onRemove(function () {
-        _this12._onRemove.remove(debindA);
+        _this13._onRemove.remove(debindA);
 
-        _this12._onRemove.remove(debindB);
+        _this13._onRemove.remove(debindB);
       });
     }
   }, {
@@ -6709,17 +6745,33 @@ var View = /*#__PURE__*/function (_Mixin$with) {
   }, {
     key: "remove",
     value: function remove() {
-      var _this13 = this;
+      var _this14 = this;
 
       var now = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
       var remover = function remover() {
-        for (var _i15 in _this13.nodes) {
-          _this13.nodes[_i15] && _this13.nodes[_i15].dispatchEvent(new Event('cvDomDetached'));
-          _this13.nodes[_i15] && _this13.nodes[_i15].remove();
+        for (var _i15 in _this14.tags) {
+          if (Array.isArray(_this14.tags[_i15])) {
+            _this14.tags[_i15] && _this14.tags[_i15].map(function (t) {
+              return t.remove();
+            });
+
+            _this14.tags[_i15].splice(0);
+          } else {
+            _this14.tags[_i15] && _this14.tags[_i15].remove();
+            _this14.tags[_i15] = undefined;
+          }
         }
 
-        _this13.firstNode = _this13.lastNode = undefined;
+        for (var _i16 in _this14.nodes) {
+          _this14.nodes[_i16] && _this14.nodes[_i16].dispatchEvent(new Event('cvDomDetached'));
+          _this14.nodes[_i16] && _this14.nodes[_i16].remove();
+          _this14.nodes[_i16] = undefined;
+        }
+
+        _this14.nodes.splice(0);
+
+        _this14.firstNode = _this14.lastNode = undefined;
       };
 
       if (now) {
@@ -6772,9 +6824,9 @@ var View = /*#__PURE__*/function (_Mixin$with) {
 
       this.viewLists.clear();
 
-      for (var _i16 in this.timeouts) {
-        clearTimeout(this.timeouts[_i16].timeout);
-        delete this.timeouts[_i16];
+      for (var _i17 in this.timeouts) {
+        clearTimeout(this.timeouts[_i17].timeout);
+        delete this.timeouts[_i17];
       }
 
       for (var i in this.intervals) {
@@ -6792,18 +6844,18 @@ var View = /*#__PURE__*/function (_Mixin$with) {
   }, {
     key: "findTag",
     value: function findTag(selector) {
-      for (var _i17 in this.nodes) {
+      for (var _i18 in this.nodes) {
         var result = void 0;
 
-        if (!this.nodes[_i17].querySelector) {
+        if (!this.nodes[_i18].querySelector) {
           continue;
         }
 
-        if (this.nodes[_i17].matches(selector)) {
-          return new _Tag.Tag(this.nodes[_i17], this, undefined, undefined, this);
+        if (this.nodes[_i18].matches(selector)) {
+          return new _Tag.Tag(this.nodes[_i18], this, undefined, undefined, this);
         }
 
-        if (result = this.nodes[_i17].querySelector(selector)) {
+        if (result = this.nodes[_i18].querySelector(selector)) {
           return new _Tag.Tag(result, this, undefined, undefined, this);
         }
       }
@@ -6811,14 +6863,14 @@ var View = /*#__PURE__*/function (_Mixin$with) {
   }, {
     key: "findTags",
     value: function findTags(selector) {
-      var _this14 = this;
+      var _this15 = this;
 
       return this.nodes.filter(function (n) {
         return n.querySelectorAll;
       }).map(function (n) {
         return _toConsumableArray(n.querySelectorAll(selector));
       }).flat().map(function (n) {
-        return new _Tag.Tag(n, _this14, undefined, undefined, _this14);
+        return new _Tag.Tag(n, _this15, undefined, undefined, _this15);
       });
     }
   }, {
@@ -6838,11 +6890,11 @@ var View = /*#__PURE__*/function (_Mixin$with) {
   }, {
     key: "stringTransformer",
     value: function stringTransformer(methods) {
-      var _this15 = this;
+      var _this16 = this;
 
       return function (x) {
         for (var m in methods) {
-          var parent = _this15;
+          var parent = _this16;
           var method = methods[m];
 
           while (parent && !parent[method]) {
@@ -6889,7 +6941,7 @@ var View = /*#__PURE__*/function (_Mixin$with) {
   }, {
     key: "listen",
     value: function listen(node, eventName, callback, options) {
-      var _this16 = this;
+      var _this17 = this;
 
       if (typeof node === 'string') {
         options = callback;
@@ -6904,7 +6956,7 @@ var View = /*#__PURE__*/function (_Mixin$with) {
 
       if (Array.isArray(node)) {
         var removers = node.map(function (n) {
-          return _this16.listen(n, eventName, callback, options);
+          return _this17.listen(n, eventName, callback, options);
         });
         return function () {
           return removers.map(function (r) {
@@ -7143,7 +7195,7 @@ var ViewList = /*#__PURE__*/function () {
 
         if (isNaN(k)) {
           k = '_' + _i;
-        } else {
+        } else if (String(k).length) {
           k = Number(k);
         }
 
@@ -10119,6 +10171,12 @@ exports.Database = void 0;
 
 var _Bindable = require("../base/Bindable");
 
+var _Mixin = require("../base/Mixin");
+
+var _EventTargetMixin = require("../mixin/EventTargetMixin");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -10137,39 +10195,73 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var BeforeWrite = Symbol('BeforeWrite');
+var AfterWrite = Symbol('AfterWrite');
+var BeforeInsert = Symbol('BeforeInsert');
+var AfterInsert = Symbol('AfterInsert');
+var BeforeUpdate = Symbol('BeforeUpdate');
+var AfterUpdate = Symbol('AfterUpdate');
+var BeforeRead = Symbol('BeforeRead');
+var AfterRead = Symbol('AfterRead');
 var PrimaryKey = Symbol('PrimaryKey');
 var Connection = Symbol('Connection');
 var Instances = Symbol('Instances');
+var HighWater = Symbol('HighWater');
+var Metadata = Symbol('Metadata');
+var Timers = Symbol('Timers');
 var Target = Symbol('Target');
 var Store = Symbol('Store');
 var Fetch = Symbol('Each');
 var Name = Symbol('Name');
 var Bank = Symbol('Bank');
 
-var Database = /*#__PURE__*/function () {
+var Database = /*#__PURE__*/function (_Mixin$with) {
+  _inherits(Database, _Mixin$with);
+
+  var _super = _createSuper(Database);
+
   function Database(connection) {
+    var _this;
+
     _classCallCheck(this, Database);
 
-    Object.defineProperty(this, Connection, {
+    _this = _super.call(this);
+    Object.defineProperty(_assertThisInitialized(_this), Connection, {
       value: connection
     });
-    Object.defineProperty(this, Bank, {
+    Object.defineProperty(_assertThisInitialized(_this), Name, {
+      value: connection.name
+    });
+    Object.defineProperty(_assertThisInitialized(_this), Timers, {
       value: {}
     });
+    Object.defineProperty(_assertThisInitialized(_this), Metadata, {
+      value: {}
+    });
+    Object.defineProperty(_assertThisInitialized(_this), Bank, {
+      value: {}
+    });
+    return _this;
   }
 
   _createClass(Database, [{
     key: "select",
-    // static _version_1(database)
-    // {
-    // 	const eventLog = database.createObjectStore(
-    // 		'models-store', {keyPath: 'id'}
-    // 	);
-    // 	eventLog.createIndex('id',      'id',      {unique: false});
-    // 	eventLog.createIndex('class',   'class',   {unique: false});
-    // }
     value: function select(_ref) {
-      var _this = this;
+      var _this2 = this;
 
       var store = _ref.store,
           index = _ref.index,
@@ -10182,15 +10274,17 @@ var Database = /*#__PURE__*/function () {
           _ref$offset = _ref.offset,
           offset = _ref$offset === void 0 ? 0 : _ref$offset,
           _ref$type = _ref.type,
-          type = _ref$type === void 0 ? false : _ref$type;
+          type = _ref$type === void 0 ? false : _ref$type,
+          _ref$origin = _ref.origin,
+          origin = _ref$origin === void 0 ? undefined : _ref$origin;
       var t = this[Connection].transaction(store, "readonly");
       var s = t.objectStore(store);
       var i = index ? s.index(index) : s;
       return {
-        each: this[Fetch](type, i, direction, range, limit, offset),
-        one: this[Fetch](type, i, direction, range, 1, offset),
+        each: this[Fetch](type, i, direction, range, limit, offset, origin),
+        one: this[Fetch](type, i, direction, range, 1, offset, origin),
         then: function then(c) {
-          return _this[Fetch](type, i, direction, range, limit, offset)(function (e) {
+          return _this2[Fetch](type, i, direction, range, limit, offset, origin)(function (e) {
             return e;
           }).then(c);
         }
@@ -10199,46 +10293,78 @@ var Database = /*#__PURE__*/function () {
   }, {
     key: "insert",
     value: function insert(storeName, record) {
-      var _this2 = this;
+      var _this3 = this;
 
+      var origin = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
       return new Promise(function (accept, reject) {
-        _this2[Bank][storeName] = _this2[Bank][storeName] || new WeakMap();
+        _this3[Bank][storeName] = _this3[Bank][storeName] || {};
 
-        var trans = _this2[Connection].transaction([storeName], 'readwrite');
+        var trans = _this3[Connection].transaction([storeName], 'readwrite');
 
         var store = trans.objectStore(storeName);
-        var bank = _this2[Bank][storeName];
+        var bank = _this3[Bank][storeName];
         record = _Bindable.Bindable.make(record);
+        var detail = {
+          database: _this3[Name],
+          record: record,
+          store: storeName,
+          type: 'write',
+          subType: 'insert',
+          origin: origin
+        };
+        var beforeWriteResult = record[Database.BeforeWrite] ? record[Database.BeforeWrite](detail) : null;
+        var beforeInsertResult = record[Database.BeforeInsert] ? record[Database.BeforeInsert](detail) : null;
         var request = store.add(Object.assign({}, record));
 
+        if (beforeWriteResult === false || beforeInsertResult === false) {
+          return;
+        }
+
         request.onerror = function (error) {
-          Database.dispatchEvent(new CustomEvent('writeError', {
-            detail: {
-              database: _this2[Name],
-              record: record,
-              store: storeName,
-              type: 'write',
-              subType: 'insert'
-            }
+          _this3.dispatchEvent(new CustomEvent('writeError', {
+            detail: detail
           }));
+
           reject(error);
         };
 
         request.onsuccess = function (event) {
           var pk = event.target.result;
           bank[pk] = record;
-          record[PrimaryKey] = Symbol["for"](pk);
-          record[Store] = storeName;
-          Database.dispatchEvent(new CustomEvent('write', {
-            detail: {
-              database: _this2[Name],
-              key: Database.getPrimaryKey(record),
-              store: storeName,
-              type: 'write',
-              subType: 'insert'
-            }
+          var cancelable = true;
+          detail.key = Database.getPrimaryKey(record);
+
+          var eventResult = _this3.dispatchEvent(new CustomEvent('write', {
+            cancelable: cancelable,
+            detail: detail
           }));
-          trans.commit();
+
+          if (eventResult) {
+            record[PrimaryKey] = Symbol["for"](pk);
+
+            if (!_this3[Metadata][storeName]) {
+              _this3[Metadata][storeName] = _this3.getStoreMeta(storeName, 'store', {});
+            }
+
+            if (_this3[Metadata][storeName]) {
+              var metadata = _this3[Metadata][storeName];
+
+              var currentMark = _this3.checkHighWaterMark(storeName, record);
+
+              var recordMark = record[metadata.highWater];
+
+              if (currentMark < recordMark) {
+                _this3.setHighWaterMark(storeName, record, origin, 'insert');
+              }
+            }
+
+            trans.commit();
+            record[Database.AfterInsert] && record[Database.AfterInsert](detail);
+            record[Database.AfterWrite] && record[Database.AfterWrite](detail);
+          } else {
+            trans.abort();
+          }
+
           accept(record);
         };
       });
@@ -10246,43 +10372,76 @@ var Database = /*#__PURE__*/function () {
   }, {
     key: "update",
     value: function update(storeName, record) {
-      var _this3 = this;
+      var _this4 = this;
+
+      var origin = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
 
       if (!record[PrimaryKey]) {
         throw Error('Value provided is not a DB record!');
       }
 
       return new Promise(function (accept, reject) {
-        // const storeName = record[Store];
-        var trans = _this3[Connection].transaction([storeName], 'readwrite');
+        var trans = _this4[Connection].transaction([storeName], 'readwrite');
 
         var store = trans.objectStore(storeName);
+        var detail = {
+          database: _this4[Name],
+          key: Database.getPrimaryKey(record),
+          record: record,
+          store: storeName,
+          type: 'write',
+          subType: 'update',
+          origin: origin
+        };
+        record[Database.AfterInsert] && record[Database.AfterInsert](detail);
+        record[Database.AfterWrite] && record[Database.AfterWrite](detail);
+        var beforeWriteResult = record[Database.BeforeWrite] ? record[Database.BeforeWrite](detail) : null;
+        var beforeUpdateResult = record[Database.BeforeUpdate] ? record[Database.BeforeUpdate](detail) : null;
+
+        if (beforeWriteResult === false || beforeUpdateResult === false) {
+          return;
+        }
+
         var request = store.put(Object.assign({}, record));
 
         request.onerror = function (error) {
-          Database.dispatchEvent(new CustomEvent('writeError', {
-            detail: {
-              database: _this3[Name],
-              key: Database.getPrimaryKey(record),
-              store: storeName,
-              type: 'write',
-              subType: 'update'
-            }
+          _this4.dispatchEvent(new CustomEvent('writeError', {
+            detail: detail
           }));
+
           reject(error);
         };
 
         request.onsuccess = function (event) {
-          Database.dispatchEvent(new CustomEvent('write', {
-            detail: {
-              database: _this3[Name],
-              key: Database.getPrimaryKey(record),
-              store: storeName,
-              type: 'write',
-              subType: 'update'
-            }
+          var cancelable = true;
+
+          var eventResult = _this4.dispatchEvent(new CustomEvent('write', {
+            cancelable: cancelable,
+            detail: detail
           }));
-          trans.commit();
+
+          if (eventResult) {
+            if (!_this4[Metadata][storeName]) {
+              _this4[Metadata][storeName] = _this4.getStoreMeta(storeName, 'store', {});
+            }
+
+            if (_this4[Metadata][storeName]) {
+              var metadata = _this4[Metadata][storeName];
+
+              var currentMark = _this4.checkHighWaterMark(storeName, record);
+
+              var recordMark = record[metadata.highWater];
+
+              if (currentMark < recordMark) {
+                _this4.setHighWaterMark(storeName, record, origin, 'update');
+              }
+            }
+
+            trans.commit();
+          } else {
+            trans.abort();
+          }
+
           accept(event);
         };
       });
@@ -10290,15 +10449,16 @@ var Database = /*#__PURE__*/function () {
   }, {
     key: "delete",
     value: function _delete(storeName, record) {
-      var _this4 = this;
+      var _this5 = this;
+
+      var origin = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
 
       if (!record[PrimaryKey]) {
         throw Error('Value provided is not a DB record!');
       }
 
       return new Promise(function (accept, reject) {
-        // const storeName = record[Store];
-        var trans = _this4[Connection].transaction([storeName], 'readwrite');
+        var trans = _this5[Connection].transaction([storeName], 'readwrite');
 
         var store = trans.objectStore(storeName);
         var request = store["delete"](Number(record[PrimaryKey].description));
@@ -10306,30 +10466,36 @@ var Database = /*#__PURE__*/function () {
         request.onerror = function (error) {
           var deleteEvent = new CustomEvent('writeError', {
             detail: {
-              database: _this4[Name],
+              database: _this5[Name],
               original: event,
               key: Database.getPrimaryKey(record),
               store: storeName,
               type: 'write',
-              subType: 'delete'
+              subType: 'delete',
+              origin: origin
             }
           });
-          Database.dispatchEvent(deleteEvent);
+
+          _this5.dispatchEvent(deleteEvent);
+
           reject(error);
         };
 
         request.onsuccess = function (event) {
           var writeEvent = new CustomEvent('write', {
             detail: {
-              database: _this4[Name],
+              database: _this5[Name],
               original: event,
               key: Database.getPrimaryKey(record),
               store: storeName,
               type: 'write',
-              subType: 'delete'
+              subType: 'delete',
+              origin: origin
             }
           });
-          Database.dispatchEvent(writeEvent);
+
+          _this5.dispatchEvent(writeEvent);
+
           trans.commit();
           accept(writeEvent);
         };
@@ -10349,8 +10515,8 @@ var Database = /*#__PURE__*/function () {
     }
   }, {
     key: Fetch,
-    value: function value(type, index, direction, range, limit, offset) {
-      var _this5 = this;
+    value: function value(type, index, direction, range, limit, offset, origin) {
+      var _this6 = this;
 
       return function (callback) {
         return new Promise(function (accept, reject) {
@@ -10373,8 +10539,8 @@ var Database = /*#__PURE__*/function () {
 
             var source = cursor.source;
             var storeName = source.objectStore ? source.objectStore.name : index.name;
-            _this5[Bank][storeName] = _this5[Bank][storeName] || new WeakMap();
-            var bank = _this5[Bank][storeName];
+            _this6[Bank][storeName] = _this6[Bank][storeName] || {};
+            var bank = _this6[Bank][storeName];
             var pk = cursor.primaryKey;
             var value = type ? type.from(cursor.value) : cursor.value;
 
@@ -10382,19 +10548,20 @@ var Database = /*#__PURE__*/function () {
               Object.assign(bank[pk], value);
             } else {
               value[PrimaryKey] = Symbol["for"](pk);
-              value[Store] = storeName;
               bank[pk] = _Bindable.Bindable.makeBindable(value);
             }
 
-            Database.dispatchEvent(new CustomEvent('read', {
+            _this6.dispatchEvent(new CustomEvent('read', {
               detail: {
-                database: _this5[Name],
+                database: _this6[Name],
                 record: value,
                 store: storeName,
                 type: 'read',
-                subType: 'select'
+                subType: 'select',
+                origin: origin
               }
             }));
+
             var result = callback ? callback(bank[pk], i) : bank[pk];
 
             if (limit && i - offset >= limit) {
@@ -10411,10 +10578,76 @@ var Database = /*#__PURE__*/function () {
         });
       };
     }
+  }, {
+    key: "setStoreMeta",
+    value: function setStoreMeta(storeName, key, value) {
+      localStorage.setItem("::::cvdb::".concat(storeName, "::").concat(key), JSON.stringify(value));
+    }
+  }, {
+    key: "getStoreMeta",
+    value: function getStoreMeta(storeName, key, notFound) {
+      var source = localStorage.getItem("::::cvdb::".concat(storeName, "::").concat(key));
+      return source ? JSON.parse(source) : notFound;
+    }
+  }, {
+    key: "createObjectStore",
+    value: function createObjectStore(storeName, options) {
+      var eventLog = this[Connection].createObjectStore(storeName, options);
+      this.setStoreMeta(storeName, 'store', options);
+      return eventLog;
+    }
+  }, {
+    key: "deleteObjectStore",
+    value: function deleteObjectStore(storeName) {
+      return this[Connection].deleteObjectStore(storeName);
+    }
+  }, {
+    key: "checkHighWaterMark",
+    value: function checkHighWaterMark(storeName, record) {
+      var origin = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
+      // if(!this[Metadata][storeName])
+      // {
+      // 	this[Metadata][storeName] = this.getStoreMeta(storeName, 'store', {});
+      // }
+      // if(!this[Metadata][storeName])
+      // {
+      // 	return;
+      // }
+      var currentMark = this.getStoreMeta(storeName, 'highWater', 0);
+      return currentMark; // const metadata    = this[Metadata][storeName];
+      // const currentMark = this.getStoreMeta(storeName, 'highWater', 0);
+      // const recordMark  = record[metadata.highWater];
+      // if(currentMark < recordMark)
+      // {
+      // 	this.setHighWaterMark(storeName, record, origin);
+      // }
+    }
+  }, {
+    key: "setHighWaterMark",
+    value: function setHighWaterMark(storeName, record) {
+      var origin = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
+      var subType = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
+      var metadata = this[Metadata][storeName];
+      var recordMark = record[metadata.highWater];
+      var currentMark = this.getStoreMeta(storeName, 'highWater', 0);
+      this.setStoreMeta(storeName, 'highWater', recordMark);
+      this.dispatchEvent(new CustomEvent('highWaterMoved', {
+        detail: {
+          database: this[Name],
+          record: record,
+          store: storeName,
+          type: 'highWaterMoved',
+          subType: subType,
+          origin: origin,
+          oldValue: currentMark,
+          value: recordMark
+        }
+      }));
+    }
   }], [{
     key: "open",
     value: function open(dbName) {
-      var _this6 = this;
+      var _this7 = this;
 
       var version = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
 
@@ -10428,9 +10661,9 @@ var Database = /*#__PURE__*/function () {
         request.onerror = function (error) {
           Database.dispatchEvent(new CustomEvent('readError', {
             detail: {
-              database: _this6[Name],
+              database: _this7[Name],
               error: error,
-              store: storeName,
+              store: undefined,
               type: 'read',
               subType: 'select'
             }
@@ -10439,26 +10672,23 @@ var Database = /*#__PURE__*/function () {
         };
 
         request.onsuccess = function (event) {
-          var instance = new _this6(event.target.result);
-          instance[Name] = dbName;
-          _this6[Instances][dbName] = instance;
+          var instance = new _this7(event.target.result);
+          _this7[Instances][dbName] = instance;
           accept(instance);
         };
 
         request.onupgradeneeded = function (event) {
           var connection = event.target.result;
           connection.addEventListener('error', function (error) {
-            console.error(error);
+            return console.error(error);
           });
+          var instance = new _this7(connection);
 
-          for (var v = event.oldVersion + 1; v <= version; v++) {
-            _this6['_version_' + v](connection);
+          for (var v = event.oldVersion + 1; v <= version; v += 1) {
+            instance['_version_' + v](connection);
           }
 
-          var instance = new _this6(connection);
-          instance[Name] = dbName;
-          _this6[Instances][dbName] = instance;
-          accept(instance);
+          _this7[Instances][dbName] = instance;
         };
       });
     }
@@ -10470,7 +10700,7 @@ var Database = /*#__PURE__*/function () {
   }, {
     key: "destroyDatabase",
     value: function destroyDatabase() {
-      var _this7 = this;
+      var _this8 = this;
 
       return new Promise(function (accept, reject) {
         var request = indexedDB["delete"](dbName);
@@ -10487,7 +10717,7 @@ var Database = /*#__PURE__*/function () {
         };
 
         request.onsuccess = function (event) {
-          delete _this7[Instances][dbName];
+          delete _this8[Instances][dbName];
           accept(dbName);
         };
       });
@@ -10495,7 +10725,7 @@ var Database = /*#__PURE__*/function () {
   }]);
 
   return Database;
-}();
+}(_Mixin.Mixin["with"](_EventTargetMixin.EventTargetMixin));
 
 exports.Database = Database;
 Object.defineProperty(Database, Instances, {
@@ -10503,6 +10733,30 @@ Object.defineProperty(Database, Instances, {
 });
 Object.defineProperty(Database, Target, {
   value: new EventTarget()
+});
+Object.defineProperty(Database, 'BeforeWrite', {
+  value: BeforeWrite
+});
+Object.defineProperty(Database, 'AfterWrite', {
+  value: AfterWrite
+});
+Object.defineProperty(Database, 'BeforeInsert', {
+  value: BeforeInsert
+});
+Object.defineProperty(Database, 'AfterInsert', {
+  value: AfterInsert
+});
+Object.defineProperty(Database, 'BeforeUpdate', {
+  value: BeforeUpdate
+});
+Object.defineProperty(Database, 'AfterUpdate', {
+  value: AfterUpdate
+});
+Object.defineProperty(Database, 'BeforeRead', {
+  value: BeforeRead
+});
+Object.defineProperty(Database, 'AfterRead', {
+  value: AfterRead
 });
 
 var _loop = function _loop(method) {
@@ -10570,6 +10824,7 @@ var Model = /*#__PURE__*/function () {
       writable: true,
       value: false
     });
+    return _Bindable.Bindable.makeBindable(this);
   }
 
   _createClass(Model, [{

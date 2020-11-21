@@ -1,5 +1,7 @@
 import { Model } from 'curvature/model/Model';
 
+import { MockModel } from './MockModel';
+
 import { Tag } from 'curvature/base/Tag';
 import { View as BaseView } from 'curvature/base/View';
 
@@ -35,16 +37,12 @@ export class View extends BaseView
 
 		this.args.rangeValue = 'value';
 
-		this.db = new Promise((accept, reject) => {
-			ExampleDatabase.open('models-db', 1).then(db => {
-				accept(db);
-			});
-		});
+		this.db = ExampleDatabase.open('models-db', 1);
 
-		ExampleDatabase.open('models-db', 1).then(db => {
+		this.db.then(db => {
 			const store = 'Mock-store';
 			const index = 'id';
-			const query = {store, index, limit: 0, type: Model};
+			const query = {store, index, limit: 0, type: MockModel};
 
 			this.args.stores = db.listStores();
 
@@ -52,30 +50,61 @@ export class View extends BaseView
 
 			this.args.queryStore = this.args.stores[0] ?? null;
 
+			db.addEventListener(
+				'write'
+				, event => {
+
+					const model = event.detail.record;
+
+					if(model.id % 2 === 0)
+					{
+						event.preventDefault();
+					}
+				}
+			);
+
+			db.addEventListener(
+				'highWaterMoved'
+				, event => {
+
+					console.log(event.detail.value);
+
+					switch(event.detail.origin)
+					{
+						case 'server':
+							// console.log(`Got model ${event.detail.record.id} from server!`, event);
+							break;
+
+						case 'user':
+						default:
+							// console.log(`Send model ${event.detail.record.id} server!`, event);
+							break;
+					}
+				}
+			);
+
 			Promise.all(Array(500).fill().map((x,y)=>{
 
 				const id = 1+y;
 				const qq = Object.assign({}, query, {range: id});
 
 				return db.select(qq).then(({index}) => {
-						if(index)
-						{
-							return;
-						}
+					if(index)
+					{
+						return;
+					}
 
-						return db.insert(store, Model.from({
-							class: 'Mock'
-							, id:  id
-						}));
-					});
+					return db.insert(
+						store
+						, MockModel.from({class: 'Mock', id:  id})
+						, 'user'
+					);
+				});
 			}))
 		});
 
 		this.args.bindTo('queryStore', v => {
-
-			if(!v) return;
-
-			ExampleDatabase.open('models-db', 1).then(db => {
+			v && this.db.then(db => {
 				this.args.queryIndexes = [db.listIndexes(v),db.listIndexes(v)].flat();
 			});
 		});
@@ -139,10 +168,11 @@ export class View extends BaseView
 			store: `${this.args.newClass}-store`
 			, index: 'id'
 			, range: Number(this.args.newId)
+			, type: MockModel
 		};
 
 		this.db.then(db =>{
-			db.select(query).one(record=>{
+			return db.select(query).one(record=>{
 
 				const model = Model.from(record);
 
@@ -150,17 +180,15 @@ export class View extends BaseView
 
 				this.args.models.push(model);
 
-			}).then(({index})=> {
-
-				if(index === 0)
-				{
-					this.args.models.push(Model.from({
-						id: Number(this.args.newId)
-						, class: this.args.newClass
-					}));
-				}
-
-			});
+			})
+		}).then(({index})=> {
+			if(index === 0)
+			{
+				this.args.models.push(Model.from({
+					id: Number(this.args.newId)
+					, class: this.args.newClass
+				}));
+			}
 		});
 	}
 
@@ -182,7 +210,7 @@ export class View extends BaseView
 			store: this.args.queryStore
 			, index: this.args.queryIndex
 			, limit: Number(this.args.queryLimit || 0)
-			, type: Model
+			, type: MockModel
 		};
 
 		if(this.args.queryLimit === '')
@@ -214,16 +242,19 @@ export class View extends BaseView
 			);
 		}
 
-		ExampleDatabase.open('models-db', 1).then(db => {
+		const content = [];
+
+		this.db.then(db => {
+
+			return db.select(query).each(record => content.push(record));
+
+		}).then(({index})  => {
+
 			this.args.total = null;
 			const scroller  = this.args.resultScroller;
-			const content   = [];
-			db.select(query)
-				.each(record => content.push(record))
-				.then(({index})  => {
-					this.args.total = index;
-					scroller.args.content = content;
-				});
+			this.args.total = index;
+
+			scroller.args.content = content;
 		});
 	}
 
@@ -252,9 +283,9 @@ export class View extends BaseView
 	storeModel(event, model)
 	{
 		const store = `${model.class}-store`
-		const query = {store, index: 'id', range: model.id, type: Model};
+		const query = {store, index: 'id', range: model.id, type: MockModel};
 
-		ExampleDatabase.open('models-db', 1).then(db => {
+		this.db.then(db => {
 			db.select(query).one(record=>{
 
 				const keys = Object.keys(model);
@@ -266,7 +297,7 @@ export class View extends BaseView
 					}
 				});
 
-				const newRecord = Object.assign({}, record, model);
+				const newRecord = Object.assign(record, model);
 
 				db.update(store, newRecord).then(()=>{
 					model.stored();
@@ -278,8 +309,6 @@ export class View extends BaseView
 					db.insert(store, model).then(()=>{
 						model.stored();
 					});
-
-					model.stored();
 				}
 			});
 		});

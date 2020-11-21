@@ -29,7 +29,6 @@ export class Editor extends BaseView
 		// this.args.status    = `Code updated at ${(new Date).toISOString()}.`;
 		this.args.status    = ``;
 		this.args.showField = `*`;
-
 	}
 
 	onAttached()
@@ -55,6 +54,8 @@ export class Editor extends BaseView
 					file.editor  = new CodeEditor({value: file.value, mode: file.type});
 					file.control = file.editor;
 				}
+
+				file.control && (file.control.editor = this);
 
 				if(file.editor && (
 					!radioBarArgs.buttons[i]
