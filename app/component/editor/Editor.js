@@ -69,7 +69,11 @@ export class Editor extends BaseView
 					});
 				}
 
-				radioBarArgs.buttons[i] = {label, callback, file};
+				const button = radioBarArgs.buttons[i] = {label, callback, file};
+
+				file.bindTo('hide', vv => {
+					button.hide = vv;
+				})
 			}
 
 			radioBarArgs.buttons.length = v.length;

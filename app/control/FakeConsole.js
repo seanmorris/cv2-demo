@@ -40,17 +40,18 @@ export class FakeConsole extends View
 			frame();
 
 		}, {wait: 0});
-
-		this.listen(window, 'message', event => {
-
-			console.log(event);
-
-			const message = JSON.parse(event.data);
-			const type    = message.shift()
-			const items   = message.map(i => JSON.stringify(i)).join(', ');
-
-			this.args.lines.push({type, items});
-
-		});
 	}
+
+	// onAttached()
+	// {
+	// 	this.editor.listen('message', event => {
+
+	// 		const message = JSON.parse(event.data);
+	// 		const type    = message.shift()
+	// 		const items   = message.map(i => JSON.stringify(i)).join(', ');
+
+	// 		this.args.lines.push({type, items});
+
+	// 	});
+	// }
 }

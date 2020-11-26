@@ -7,9 +7,10 @@ export class SandboxFrame extends View
 	{
 		super(args, parent);
 
-		this.template = require('./sandboxFrame');
+		this.args.source  = '';
 
-		this.args.source = '';
+		this.messageQueue = [];
+		this.template     = require('./sandboxFrame');
 
 		this.args.csp = this.args.csp || {
 			'script-src': [
@@ -24,6 +25,8 @@ export class SandboxFrame extends View
 				, 'https://unpkg.com'
 			]
 		};
+
+		this.listen(window, 'message', event => this.onMessage(event));
 
 		this.frameTag = false;
 		this.debind   = false;
@@ -50,7 +53,7 @@ export class SandboxFrame extends View
 
 		frameDoc.head.append(cspTag.node);
 
-		const frameTag = new Tag(`<iframe sandbox = "allow-scripts"/>`);
+		const frameTag = new Tag(`<iframe sandbox = "allow-scripts" />`);
 
 		this.debind = this.args.bindTo('source', v => frameTag.attr({'srcdoc': v}));
 
@@ -76,12 +79,48 @@ export class SandboxFrame extends View
 
 		this.frameTag = frameTag;
 		this.cspTag   = cspTag;
+
+		this.listen(frameTag, 'load', event => this.onFrameLoaded(event));
 	}
 
-	frameLoaded()
+	onFrameLoaded(event)
 	{
-		this.dispatchEvent(new CustomEvent('SandboxLoaded', {
-			detail: { view: this }
-		}));
+		this.subFrame = event.target.contentWindow;
+
+		while(event = this.messageQueue.shift())
+		{
+			this.onMessage(event);
+		}
+
+		this.dispatchEvent(new CustomEvent('SandboxLoaded', {detail: { view: this }}));
+	}
+
+	onMessage(event)
+	{
+		if(!this.subFrame)
+		{
+			this.messageQueue.push(event);
+			return;
+		}
+
+		if(event.source !== this.subFrame)
+		{
+			return;
+		}
+
+		// console.log(this, event);
+
+		this.dispatchEvent(new CustomEvent('SandboxMessage', {detail: {
+			view: this, data: event.data
+		}}));
+
+		// console.log(this, event);
+		// console.log(event.target.contentWindow.frames[0]);
+
+		// const message = JSON.parse(event.data);
+		// const type    = message.shift()
+		// const items   = message.map(i => JSON.stringify(i)).join(', ');
+
+		// this.args.lines.push({type, items});
 	}
 }

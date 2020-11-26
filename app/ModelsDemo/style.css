@@ -110,6 +110,7 @@
 
 .database-store-list ul li {
 	padding: 0.5em;
+	cursor: pointer;
 }
 
 .models-demo .models {}

@@ -19,53 +19,19 @@
 
 [[debindingEditor]]
 
-<span class = "hide">[[bindingSandbox]]</span>
-
-<pre>
-	class Foobar {};
-
-	const foo = Bindable.make( new Foobar );
-
-	const debind = foo.bindTo('x', v => console.log(v));
-
-	foo.x = 5;
-
-	debind();
-
-	foo.x = 6;
-</pre>
+<span class = "hide">[[debindingSandbox]]</span>
 
 <h3>watching multiple properties</h3>
 
 Pass an array of property names as the first parameter to bind to more than one property.
 
-<pre>
-	class Foobar {};
-
-	const foo = Bindable.make( new Foobar );
-
-	foo.bindTo(['x', 'y', 'z'], (v,k) => console.log(k, v));
-
-	foo.x = 5;
-	foo.y = 6;
-	foo.z = 7;
-</pre>
+[[multibindingEditor]]
 
 <h3>watching all properties</h3>
 
 <p>Passing a callback as the first parameter without a property name will watch all properties on the object. The second parameter to the callback is the name of the property being set.</p>
 
-<pre>
-	class Foobar {};
-
-	const foo = Bindable.make( new Foobar );
-
-	foo.bindTo((v,k) => console.log(k, v));
-
-	foo.x = 5;
-	foo.y = 6;
-	foo.z = 7;
-</pre>
+[[omnibindingEditor]]
 
 <h3>parameters: v, k, t, d, p</h3>
 
@@ -78,6 +44,8 @@ The callback will be invoked with the following parameters when there are update
 	<b>d</b>elete   - true if the property is being deleted, false otherwise.
 	<b>p</b>revious - the previous value of the property
 </pre>
+
+[[parambindingEditor]]
 
 <h3>lifecycle</h3>
 

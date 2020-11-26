@@ -7,6 +7,10 @@
 	height: 6px;
 }
 
+.sample-editor [data-hide=true] {
+	display: none !important;
+}
+
 .sample-editor ::-webkit-scrollbar-track-piece {
 	background-color: rgba(0, 0, 0, 0);
 }
