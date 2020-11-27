@@ -1,4 +1,4 @@
-const View = require('curvature/base/View').View;
+import { View } from 'curvature/base/View';
 
 export class ViewMappingExample extends View
 {

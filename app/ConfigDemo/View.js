@@ -23,19 +23,16 @@ export class View extends BaseView
 		const sandbox = new CurvatureFrame;
 		const editor  = new Editor;
 
-		sandbox.editor = editor;
-
 		editor.args.files = [
 			{
 				filename: '*'
 				, label:  '*'
 			}
 			, {
-				filename: 'ConfigExampleLayout.js'
-				, label:  'ConfigExampleLayout.js'
-				, value:  rawquire('./sample/ConfigExampleLayout.js')
+				filename: 'ConfigExample.js'
+				, label:  'ConfigExample.js'
+				, value:  rawquire('./sample/ConfigExample.js')
 				, type:   'application/javascript'
-
 			}
 			, {
 				filename: 'config-example-template.html'
@@ -48,12 +45,13 @@ export class View extends BaseView
 				, label:  'config-example-initialize.js'
 				, value:  rawquire('./sample/config-example-initialize.js')
 				, type:   'application/javascript'
+				, hide:   true
 			}
-			// , {
-			// 	filename: 'result'
-			// 	, label:  'result'
-			// 	, control: sandbox
-			// }
+			, {
+				filename: 'result'
+				, label:  'result'
+				, control: sandbox
+			}
 		];
 
 		this.args.editor  = editor;

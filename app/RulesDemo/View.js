@@ -18,7 +18,6 @@ export class View extends BaseView
 
 		basicSandbox.editor    = basicEditor;
 
-		this.args.basicSandbox = basicSandbox;
 		this.args.basicEditor  = basicEditor;
 
 		basicEditor.args.files = [
@@ -40,6 +39,12 @@ export class View extends BaseView
 				, label:  'initialize.js'
 				, value:  rawquire('./Samples/basic-initialize.js')
 				, type:   'application/javascript'
+				, hide:   true
+			}
+			, {
+				filename: 'result'
+				, label:  'result'
+				, control: basicSandbox
 			}
 		];
 
@@ -51,6 +56,8 @@ export class View extends BaseView
 		const globalEditor   = new Editor;
 
 		globalSandbox.editor = globalEditor;
+
+		globalSandbox.args.csp['connect-src'].push('https://api.dictionaryapi.dev');
 
 		globalEditor.args.files = [
 			{ filename: '*', label:  '*' }
@@ -71,10 +78,15 @@ export class View extends BaseView
 				, label:  'initialize.js'
 				, value:  rawquire('./Samples/global-initialize.js')
 				, type:   'application/javascript'
+				, hide:   true
+			}
+			, {
+				filename: 'result'
+				, label:  'result'
+				, control: globalSandbox
 			}
 		];
 
-		this.args.globalSandbox = globalSandbox;
 		this.args.globalEditor  = globalEditor;
 
 		globalEditor.addEventListener('execute', ()=>{
@@ -105,6 +117,12 @@ export class View extends BaseView
 				, label:  'initialize.js'
 				, value:  rawquire('./Samples/preprocess-initialize.js')
 				, type:   'application/javascript'
+				, hide:   true
+			}
+			, {
+				filename: 'result'
+				, label:  'result'
+				, control: preprocSandbox
 			}
 		];
 
@@ -139,6 +157,12 @@ export class View extends BaseView
 				, label:  'initialize.js'
 				, value:  rawquire('./Samples/tag-mapping-initialize.js')
 				, type:   'application/javascript'
+				, hide:   true
+			}
+			, {
+				filename: 'result'
+				, label:  'result'
+				, control: tagMappingSandbox
 			}
 		];
 
@@ -173,6 +197,12 @@ export class View extends BaseView
 				, label:  'initialize.js'
 				, value:  rawquire('./Samples/view-mapping-initialize.js')
 				, type:   'application/javascript'
+				, hide:   true
+			}
+			, {
+				filename: 'result'
+				, label:  'result'
+				, control: viewMappingSandbox
 			}
 		];
 

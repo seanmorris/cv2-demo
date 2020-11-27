@@ -1,5 +1,5 @@
-import { ConfigExampleLayout } from './ConfigExampleLayout';
+import { ConfigExample } from './ConfigExample';
 
-const layout = new ConfigExampleLayout;
+const layout = new ConfigExample;
 
 layout.render(document.body);

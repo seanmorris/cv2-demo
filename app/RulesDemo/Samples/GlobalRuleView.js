@@ -1,17 +1,18 @@
-const RuleSet = require('curvature/base/RuleSet').RuleSet;
-const View    = require('curvature/base/View').View;
-const Tip     = Symbol();
+import { RuleSet } from 'curvature/base/RuleSet';
+import { View    } from 'curvature/base/View';
+import { Tag     } from 'curvature/base/Tag';
+
+const Tip = Symbol();
 
 RuleSet.add('define', tag => {
-	const final = document.createElement('span');
+	const final = new Tag('<span>');
 	const word  = tag.element.innerText;
 
-	final.style.display = 'content';
-	final.style.cursor  = 'help';
+	final.setAttribute('tabindex', '-1');
 
 	final.style.borderBottom = '1px purple solid';
-
-	final.setAttribute('tabindex', '-1');
+	final.style.display      = 'content';
+	final.style.cursor       = 'help';
 
 	const url = `https://api.dictionaryapi.dev/api/v1/entries/en/${word}`;
 
@@ -26,12 +27,12 @@ RuleSet.add('define', tag => {
 
 		const tip = document.createElement('div');
 
-		tip.innerText = '&nbsp;';
+		tip.innerHTML = '&nbsp;';
 
 		tip.style.pointerEvents = 'none';
 
 		tip.style.border     = '1px #ccc solid';
-		tip.style.fontSize   = '0.5em';
+		tip.style.fontSize   = '0.75em';
 		tip.style.padding    = '0.25em';
 		tip.style.minWidth   = '1em';
 		tip.style.maxWidth   = '15em';

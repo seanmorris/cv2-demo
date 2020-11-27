@@ -79,12 +79,12 @@ export class View extends BaseView
 					switch(event.detail.origin)
 					{
 						case 'server':
-							console.log(`[ ${event.detail.value} ] Got model ${event.detail.record.id} from server!`);
+							// console.log(`[ ${event.detail.value} ] Got model ${event.detail.record.id} from server!`);
 							break;
 
 						case 'user':
 						default:
-							console.log(`[  ${event.detail.value}  ] Send model ${event.detail.record.id} server!`);
+							// console.log(`[  ${event.detail.value}  ] Send model ${event.detail.record.id} server!`);
 							break;
 					}
 				}

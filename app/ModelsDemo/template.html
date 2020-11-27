@@ -42,7 +42,7 @@
 				<div class = "model-editor-eyebrow">When you modify the properties below, the in-memory values will be updated as you type.</div>
 
 				<div class = "model-editor-body"><form cv-on = "submit:storeModel(event, model)">
-<pre><span class = "firstline row">model = { <span cv-if = "!saved" class = "contents"><img src = "/save.svg" cv-on = "click:storeModel(event, model)" data-icon tabindex="-1"></span><img src = "/delete.svg" cv-on = "click:deleteModel(event, model)" data-icon tabindex="-1"></span>
+<pre><span class = "firstline row">model = { <span class = "end"><span cv-if = "!saved" class = "contents"><img src = "/save.svg" cv-on = "click:storeModel(event, model)" data-icon tabindex="-1"></span><span cv-if = "!model.deleted" class = "contents"><img src = "/delete.svg" cv-on = "click:deleteModel(event, model)" data-icon tabindex="-1"></span></span></span>
 <div cv-each = "model:value:property"><div class = "property-edit"><span class = "prop-remove remove-[[property]]" cv-on = "click:removeKey(property, m);">  ✕ </span> [[property]]: <input data-property = "[[property]]" cv-bind = "value" cv-on = "cvDomAttached:fieldAttached(event)" />,
 </div></div>};<input style = "display: none;" type = "submit" value = "submit"></form></pre>
 

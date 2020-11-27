@@ -67,7 +67,7 @@ export class RadioBar extends View
 		this.tags.highlight.style({
 			transform: `translate(${button.offsetLeft}px, ${button.offsetTop}px)`
 			, width:   `${button.offsetWidth}px`
-			, height:  `${button.offsetHeight}px`
+			, height:  `${button.offsetHeight+1}px`
 		});
 	}
 }

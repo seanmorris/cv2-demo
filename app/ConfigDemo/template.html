@@ -1,25 +1,12 @@
 <h2>config</h2>
 
-<p>Configuration may be set in a few ways:</p>
+<p>Configuration may be set in two ways:</p>
 
 <ul>
 	<li>Calling <code>Config.set('name', 'value')</code> on <code>curvature/base/Config</code>.</li>
 	<li>Calling <code>Config.init({name: value, ...})</code> on <code>curvature/base/Config</code>.</li>
-	<li>Creating a top-level <code>Config</code> class and setting static properties on it.</li>
 </ul>
 
-<p>Configs may be read in two ways:</p>
-
-<ul>
-	<li>Calling <code>Config.get('name')</code> on <code>curvature/base/Config</code>.</li>
-	<li>Reading a static property from a top level <code>Config</code> class.
-</ul>
+<p>Configs may be read by calling <code>Config.get('name')</code> on <code>curvature/base/Config</code>.</p>
 
 [[editor]]
-
-<div class = "article-box">
-	<div class = "highlight-bar">live example</div>
-	<div class = "sub-box">
-		[[sandbox]]
-	</div>
-</div>

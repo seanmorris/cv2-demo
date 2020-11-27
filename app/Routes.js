@@ -12,6 +12,8 @@ import { View as RulesView  } from 'RulesDemo/View';
 
 import { View as KeyboardView } from 'KeyboardDemo/View';
 
+import { GamepadDemo } from 'demos/gamepad/GamepadDemo';
+
 import { View as ScalarView } from 'ScalarDemo/View';
 import { View as ChainView  } from 'ChainDemo/View';
 import { View as ArrayView  } from 'ArrayDemo/View';
@@ -88,6 +90,8 @@ ${rawquire('../LICENSE')}
 	, models: () => {
 		return new ModelsView;
 	}
+
+	, gamepad: () => new GamepadDemo
 
 	, keyboard: () => new KeyboardView
 

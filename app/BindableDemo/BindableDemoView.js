@@ -57,8 +57,7 @@ export class BindableDemoView extends View
 			}
 		];
 
-		// this.args.bindingSandbox = bindingSandbox;
-		this.args.bindingEditor  = bindingEditor;
+		this.args.bindingEditor = bindingEditor;
 
 		bindingSandbox.addEventListener('SandboxMessage', event => {
 
@@ -111,7 +110,7 @@ export class BindableDemoView extends View
 			}
 		];
 
-		this.args.debindingEditor  = debindingEditor;
+		this.args.debindingEditor = debindingEditor;
 
 		debindingSandbox.addEventListener('SandboxMessage', event => {
 
@@ -149,7 +148,6 @@ export class BindableDemoView extends View
 				, label:  'multibindExample.js'
 				, value:  rawquire('./sample/MultibindExample.js')
 				, type:   'application/javascript'
-
 			}
 			, {
 				filename: 'Console'

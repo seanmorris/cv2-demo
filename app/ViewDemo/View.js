@@ -4,18 +4,17 @@ import { View as ObjectView } from '../ObjectDemo/View';
 
 import { View as EditorView } from '../Editor/View';
 
-const Module = {
-	onRuntimeInitialized: () => {
-		console.log('WASM Loaded');
-	}
-};
+import { CurvatureFrame } from '../control/CurvatureFrame';
 
-import * as ace from 'brace';
+import { Editor   } from '../component/editor/Editor';
+import { rawquire } from 'rawquire/rawquire.macro';
 
-import 'brace/mode/html';
-import 'brace/mode/php';
-import 'brace/mode/javascript';
-import 'brace/theme/monokai';
+// import * as ace from 'brace';
+
+// import 'brace/mode/html';
+// import 'brace/mode/php';
+// import 'brace/mode/javascript';
+// import 'brace/theme/monokai';
 
 export class View extends BaseView
 {
@@ -25,127 +24,266 @@ export class View extends BaseView
 
 		this.template = require('./template');
 
-		window.addEventListener('message', onMessage);
+		const basicViewEditor   = new Editor;
 
-		this.onRemove(() => {
+		basicViewEditor.args.files = [
+			{
+				filename: '*'
+				, label:  '*'
+			}
+			, {
+				filename: 'ExampleView.js'
+				, label:  'ExampleView.js'
+				, value:  rawquire('./Samples/ExampleView.js')
+				, type:   'application/javascript'
 
-			window.removeEventListener('message', onMessage);
+			}
+			, {
+				filename: 'initialize.js'
+				, label:  'initialize.js'
+				, value:  rawquire('./Samples/ExampleViewInitialize.js')
+				, type:   'application/javascript'
+				, hide:   true
+			}
+			, {
+				filename: 'result'
+				, label:  'result'
+				, control: new CurvatureFrame
+			}
+		];
 
-		});
+		this.args.basicViewEditor = basicViewEditor;
 
-		const editor = this.args.editor = new EditorView;
+		/******/
 
-		editor.args.tabs.js   = {
-			title:  'js'
-			, file: 'DemoView.js'
-			, body: require('./Samples/Scalar.jss')
-			, mode: 'ace/mode/javascript'
-		};
+		const scalarEditor   = new Editor;
 
-		editor.args.tabs.html = {
-			title:  'html'
-			, file: 'template.html'
-			, body: require('./Samples/Scalar.html')
-			, mode: 'ace/mode/html'
-		};
+		scalarEditor.args.files = [
+			{
+				filename: '*'
+				, label:  '*'
+			}
+			, {
+				filename: 'ScalarExample.js'
+				, label:  'ScalarExample.js'
+				, value:  rawquire('./Samples/ScalarExample.js')
+				, type:   'application/javascript'
 
-		editor.refreshCode();
+			}
+			, {
+				filename: 'scalar-template.html'
+				, label:  'scalar-template.html'
+				, value:  rawquire('./Samples/scalar-template.html')
+				, type:   'text/html'
+			}
+			, {
+				filename: 'initialize.js'
+				, label:  'initialize.js'
+				, value:  rawquire('./Samples/ScalarExampleInitialize.js')
+				, type:   'application/javascript'
+				, hide:   true
+			}
+			, {
+				filename: 'result'
+				, label:  'result'
+				, control: new CurvatureFrame
+			}
+		];
 
-		const editorTwoWay = this.args.editorTwoWay = new EditorView;
+		this.args.scalarEditor = scalarEditor;
 
-		editorTwoWay.args.tabs.js   = {
-			title:  'js'
-			, file: 'DemoView.js'
-			, body: require('./Samples/TwoWay.jss')
-			, mode: 'ace/mode/javascript'
-		};
+		/******/
 
-		editorTwoWay.args.tabs.html = {
-			title:  'html'
-			, file: 'template.html'
-			, body: require('./Samples/TwoWay.html')
-			, mode: 'ace/mode/html'
-		};
 
-		editorTwoWay.refreshCode();
+		const twoWayEditor   = new Editor;
 
-		const onMessage = event => {
-			console.log( event );
-		};
+		twoWayEditor.args.files = [
+			{
+				filename: '*'
+				, label:  '*'
+			}
+			, {
+				filename: 'TwoWayExample.js'
+				, label:  'TwoWayExample.js'
+				, value:  rawquire('./Samples/TwoWayExample.js')
+				, type:   'application/javascript'
 
-		const editorReverse = this.args.editorReverse = new EditorView;
+			}
+			, {
+				filename: 'two-way-template.html'
+				, label:  'two-way-template.html'
+				, value:  rawquire('./Samples/two-way-template.html')
+				, type:   'text/html'
+			}
+			, {
+				filename: 'initialize.js'
+				, label:  'initialize.js'
+				, value:  rawquire('./Samples/TwoWayExampleInitialize.js')
+				, type:   'application/javascript'
+				, hide:   true
+			}
+			, {
+				filename: 'result'
+				, label:  'result'
+				, control: new CurvatureFrame
+			}
+		];
 
-		editorReverse.args.tabs.js   = {
-			title:  'js'
-			, file: 'DemoView.js'
-			, body: require('./Samples/Scalar.jss')
-			, mode: 'ace/mode/javascript'
-		};
+		this.args.twoWayEditor = twoWayEditor;
 
-		editorReverse.args.tabs.html = {
-			title:  'html'
-			, file: 'template.html'
-			, body: require('./Samples/Reverse.html')
-			, mode: 'ace/mode/html'
-		};
+		/******/
 
-		editorReverse.refreshCode();
+		const reverseViewEditor = new Editor;
 
-		const editorEscape = this.args.editorEscape = new EditorView;
+		reverseViewEditor.args.files = [
+			{
+				filename: '*'
+				, label:  '*'
+			}
+			, {
+				filename: 'ScalarExample.js'
+				, label:  'ScalarExample.js'
+				, value:  rawquire('./Samples/ScalarExample.js')
+				, type:   'application/javascript'
 
-		editorEscape.args.tabs.js   = {
-			title:  'js'
-			, file: 'DemoView.js'
-			, body: require('./Samples/Scalar.jss')
-			, mode: 'ace/mode/javascript'
-		};
+			}
+			, {
+				filename: 'scalar-template.html'
+				, label:  'scalar-template.html'
+				, value:  rawquire('./Samples/reverse-template.html')
+				, type:   'text/html'
+			}
+			, {
+				filename: 'initialize.js'
+				, label:  'initialize.js'
+				, value:  rawquire('./Samples/ScalarExampleInitialize.js')
+				, type:   'application/javascript'
+				, hide:   true
+			}
+			, {
+				filename: 'result'
+				, label:  'result'
+				, control: new CurvatureFrame
+			}
+		];
 
-		editorEscape.args.tabs.html = {
-			title:  'html'
-			, file: 'template.html'
-			, body: require('./Samples/Escape.html')
-			, mode: 'ace/mode/html'
-		};
+		this.args.reverseViewEditor = reverseViewEditor;
 
-		editorEscape.refreshCode();
+		/******/
 
-		const editorArray = this.args.editorArray = new EditorView;
+		const escapeViewEditor = new Editor;
 
-		editorArray.args.orientation = 'vertical';
+		escapeViewEditor.args.files = [
+			{
+				filename: '*'
+				, label:  '*'
+			}
+			, {
+				filename: 'EscapeExample.js'
+				, label:  'EscapeExample.js'
+				, value:  rawquire('./Samples/EscapeExample.js')
+				, type:   'application/javascript'
 
-		editorArray.args.tabs.js   = {
-			title:  'js'
-			, file: 'DemoView.js'
-			, body: require('./Samples/Array.jss')
-			, mode: 'ace/mode/javascript'
-		};
+			}
+			, {
+				filename: 'escape-template.html'
+				, label:  'escape-template.html'
+				, value:  rawquire('./Samples/escape-template.html')
+				, type:   'text/html'
+			}
+			, {
+				filename: 'initialize.js'
+				, label:  'initialize.js'
+				, value:  rawquire('./Samples/EscapeExampleInitialize.js')
+				, type:   'application/javascript'
+				, hide:   true
+			}
+			, {
+				filename: 'result'
+				, label:  'result'
+				, control: new CurvatureFrame
+			}
+		];
 
-		editorArray.args.tabs.html = {
-			title:  'html'
-			, file: 'template.html'
-			, body: require('./Samples/Array.html')
-			, mode: 'ace/mode/html'
-		};
+		this.args.escapeViewEditor = escapeViewEditor;
 
-		editorArray.refreshCode();
+		/******/
 
-		const editorJson = this.args.editorJson = new EditorView;
+		const arrayViewEditor = new Editor;
 
-		editorJson.args.tabs.js   = {
-			title:  'js'
-			, file: 'DemoView.js'
-			, body: require('./Samples/Array.jss')
-			, mode: 'ace/mode/javascript'
-		};
+		arrayViewEditor.args.files = [
+			{
+				filename: '*'
+				, label:  '*'
+			}
+			, {
+				filename: 'ArrayExample.js'
+				, label:  'ArrayExample.js'
+				, value:  rawquire('./Samples/ArrayExample.js')
+				, type:   'application/javascript'
 
-		editorJson.args.tabs.html = {
-			title:  'html'
-			, file: 'template.html'
-			, body: require('./Samples/ArrayJson.html')
-			, mode: 'ace/mode/html'
-		};
+			}
+			, {
+				filename: 'array-template.html'
+				, label:  'array-template.html'
+				, value:  rawquire('./Samples/array-template.html')
+				, type:   'text/html'
+			}
+			, {
+				filename: 'initialize.js'
+				, label:  'initialize.js'
+				, value:  rawquire('./Samples/ArrayExampleInitialize.js')
+				, type:   'application/javascript'
+				, hide:   true
+			}
+			, {
+				filename: 'result'
+				, label:  'result'
+				, control: new CurvatureFrame
+			}
+		];
 
-		editorJson.refreshCode();
+		this.args.arrayViewEditor = arrayViewEditor;
+
+		/******/
+
+		const reuseViewEditor = new Editor;
+
+		reuseViewEditor.args.files = [
+			{
+				filename: '*'
+				, label:  '*'
+			}
+			, {
+				filename: 'ArrayExample.js'
+				, label:  'ArrayExample.js'
+				, value:  rawquire('./Samples/ArrayExample.js')
+				, type:   'application/javascript'
+
+			}
+			, {
+				filename: 'array-template.html'
+				, label:  'array-template.html'
+				, value:  rawquire('./Samples/reuse-template.html')
+				, type:   'text/html'
+			}
+			, {
+				filename: 'initialize.js'
+				, label:  'initialize.js'
+				, value:  rawquire('./Samples/ArrayExampleInitialize.js')
+				, type:   'application/javascript'
+				, hide:   true
+			}
+			, {
+				filename: 'result'
+				, label:  'result'
+				, control: new CurvatureFrame
+			}
+		];
+
+		this.args.reuseViewEditor = reuseViewEditor;
+
+		/******/
 
 		const editorReuse = this.args.editorReuse = new EditorView;
 
