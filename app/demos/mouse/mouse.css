@@ -1,0 +1,142 @@
+.mouse-pad-holder {
+	resize: vertical;
+	overflow: hidden;
+	height: 14em;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.mouse-pad {
+	width: 100%;
+	height: 100%;
+	background-color: #AACCFF;
+	position: relative;
+	box-sizing: border-box;
+	overflow: hidden;
+	--button-spacing: 0.25em;
+}
+
+.mouse-pad .cursor {
+	position: absolute;
+	left: calc(var(--x) * 1px);
+	top: calc(var(--y) * 1px);
+	transform: translate(-50%, -50%);
+	border: 2px solid red;
+	border-radius: 50%;
+	width: 4em;
+	height: 4em;
+	pointer-events: none;
+	display: flex;
+}
+
+.mouse-pad .cursor .position {
+	position: absolute;
+	display: block;
+	white-space: pre;
+	color: red;
+	font-weight: bold;
+	font-size: 0.75em;
+}
+
+.mouse-pad .cursor .position.top.left {
+	left: 100%;
+	top: 0px;
+}
+
+.mouse-pad .cursor .position.top.right {
+	right: 100%;
+	top: 0px;
+}
+
+.mouse-pad .cursor .position.bottom.left {
+	right: 100%;
+	bottom: 0px;
+}
+
+.mouse-pad .cursor .position.bottom.right {
+	left: 100%;
+	bottom: 0px;
+}
+
+.mouse-pad .cursor .mouse-button {
+	position: absolute;
+	border: 1px solid black;
+	border-radius: 50%;
+	margin: auto;
+	box-sizing: border-box;
+}
+
+.mouse-pad .mouse-button {
+	opacity: 0;
+}
+
+.mouse-pad .button-pressed-1 .mouse-button-1 {
+	opacity: 1;
+	width: calc(100% - calc(1 * var(--button-spacing)));
+	height: calc(100% - calc(1 * var(--button-spacing)));
+	margin: calc(calc(1 * var(--button-spacing)) / 2);
+}
+
+.mouse-pad .button-pressed-2 .mouse-button-2 {
+	opacity: 1;
+	width: calc(100% - calc(2 * var(--button-spacing)));
+	height: calc(100% - calc(2 * var(--button-spacing)));
+	margin: calc(calc(2 * var(--button-spacing)) / 2);
+}
+
+.mouse-pad .button-pressed-3 .mouse-button-3 {
+	opacity: 1;
+	width: calc(100% - calc(3 * var(--button-spacing)));
+	height: calc(100% - calc(3 * var(--button-spacing)));
+	margin: calc(calc(3 * var(--button-spacing)) / 2);
+}
+
+.mouse-pad .button-pressed-4 .mouse-button-4 {
+	opacity: 1;
+	width: calc(100% - calc(4 * var(--button-spacing)));
+	height: calc(100% - calc(4 * var(--button-spacing)));
+	margin: calc(calc(4 * var(--button-spacing)) / 2);
+}
+
+.mouse-pad .button-pressed-5 .mouse-button-5 {
+	opacity: 1;
+	width: calc(100% - calc(5 * var(--button-spacing)));
+	height: calc(100% - calc(5 * var(--button-spacing)));
+	margin: calc(calc(5 * var(--button-spacing)) / 2);
+}
+
+.mouse-pad .cursor .wheel {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 3em;
+}
+
+.mouse-pad .cursor .wheel {
+	opacity: 0;
+}
+
+.mouse-pad .cursor .wheel.x {
+	color: blue;
+}
+
+.mouse-pad .cursor .wheel.y {
+	color: green;
+}
+
+.mouse-pad .cursor.yPlus .wheel.plus.y {
+	opacity: 1;
+}
+
+.mouse-pad .cursor.yMinus .wheel.minus.y {
+	opacity: 1;
+}
+
+.mouse-pad .cursor.xPlus .wheel.plus.x {
+	opacity: 1;
+}
+
+.mouse-pad .cursor.xMinus .wheel.minus.x {
+	opacity: 1;
+}

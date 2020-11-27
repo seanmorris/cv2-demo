@@ -1,0 +1,64 @@
+.gamepad {
+	width: 100%;
+}
+
+.gamepad .button {
+	display: flex;
+	box-sizing: border-box;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid black;
+	border-radius: 50%;
+	width: 2em;
+	height: 2em;
+}
+
+.gamepad .main-cluster .button {
+	transform: rotate(-45deg);
+}
+
+.gamepad .button{
+	background: rgba(255,0,0,var(--pressed));
+}
+
+.main-cluster {
+	display: flex;
+	width: 4em;
+	flex-wrap: wrap;
+	transform: rotate(45deg);
+}
+
+.mid-buttons {
+	display: flex;
+	justify-content: space-around;
+}
+
+.shoulder-buttons,
+.main-buttons,
+.sticks {
+	width: 100%;
+	display: flex;
+	justify-content: space-around;
+}
+
+.gamepad .joystick {
+	border: 1px solid black;
+	border-radius: 50%;
+	width: 4em;
+	height: 4em;
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.gamepad .joystick:after {
+	position: relative;
+	border: 1px solid black;
+	border-radius: 50%;
+	content: ' ';
+	margin-left: calc(100% * var(--xpos));
+	margin-top: calc(100% * var(--ypos));
+	width: 0.2em;
+	height: 0.2em;
+}

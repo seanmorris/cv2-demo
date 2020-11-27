@@ -13,6 +13,7 @@ import { View as RulesView  } from 'RulesDemo/View';
 import { View as KeyboardView } from 'KeyboardDemo/View';
 
 import { GamepadDemo } from 'demos/gamepad/GamepadDemo';
+import { MouseDemo   } from 'demos/mouse/MouseDemo';
 
 import { View as ScalarView } from 'ScalarDemo/View';
 import { View as ChainView  } from 'ChainDemo/View';
@@ -92,6 +93,7 @@ ${rawquire('../LICENSE')}
 	}
 
 	, gamepad: () => new GamepadDemo
+	, mouse:   () => new MouseDemo
 
 	, keyboard: () => new KeyboardView
 
