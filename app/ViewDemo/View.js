@@ -24,7 +24,7 @@ export class View extends BaseView
 
 		this.template = require('./template');
 
-		const basicViewEditor   = new Editor;
+		const basicViewEditor = new Editor;
 
 		basicViewEditor.args.files = [
 			{

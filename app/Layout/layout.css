@@ -2,6 +2,7 @@ body {
 	flex-direction: column;
 	display:        flex;
 	overflow-y:     scroll;
+	overflow-x:    auto;
 	text-align:     justify;
 }
 
