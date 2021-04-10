@@ -128,6 +128,7 @@ pre.wrap {
 
 .centered {
 	align-items: center;
+	justify-content: center;
 }
 
 .spaced-out {
@@ -148,4 +149,22 @@ pre.wrap {
 
 button {
 	margin-right: 0.5em;
+}
+
+input {
+	padding: 7pt;
+	margin-right: 0.5em;
+}
+
+label {
+	margin-right: 0.5em;
+}
+
+fieldset {
+	align-items: center;
+}
+
+.project {
+	max-width: 400px;
+	margin-right: 3em;
 }

@@ -1,4 +1,5 @@
 import { View as BaseView } from 'curvature/base/View';
+import { Bindable } from 'curvature/base/Bindable';
 
 import { Keyboard } from 'curvature/input/Keyboard';
 
@@ -45,7 +46,7 @@ export class Editor extends BaseView
 
 			for(const i in v)
 			{
-				const file     = v[i];
+				const file     = Bindable.make(v[i]);
 				const callback = () => this.showField(file.label);
 				const label    = file.filename;
 

@@ -68,5 +68,23 @@ export class GamepadView extends View
 
 			this.args['b' + ii] = button.value;
 		}
+
+		if(this.willRumble)
+		{
+			// pad.vibrationActuator.pulse();
+
+			console.log(pad.vibrationActuator.playEffect("dual-rumble", {
+				duration: 1000,
+				strongMagnitude: 1.0,
+				weakMagnitude: 1.0
+			}));
+
+			this.willRumble = false;
+		}
+	}
+
+	rumble()
+	{
+		this.willRumble = true;
 	}
 }

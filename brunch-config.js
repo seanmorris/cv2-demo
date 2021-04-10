@@ -2,7 +2,7 @@ exports.files = {
 
 	javascripts: {
 		joinTo: {
-			'app.js': /app\/*/
+			'app.js': /(app\/*|package.json)/
 			, 'curvature.js': /node_modules\/curvature\/.+/
 			, 'vendor.js': /node_modules\/((?!curvature).)+\/.+?/
 		}
@@ -31,7 +31,7 @@ exports.plugins = {
 		, log: true
 	},
 	raw: {
-		pattern: /\.(jss|html|php|tmp|svg)/,
+		pattern: /\.(jss|html|php|tmp|svg|json)/,
 		wrapper: content => `module.exports = ${JSON.stringify(content)}`
 	}
 };

@@ -5,18 +5,16 @@
 		cv-with = "row"
 		class   = "table-row [[row.___header]]">
 
-		<div>[[id]]</div>
+		<div cv-bind = "id"></div>
 
 		<div>
-			<span cv-if = "___header">
-				title
-			</span>
+			<span cv-if = "___header" cv-bind = "title"></span>
 			<span cv-if = "!___header">
 				<input type = "text" cv-bind = "title" placeholder = "input a title">
 			</span>
 		</div>
 
-		<div>[[value]]</div>
+		<div cv-bind = "value"></div>
 
 		<div cv-if = "!___header">
 

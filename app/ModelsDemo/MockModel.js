@@ -3,6 +3,8 @@ import { Database } from 'curvature/model/Database';
 
 export class MockModel extends Model
 {
+	static get keyProps(){ return ['id', 'class'] };
+
 	constructor()
 	{
 		super();

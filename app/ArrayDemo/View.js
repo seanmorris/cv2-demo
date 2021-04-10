@@ -21,12 +21,12 @@ export class View extends BaseView
 			return;
 		}
 
-		this.args.list.splice(position, del, item);
+		this.args.list.splice(position, del, `Spliced Item ${this.z++}`);
 	}
 
 	arrayUnshift()
 	{
-		this.args.list.unshift((this.z++) + ' new_shift' );
+		this.args.list.unshift(`UnShifted Item ${this.z++}`);
 	}
 
 	arrayShift()
@@ -36,7 +36,7 @@ export class View extends BaseView
 
 	arrayPush()
 	{
-		this.args.list.push((this.z++) + ' new_push');
+		this.args.list.push(`Pushed Item ${this.z++}`);
 	}
 
 	arrayPop()

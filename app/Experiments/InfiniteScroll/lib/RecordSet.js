@@ -8,7 +8,7 @@ export class RecordSet
 
 	constructor()
 	{
-		this.length = 1000000;
+		this.length = 1000;
 
 		const get = (t, k) => {
 
@@ -25,21 +25,21 @@ export class RecordSet
 			return this[_Fetch](Number(k));
 		};
 
-		const set = (t, k, v) => {
+		// const set = (t, k, v) => {
 
-			if(typeof k === 'symbol' || parseInt(k) !== Number(k))
-			{
-				return true;
-			}
+		// 	// if(typeof k === 'symbol' || parseInt(k) !== Number(k))
+		// 	// {
+		// 	// 	return true;
+		// 	// }
 
-			return true;
-		};
+		// 	return true;
+		// };
 
 		const del = (t, k) => {
 			return true;
 		};
 
-		return new Proxy(Bindable.make(this), {get, set, delete:del});
+		return Bindable.make(new Proxy(this, {get}));
 	}
 
 	count()
@@ -68,12 +68,12 @@ export class RecordSet
 			this.content = [];
 		}
 
-		if(this.content[k])
+		if(!this.content[k])
 		{
-			return this.content[k];
+			this.content[k] = this.fetch(k);
 		}
 
-		return this.content[k] = this.fetch(k);
+		return this.content[k]
 	}
 
 	fetch(k)

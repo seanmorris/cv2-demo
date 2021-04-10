@@ -189,3 +189,7 @@ div.table-row > *:last-child {
 	width: 4em;
 	text-align: center;
 }
+
+.cv-hyperscroller-row input {
+	padding: 2pt;
+}

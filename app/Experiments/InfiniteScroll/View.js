@@ -60,7 +60,7 @@ export class View extends BaseView
 
 		gridScroller.args.content = recordSet;
 
-		this.args.bindTo('rows', v => recordSet.changed(v));
+		this.args.bindTo('rows', v => recordSet.changed(v), {wait:0});
 
 		this.args.simpleRows = 1000;
 
@@ -68,7 +68,7 @@ export class View extends BaseView
 		this.args.stringScroller = new InfiniteScroller({rowHeight: 33});
 		this.args.viewScroller   = new InfiniteScroller({rowHeight: 33});
 
-		console.log(LoneScrollbar);
+		// console.log(LoneScrollbar);
 
 		this.args.infiniteVertScroller  = new LoneScrollbar({size: 1000, value: 500});
 
@@ -76,7 +76,7 @@ export class View extends BaseView
 		this.args.horizScroller = new LoneScrollbar({horizontal: true});
 	}
 
-	attached()
+	onRendered()
 	{
 		this.args.viewScroller.args.content   = new ViewRecords;
 		this.args.stringScroller.args.content = new StringRecords;

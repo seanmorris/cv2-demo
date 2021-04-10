@@ -58,7 +58,7 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 		});
 	}
 
-	attached()
+	onRendered()
 	{
 		const container = this.container = this.tags.list;
 		const scroller  = this.scroller  = (this.tags.scroller || container);
@@ -72,17 +72,17 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 		});
 
 		shim.style({
-			pointerEvents:    'none'
-			, position:         'absolute'
-			, opacity:          0
-			, height:           'var(--shimHeight)'
-			, width:            '1px'
+			pointerEvents: 'none'
+			, position:    'absolute'
+			, opacity:     0
+			, height:      'var(--shimHeight)'
+			, width:       '1px'
 		});
 
 		this.listen(scroller.node, 'scroll', event => this.updateViewport(event));
 
-		this.args.bindTo('snapOffset', v => container.style({'--snapperOffset': `${-1*v}px`}));
-		this.args.bindTo('snapOffset', v => container.style({'--snapperOffset': `${-1*v}px`}));
+		this.args.bindTo('snapOffset', v => container.style({'--snapperOffset': `${-1*v}px`}), {wait: 0});
+		this.args.bindTo('snapOffset', v => container.style({'--snapperOffset': `${-1*v}px`}), {wait: 0});
 
 		scroller.append(shim.element);
 
@@ -135,29 +135,32 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 
 					this.args.shimHeight = (headerRow + v) * this.args.rowHeight;
 
-					this.onNextFrame(() => this.updateViewport());
-				});
+					// this.onNextFrame(() => this.updateViewport());
+
+					this.updateViewport();
+				}, {wait: 0});
 			}
-
-			this.onNextFrame(()=> this.updateViewport());
-
+			else
+			{
+				this.updateViewport();
+			}
 		}, {wait: 0});
-
 
 		this.updateViewport();
 	}
 
 	updateViewport(event)
 	{
-		this.snapper && this.snapper.cancel();
+		const container = this.container;
+		const scroller  = this.scroller || container;
 
 		if(this.changing)
 		{
 			return;
 		}
 
-		const container = this.container;
-		const scroller  = this.scroller || container;
+		this.snapper && this.snapper.cancel();
+
 		const headers   = this.header && this.header();
 
 		const start = this.args.scrollTop    = scroller.scrollTop;
@@ -223,6 +226,9 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 		{
 			container.style({'--inertiaOffset': `0px`});
 			container.style({'--snapperOffset': `0px`});
+			this.args.snapOffset = 0;
+
+			this.snapperDone && this.snapperDone();
 			return;
 		}
 
@@ -235,15 +241,15 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 		const groove   = closeRow * this.args.rowHeight;
 		const diff     = groove - start;
 
-		let duration = Math.abs(diff * this.args.rowHeight / 2);
+		let duration = Math.abs(diff * this.args.rowHeight);
 
-		if(duration > 128)
+		if(duration > 512)
 		{
-			duration = 128;
+			duration = 512;
 		}
 
-		const snapper = Math.abs(diff) > 3
-			? new ElasticOut(duration * 12, {friction: 0.2})
+		const snapper = Math.abs(diff) > 2
+			? new ElasticOut(duration * 5, {friction: 0.05})
 			: new GeoIn(duration, {power: 5});
 
 		this.snapperDone && this.snapperDone();
@@ -261,16 +267,21 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 
 			if(scroller.scrollTop !== groove)
 			{
-				this.args.snapOffset = 0;
 				scroller.scrollTop = groove;
 			}
 
+			this.args.snapOffset = 0;
+
 			this.snapperDone && this.snapperDone();
+
 			event.preventDefault();
 
 		}).catch(elapsed => {
-			const offset = this.snapper.current() * diff;
-			this.args.snapOffset = offset;
+
+			// const offset = this.snapper.current() * diff;
+
+			// this.args.snapOffset = 0;
+
 		});
 
 		this.scrollFrame && cancelAnimationFrame(this.scrollFrame);
@@ -284,13 +295,15 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 	{
 		if(this.changing)
 		{
+			// cancelAnimationFrame(this.changing);
+			// this.changing = false;
 			return;
 		}
 
-		// if(this.first === first && this.last === last)
-		// {
-		// 	return;
-		// }
+		if(this.first === first && this.last === last)
+		{
+			return;
+		}
 
 		if(!this.tags.list)
 		{
@@ -298,14 +311,12 @@ export class InfiniteScroller extends Mixin.from(BaseView)
 		}
 
 		const listTag     = this.tags.list;
-		const visibleList = this.viewLists.get(listTag.element);
+		const visibleList = this.viewLists.get(listTag.node);
 
 		if(!visibleList)
 		{
 			return;
 		}
-
-		this.changing = true;
 
 		const visible = visibleList.views;
 

@@ -15,6 +15,13 @@ export class GamepadDemo extends View
 		this.args.pads = [];
 	}
 
+	onAttached()
+	{
+		const l = ()=> { this.loop(); requestAnimationFrame(l); };
+
+		requestAnimationFrame(l);
+	}
+
 	padConnected(event)
 	{
 		const pad  = event.gamepad;
@@ -22,12 +29,6 @@ export class GamepadDemo extends View
 		const view = new GamepadView({pad}, this);
 
 		this.args.pads[ pad.index ] = view;
-
-		console.log(this.args.pads);
-
-		const l = ()=> { this.loop(); requestAnimationFrame(l); };
-
-		requestAnimationFrame(l);
 	}
 
 	loop()
@@ -39,7 +40,7 @@ export class GamepadDemo extends View
 		{
 			if(!this.args.pads[i])
 			{
-				this.args.pads[i] = null;
+				this.args.pads.splice(i);
 				continue;
 			}
 

@@ -16,8 +16,6 @@ export class LoneScrollbar extends View
 	{
 		this.args.bindTo('value', v => {
 
-			console.log(Date.now());
-
 			if(v === 0)
 			{
 				this.tags.scroller[posKey] = 0;
