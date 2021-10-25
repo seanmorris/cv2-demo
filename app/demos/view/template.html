@@ -1,0 +1,61 @@
+<h2>views</h2>
+
+<p>A View object represents a chunk of HTML paired with a bit of logic. Views are event targets.</p>
+
+<p>Views allow you to stitch data into HTML or SVG.</p>
+
+[[basicViewEditor]]
+
+<h3>Scalar Binding</h3>
+
+<p>Scalars can be bound with double square brackets:</p>
+
+[[scalarEditor]]
+
+<h3>Two way binding, Events & Methods</h3>
+
+<p>Two way binding is also supported.</p>
+
+<p>Methods can be bound to events with cv-on.</p>
+
+[[twoWayEditor]]
+
+<h3>Transformations</h3>
+
+<p>Values can also be transformed with methods:</p>
+
+[[reverseViewEditor]]
+
+<h3>Escaping</h3>
+
+<p>HTML is automatically escaped unless "$" is used:</p>
+
+[[escapeViewEditor]]
+
+<h3>Arrays & Objects</h3>
+
+<p>Arrays and objects may be looped over with the cv-each attribute:</p>
+
+[[arrayViewEditor]]
+
+<!--
+<h3>Methods</h3>
+<p>Values of any type may be transformed by methods:</p>
+[[editorJson]]
+ -->
+
+<h3>Templates</h3>
+
+<p>Reusable templates can be created with the cv-template attribute.</p>
+
+<p>Templates may be reused within the same view with the cv-slot attribute.</p>
+
+[[reuseViewEditor]]
+
+<h2>Lifecycle</h2>
+
+<h4>Construct</h3>
+<h4>Render</h3>
+<h4>Attach</h3>
+<h4>Detach</h3>
+<h4>Remove</h3>

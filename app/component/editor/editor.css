@@ -342,11 +342,11 @@
 	border: 1px solid white;
 }
 
-.sample-editor[data-changed=true] .status button {
+.sample-editor[data-throttled=false] .status button {
 	cursor: pointer;
 }
 
-.sample-editor[data-changed=false] .status button {
+.sample-editor[data-throttled=true] .status button {
 	pointer-events: none;
 	border-color: white;
 	background: black;

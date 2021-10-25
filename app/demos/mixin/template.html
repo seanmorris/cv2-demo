@@ -1,0 +1,29 @@
+<h2>mixin</h2>
+
+<p>Mixins provide a multiple-inheritance like facility.</p>
+
+<p>The Mixin class provides 3 static methods to create mixins:</p>
+
+<ul>
+	<li>Mixin.with(...mixins)</li>
+	<li>Mixin.from(baseClass, ...mixins)</li>
+	<li>Mixin.to(toClass, ...mixins)</li>
+</ul>
+
+<h3>Using Mixins:</h3>
+
+<h4>Mixin.with(...mixins)</h4>
+
+<p>The simplest method, Mixin.with() takes a list of mixins and applies them to an emply base class. It then returns the resulting class, which can then be extended or instantiated.</p>
+
+<p>You can see it in action on line 6 of Countdown.js below, where it is used to allow Countdown objects to act like both Promises and EventTargets.</p>
+
+[[editor]]
+
+<h4>Mixin.from(baseClass, ...mixins)</h4>
+
+<p>Mixin.from() takes a base class and a list of mixins. It extends the base class, and applies the mixin to the new class before returning it.</p>
+
+<h4>Mixin.to(toClass, ...mixins)</h4>
+
+<p>Mixin.to() takes a class and a list of mixins. It then applies the mixins to the class, in-place.</p>

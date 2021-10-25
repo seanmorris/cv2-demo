@@ -1,0 +1,52 @@
+<h2>cookies</h2>
+
+<p>The editor used in the other demos doesn't support cookies,
+since it doesn't use an http origin, however you can view the
+source of the controls below.</p>
+
+<p><b>test-cookie-a</b>: <span class = "cookie" cv-if = "testCookieA">🍪 [[testCookieA]]</span></p>
+
+<div class = "row">
+	<button cv-on = "click:getCookie(event, 'test-cookie-a', 'aa')">get</button>
+	<button cv-on = "click:setCookie(event, 'test-cookie-a', 'aa')">set</button>
+	<button cv-on = "click:delCookie(event, 'test-cookie-a')">del</button>
+</div>
+
+<div class = "row">
+	<input type = "text" cv-bind = "aa">
+</div>
+
+<p><b>test-cookie-b</b>: <span class = "cookie" cv-if = "testCookieB">🍪 [[testCookieB]]</span></p>
+
+<div class = "row">
+	<button cv-on = "click:getCookie(event, 'test-cookie-b', 'bb')">get</button>
+	<button cv-on = "click:setCookie(event, 'test-cookie-b', 'bb')">set</button>
+	<button cv-on = "click:delCookie(event, 'test-cookie-b')">del</button>
+</div>
+
+<div class = "row">
+	<input type = "text" cv-bind = "bb">
+</div>
+
+<p><b>test-cookie-c</b>: <span class = "cookie" cv-if = "testCookieC">🍪 [[testCookieC]]</span></p>
+
+<div class = "row">
+	<button cv-on = "click:getCookie(event, 'test-cookie-c', 'cc')">get</button>
+	<button cv-on = "click:setCookie(event, 'test-cookie-c', 'cc')">set</button>
+	<button cv-on = "click:delCookie(event, 'test-cookie-c')">del</button>
+</div>
+
+<div class = "row">
+	<input type = "text" cv-bind = "cc">
+</div>
+
+<div class = "article-box">
+	<div class = "highlight-bar">CookieDemo/view.js</div>
+	[[jsEditor]]
+</div>
+
+<div class = "article-box">
+
+	<div class = "highlight-bar">CookieDemo/template.html</div>
+	[[htmlEditor]]
+</div>

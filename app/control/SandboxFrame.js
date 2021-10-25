@@ -26,15 +26,23 @@ export class SandboxFrame extends View
 			]
 		};
 
-		this.listen(window, 'message', event => this.onMessage(event));
 
 		this.frameTag = false;
 		this.debind   = false;
 		this.cspTag   = false;
 	}
 
-	onAttached()
+	onAttached(event)
 	{
+		if(this.hasAttached)
+		{
+			return;
+		}
+
+		this.hasAttached = true;
+
+		this.listen(window, 'message', event => this.onMessage(event));
+
 		this.cspTag   && this.cspTag.remove();
 		this.frameTag && this.frameTag.remove();
 		this.debind   && this.debind();
@@ -49,14 +57,9 @@ export class SandboxFrame extends View
 			cspTag.attr({content});
 		});
 
-		const frameDoc = this.tags.sandbox.contentDocument;
-
-		frameDoc.head.append(cspTag.node);
-
 		const frameTag = new Tag(`<iframe sandbox = "allow-scripts" />`);
-
-		this.debind = this.args.bindTo('source', v => frameTag.attr({'srcdoc': v}));
-
+		const frameDoc = this.tags.sandbox.node.contentDocument;
+		frameDoc.head.append(cspTag.node);
 		frameDoc.body.append(frameTag.node);
 
 		frameTag.style({
@@ -81,6 +84,8 @@ export class SandboxFrame extends View
 		this.cspTag   = cspTag;
 
 		this.listen(frameTag, 'load', event => this.onFrameLoaded(event));
+
+		this.debind = this.args.bindTo('source', v => frameTag.attr({'srcdoc': v}));
 	}
 
 	onFrameLoaded(event)
@@ -108,14 +113,9 @@ export class SandboxFrame extends View
 			return;
 		}
 
-		// console.log(this, event);
-
 		this.dispatchEvent(new CustomEvent('SandboxMessage', {detail: {
 			view: this, data: event.data
 		}}));
-
-		// console.log(this, event);
-		// console.log(event.target.contentWindow.frames[0]);
 
 		// const message = JSON.parse(event.data);
 		// const type    = message.shift()

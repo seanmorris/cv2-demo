@@ -1,0 +1,37 @@
+<article class = "matrix-api">
+	<h2>matrix api</h2>
+
+	<span cv-if = "!loggedIn">
+		<p>Not logged in.</p>
+		<button cv-on = "click:login">login</button>
+	</span>
+
+	<span cv-if = "loggedIn">
+		<p><b>Logged in.</b></p>
+	</span>
+
+	<p>⚠️ This demo is under construction. ⚠️</p>
+
+	<p>Install matrix-api with the npm package manager.</p>
+
+	<pre>$ npm install matrix-api</pre>
+
+	<p>Then, import or require the module in your javascript:</p>
+
+	<pre>import { Matrix } from 'matrix-api/Matrix';</pre>
+	or
+	<pre>const Matrix = require('matrix-api/Matrix').Matrix;</pre>
+
+	<p>You can also include Curvature & Matrix-Api API libraries from a CDN with:</p>
+
+	<pre>&lt;script src = "https://unpkg.com/curvature@0.0.66-p/dist/curvature.min.js"&gt;&lt;/script&gt;
+&lt;script src = "https://unpkg.com/matrix-api@0.0.0-d/dist/matrix-api.min.js"&gt;&lt;/script&gt;</pre>
+
+	<p>Or pull a version with -just- enough Curvature to run Matrix API:</p>
+
+	<pre>&lt;script src = "https://unpkg.com/matrix-api@0.0.0-d/dist/matrix-api.standalone.js"&gt;&lt;/script&gt;</pre>
+</article>
+
+<p>The source of this view is below: </p>
+
+[[editor]]

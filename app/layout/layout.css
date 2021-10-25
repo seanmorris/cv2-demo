@@ -1,0 +1,188 @@
+body {
+	flex-direction: column;
+	display:        flex;
+	overflow-y:     scroll;
+	overflow-x:    auto;
+	text-align:     justify;
+}
+
+code, pre {
+	text-align: left;
+}
+
+.navigation {
+	flex-shrink: 0;
+	min-width: 10rem;
+	font-weight: bold;
+}
+
+.content {
+}
+
+.header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.header a {
+	color: white;
+	text-decoration: none;
+}
+
+.header ul {
+	display: flex;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.header ul li {
+	margin-left: 1em;
+	white-space: nowrap;
+	display: flex;
+	align-items: center;
+}
+
+.header ul li a {
+	display: flex;
+}
+
+.layout {
+	flex-direction: row;
+	flex-grow:      1;
+	display:        flex;
+}
+
+.content {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	margin-bottom: 4em;
+}
+
+.row {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.start {
+	justify-content: flex-start;
+}
+
+.end {
+	justify-content: flex-end;
+}
+
+.col {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.row .cell {
+	align-self: stretch;
+	min-width: 10rem;
+	margin-right: 1rem;
+}
+
+.row .cell ol {
+	margin: 0.5em;
+	padding-top: 0.25rem;
+	padding-bottom: 0.25rem;
+	margin-left: 0.5em;
+}
+
+.row .cell ol:empty {
+	padding: 0;
+	margin-bottom: 1rem;
+}
+
+pre.wrap {
+	white-space: pre-wrap;
+}
+
+.wrap {
+	flex-wrap: wrap;
+}
+/*
+.row > *:not(:first-child):not(:last-child) {
+	background: transparent;
+	overflow:   auto;
+	flex:       var(--flex);
+}
+*/
+.full > .content {
+	width: 100%;
+	max-width: 880px;
+}
+
+.col.full {
+	flex: 1;
+}
+
+.row .half {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	justify-content: flex-start;
+	position: relative;
+}
+
+.row.editors {
+	flex: 1;
+}
+
+.row .half {
+	flex: 1;
+}
+
+.row .half:empty {
+	flex: 0;
+}
+
+.centered {
+	align-items: center;
+	justify-content: center;
+}
+
+.spaced-out {
+	justify-content: space-around;
+	width: 100%;
+}
+
+.article-box p {
+	margin-left: 0.5em;
+	margin-right: 0.5em;
+}
+
+.sub-box {
+	position: relative;
+	width:  100%;
+	height: 100%;
+}
+
+button {
+	margin-right: 0.5em;
+}
+
+select, input {
+	padding: 3pt;
+	margin-right: 0.5em;
+}
+
+label {
+	margin-right: 0.5em;
+}
+
+fieldset {
+	align-items: center;
+}
+
+.project {
+	max-width: 400px;
+	margin-right: 3em;
+}

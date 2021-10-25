@@ -20,8 +20,8 @@ export class CurvatureFrame extends SandboxFrame
 				+ '<'+`script src="${location.origin}/curvature.js"><`+'/script>'
 
 				+ this.editor.args.files
-					.filter(file=>file.type === 'text/html')
-					.map(file=>`<`
+					.filter(file => ['text/html', 'application/xml'].includes(file.type))
+					.map(file => `<`
 						+`script type = "text/babel" data-presets = "es2015" data-module = "${file.filename}">`
 						+ `require.register('./'+${JSON.stringify(file.filename)}, (_exports, require, module) => module.exports = ${JSON.stringify(file.editor.args.value)});`
 						+ `<` + `/script>`)
@@ -50,7 +50,9 @@ export class CurvatureFrame extends SandboxFrame
 				+ '<'+'/html>'
 		);
 
-		this.args.source = sampleHtml;
+		this.args.source = '';
+
+		this.onTimeout(0, () => this.args.source = sampleHtml);
 
 		this.editor.args.changed = false;
 		this.editor.args.status  = '';

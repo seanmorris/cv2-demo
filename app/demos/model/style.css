@@ -1,0 +1,492 @@
+.models-demo input:not([type=submit]),
+.models-demo select {
+	background-color: #EEE;
+}
+
+.models-demo input[data-property="id"],
+.models-demo input[data-property="class"] {
+}
+
+.models-demo input[disabled] {
+	cursor: not-allowed;
+}
+
+.models-demo option:checked {
+	display: none;
+}
+
+.models-demo select:focus,
+.models-demo option:hover,
+.models-demo input:not([type=submit]):focus {
+	outline: none!important;
+	background-color: #DEDEDE;
+}
+
+.models-demo .property-edit label {
+	user-select: none;
+	pointer-events: none;
+	margin-bottom: -1.25rem;
+	margin-left:0.333rem;
+	z-index: 1;
+	transition: transform 0.1s ease-in, opacity 0.1s ease-in;
+	transform-origin: left top;
+	opacity: 0.75;
+}
+
+.models-demo .property-edit:focus-within label {
+	opacity: 1;
+	transition: transform 0.1s ease-out, opacity 0.1s ease-in;
+	transform: scale(0.875) translateY(-0.05rem);
+}
+
+.models-demo .property-edit select,
+.models-demo .property-edit input {
+	padding: 0.25rem;
+	padding-top: 1rem;
+}
+
+.models-demo .property-edit input {
+	border-bottom: 1px solid black !important;
+	border-right: 1px solid black !important;
+	border-left: 1px solid black !important;
+	font-weight: bold;
+	box-sizing: border-box;
+	width: 100%;
+}
+
+.models-demo pre{
+	line-height: 1.5em;
+}
+
+.models-demo pre img[data-icon] {
+	cursor: pointer;
+	margin-left: 0.5em;
+	display: inline;
+	opacity: 1;
+	background-color: #ccc;
+	border: 1px solid #aaa;
+}
+
+.models-demo pre span.firstline img:first-child {
+	/*margin-left: auto;*/
+}
+
+.models-demo pre img[data-icon]:focus {
+	opacity: 0.85;
+	outline: 1px dotted black;
+}
+
+.models-demo pre img[data-icon]:active {
+	opacity: 0.5;
+	filter: invert(55%);
+}
+
+.models-demo .firstline {
+	display: flex;
+	align-items: center;
+}
+
+.models-demo .prop-fields {
+	margin-left: 0.25rem;
+	margin-top: -0.75rem;
+	margin-bottom: 0.5rem;
+}
+
+.models-demo [contenteditable]:focus {
+	outline: none;
+}
+
+.prop-remove {
+	cursor: pointer;
+	pointer-events: initial;
+	margin-right: 0.25rem;
+}
+
+.remove-id, .remove-class {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.database-editor,
+.model-editor {
+	border: 1px solid black;
+	display: inline-block;
+}
+
+.model-editor {
+	flex: 1;
+}
+
+.database-editor {
+	box-sizing: border-box;
+	width: 100%;
+}
+
+.database-editor-body {
+	display: flex;
+	flex-direction: row;
+}
+
+.database-store-list {
+	border-right: 1px solid black;
+	flex-shrink: 1;
+	align-items: flex-end;
+}
+
+.database-store-list ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.database-store-list ul li {
+	padding: 0.5em;
+	cursor: pointer;
+}
+
+.models-demo .models {}
+
+.models-demo .model-editor-title {
+	display: flex;
+	flex-direction: row;
+	background: black;
+	color: white;
+	font-weight: bold;
+	font-size: 0.85em;
+	padding: 0.5em;
+	user-select: none;
+}
+
+.model-editor pre {
+	font-size: 0.9em;
+}
+
+.models-demo > .model-editors {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+	margin-left: -1em;
+}
+
+.model-editor {
+	flex-direction: column;
+	overflow: hidden;
+	margin-left: 1em;
+	margin-bottom: 1em;
+}
+
+.model-editor .model-editor-title .title {
+	flex: 1;
+}
+
+.model-editor .model-editor-title .buttons {
+	margin-right: 0.25em;
+}
+
+.model-loader .model-editor-title .buttons {
+	pointer-events: none;
+	opacity: 0;
+}
+
+.model-editor .model-editor-title .buttons > * {
+	cursor: pointer;
+}
+
+img:focus,
+input:focus,
+button:focus {
+	outline: 1px dotted black;
+	outline-offset: 1px;
+}
+
+.model-editor .property-edit {
+	display: flex;
+	width: 100%;
+	flex-direction: column;
+	margin-top: 0.5em;
+}
+
+.models-demo .model-editor-eyebrow,
+.models-demo .model-editor-text {
+	font-size: 0.85em;
+	padding: 0.5em;
+}
+
+.models-demo .model-editor-eyebrow {
+	min-height: 4em;
+}
+
+.model-editor .new-property {
+	display: flex;
+	justify-content: center;
+}
+
+.model-editor .new-property {
+	border: 1px solid black !important;
+	margin: 0.5em;
+}
+
+.model-editor input {
+	flex: 1;
+}
+
+.model-editor form > .buttons {
+	margin-bottom: 0.5em;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex: 1;
+}
+
+.model-editor .buttons > * {
+	flex-grow: 0;
+}
+
+input[type=submit],
+button {
+	cursor: pointer;
+	font-weight: bold;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+	border: none;
+	background: black;
+	color: white;
+}
+
+input[type=submit].tight,
+button.tight {
+	border-bottom: 1px solid black;
+	display: inline-block;
+}
+
+input[type=submit]:not(.tight),
+button:not(.tight) {
+	padding: 8pt;
+}
+
+label.buttons div {
+	display: flex;
+	align-items: center;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+.model-editor input {
+	border: 0;
+}
+
+.model-editor input,
+label.buttons input[type=submit],
+label.buttons button,
+.model-editor button {
+	margin: 0px;
+}
+
+.model-editor pre {
+	padding: 0.5em;
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+}
+
+.models-demo .CodeMirror.cm-s-elegant {
+	margin-bottom: 1em;
+	height: auto;
+}
+
+.database-editor-right {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+}
+
+.database-editor-right > *{
+	padding: 0.5em;
+}
+
+.database-editor-right form {
+	padding: 0;
+	display: flex;
+	flex-direction: row;
+	box-sizing: border-box;
+	flex-wrap: wrap;
+}
+
+.database-editor-right form label select,
+.database-editor-right form label input{
+	margin-top: 0.5em;
+}
+
+.database-editor-right label {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	padding-top: 0.5em;
+	padding-right: 0.5em;
+}
+
+.database-editor-right label:first-child {
+	border-left: none;
+	padding-left: 0.5em;
+}
+
+.database-editor-right select,
+.database-editor-right input {
+	width: 100%;
+	box-sizing: border-box;
+	border-right: none;
+	border: 1px solid black;
+}
+
+label.buttons {
+	padding: 0.5em;
+	min-width: 100%;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+}
+
+.scroller.tight {
+	padding: 0;
+	box-sizing: border-box;
+	border: 0;
+	border-top: 1px solid black;
+}
+
+.model-editor-body {
+	position: relative;
+}
+
+.model-editor .database-store-selector {
+	display: flex;
+	flex-direction: column;
+	position: absolute;
+	background: white;
+	z-index: 1;
+	top: 0.5em;
+	left: 0.5em;
+	bottom: 0.5em;
+	right: 0.5em;
+	opacity: 0;
+	overflow: scroll;
+	transition: opacity 0.5s ease-in;
+	pointer-events: none;
+}
+
+.model-editor.saving .database-store-selector {
+	opacity: 1;
+	pointer-events: initial;
+}
+
+.model-editor .database-store-selector > *:first-child {
+	border-top: 1px solid #999;
+}
+
+.model-editor .database-store-selector > * {
+	flex: 0 0 2em;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-bottom: 1px solid #999;
+}
+
+.model-scroller {
+	min-height: 20em;
+}
+
+.model-scroller input,
+.model-scroller {
+	font-size: 9pt;
+}
+
+.model-scroller .table-row > div {
+	display: flex;
+	flex-direction: row;
+}
+
+.model-scroller .table-row > div > * {
+	flex: 1 1 33%;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding: 0.3em;
+	border-bottom: 1px solid #AAA;
+	border-right: 1px solid #999
+}
+
+.database-editor .table-row label[data-property="id"] {
+	flex: 0 0 6em;
+	order: -2;
+	min-width: 3em;
+}
+
+.database-editor  .table-row label[data-property="class"] {
+	flex: 0 0 8em;
+	order: -1;
+}
+
+.database-editor [data-property="id"] input,
+.database-editor [data-property="class"] input {
+	color: #555;
+}
+
+.database-editor .scroller .table .table-row div input {
+	border-right: 1px solid #666;
+	border-bottom: 1px solid #666;
+	text-decoration: none;
+	padding: 0.5em;
+}
+
+.database-editor .scroller .table .table-row > div > * {
+	transition: flex 0.2s ease-out, opacity 0.8s ease-in;
+}
+
+.database-editor .scroller .table .table-row > div:focus-within > *:not(:focus-within) {
+	flex: 0 1 0%;
+	overflow: hidden;
+	/*opacity: 0.75;*/
+}
+.database-editor .scroller .table .table-row > div > *:focus-within {
+	background: #bbb;
+	font-weight: bold;
+	transition: flex 0.5s ease-in, opacity 0.8s ease-in;
+	flex: 1 1 100%;
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+}
+
+[data-property="id"] input
+,[data-property="class"] input {
+	pointer-events: none;
+	color: #333;
+}
+
+.database-editor .scroller .table .table-row label[data-property="id"] input,
+.database-editor .scroller .table .table-row label[data-property="class"] input {
+	border: 0;
+	text-decoration: none;
+}
+
+.database-editor .db-active {
+	background: black;
+	color: white;
+	font-weight: bold;
+	transition: 0.25s ease-in background, 0.5s ease-out color;
+}
+
+.database-editor .database-store-list {
+	font-size: 0.9em;
+}
+
+.database-editor .database-store-list p {
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+}
+
+.database-editor label span {
+	user-select: none;
+}
+
+.database-editor a {
+	cursor: pointer;
+}

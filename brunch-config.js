@@ -31,12 +31,13 @@ exports.plugins = {
 		, log: true
 	},
 	raw: {
-		pattern: /\.(jss|html|php|tmp|svg|json)/,
+		pattern: /\.(html|php|tmp|svg|json)/,
 		wrapper: content => `module.exports = ${JSON.stringify(content)}`
 	}
 };
 
 exports.watcher = { awaitWriteFinish: true };
+
 exports.npm = {
 	styles: {
 		codemirror: [

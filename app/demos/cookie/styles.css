@@ -1,0 +1,12 @@
+span.cookie {
+	background-color: #DEDEDE;
+	border: 1px solid rgba(0,0,0,0.5);
+	padding: 0.25rem;
+	border-radius: 5px;
+	font-size: 0.8em;
+	font-weight: bold;
+}
+
+span.cookie:empty {
+	display: none;
+}

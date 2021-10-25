@@ -16,7 +16,7 @@ export class CodeEditor extends View
 
 		this.editorDefaults = {
 			mode:           'application/javascript'
-			, theme:        'elegant'
+			// , theme:        'elegant'
 			, gutter:       true
 			, lineNumbers:  true
 			, autoRefresh:  true

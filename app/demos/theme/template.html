@@ -1,0 +1,33 @@
+<h2>theme</h2>
+
+<p>Themes allow you to map arbitrary types to <a cv-link = "views">Views</a>, and if necessary, views to their templates for an added level of abstraction. This behavior can be supplemented with additional views and templates at runtime.</p>
+
+<p>Themes can fallback on other themes if they don't have the View or Template for the given object.</p>
+
+<h3>Usage:</h3>
+
+<p>All the editors on this page are linked, so modifying any files and clicking execute will propagate to the results tab of the first one.</p>
+
+[[basicEditor]]
+
+<h4>Types</h4>
+
+<p>These are the objects that will be mapped to views. They will be given <a cv-link>Bindable</a> wrappers, then provided to <a cv-link = "views">Views</a> as their args property.</p>
+
+<p>Note that you'll need to modify the object through the Bindable wrapper to propagate the changes up to the view.</p>
+
+<p>TypeX.js achieves this by creating the Bindable in the constructor. Subsequent calls to Bindable.make will return the same reference. TypeZ.js returns the bindable from the constructor, so other objects will have the Bindable reference by default. Its child class, TypeZAlpha then does not need to repeat this pattern. the value in TypeY is constant, so we do not make it Bindable by default.</p>
+
+[[typeEditor]]
+
+<h4>Views</h4>
+
+<p>Here are the views that handle the actual output. Their templates will also be pulled from the theme.</p>
+
+[[viewEditor]]
+
+<h4>Templates</h4>
+
+<p>Here are the templates that are used to display the output.</p>
+
+[[templateEditor]]

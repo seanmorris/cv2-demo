@@ -9,17 +9,7 @@ export class RadioBar extends View
 		this.template = require('./radio-bar');
 
 		this.args.buttons = [];
-
-		this.args.bindTo('buttons', v => {
-
-			this.initialHighlight = true;
-
-			this.args.selected = this.args.selected || 0;
-
-			this.onNextFrame(() => this.highlight());
-
-		}, {children:true});
-
+		this.args.selected = this.args.selected || 0;
 	}
 
 	onAttached()
@@ -29,7 +19,13 @@ export class RadioBar extends View
 			return;
 		}
 
-		this.args.selected = this.args.selected || 0;
+		this.args.bindTo('buttons', v => {
+
+			this.initialHighlight = true;
+
+			this.onNextFrame(() => this.highlight());
+
+		}, {children:true});
 
 		this.highlight();
 	}

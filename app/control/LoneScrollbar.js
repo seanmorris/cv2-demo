@@ -42,7 +42,7 @@ export class LoneScrollbar extends View
 			this.tags.scroller[posKey] = position;
 			this.args.position = position;
 
-		}, {frame: 1, throttle: 1000, wait: 100});
+		}, {frame: 1, throttle: 1000});
 
 		this.args.bindTo('horizontal', v => {
 

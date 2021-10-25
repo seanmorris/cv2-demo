@@ -1,0 +1,10 @@
+<div class = "table" cv-ref = "list">
+	<div class = "table-row" cv-ref = "row">
+		<div cv-each = "row:val:key">
+			<label data-property = "[[key]]" title = "[[key]]">
+				<div>[[key]]:</div>
+				<input cv-bind = "val" cv-on = "focus($event)" data-property = "[[key]]" />
+			</label>
+		</div>
+	</div>
+</div>

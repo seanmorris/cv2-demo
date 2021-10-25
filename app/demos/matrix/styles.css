@@ -1,0 +1,8 @@
+article.matrix-api span:empty {
+	display: none;
+}
+
+article.matrix-api pre {
+	white-space: pre-wrap;
+	word-break: break-all;
+}

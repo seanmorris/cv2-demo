@@ -9,8 +9,9 @@ import { RadioBar     } from '../../control/RadioBar';
 import CodeMirror from 'codemirror';
 
 import 'codemirror/mode/css/css';
+import 'codemirror/mode/xml/xml';
+import 'codemirror/mode/php/php';
 import 'codemirror/mode/htmlmixed/htmlmixed';
-import 'codemirror/mode/javascript/javascript';
 
 import { rawquire } from 'rawquire/rawquire.macro';
 
@@ -27,12 +28,37 @@ export class Editor extends BaseView
 		this.args.radioBar  = new RadioBar;
 		this.args.floating  = false;
 		this.args.changed   = true;
+		this.args.throttled = false;
 		// this.args.status    = `Code updated at ${(new Date).toISOString()}.`;
 		this.args.status    = ``;
-		this.args.showField = `*`;
+		this.args.showField = ``;
+
+		this.init = false;
 	}
 
-	onAttached()
+	onRendered()
+	{
+		// this.onVisible();return;
+
+		const observer = new IntersectionObserver(
+			entries => entries.forEach(entry => {
+				if(entry.isIntersecting && !this.init)
+				{
+					this.init = true;
+					this.onVisible();
+					observer.unobserve(this.tags.editor.node);
+				}
+			})
+		);
+
+		observer.observe(this.tags.editor.node);
+
+		this.onRemove(() => {
+			observer.unobserve(this.tags.editor.node);
+		});
+	}
+
+	onVisible()
 	{
 		this.args.bindTo('files', v => {
 
@@ -56,14 +82,18 @@ export class Editor extends BaseView
 					file.control = file.editor;
 				}
 
-				file.control && (file.control.editor = this);
+				if(file.control)
+				{
+					file.control.editor = this;
+				}
 
 				if(file.editor && (
 					!radioBarArgs.buttons[i]
 					|| file !== radioBarArgs.buttons[i].file
 				)){
 					file.editor.args.bindTo('value', v =>{
-						this.dispatchEvent(new CustomEvent('input'));
+						const event = new CustomEvent('input', {detail: {value: v, file: file}});
+						this.dispatchEvent(event);
 						this.args.changed = true;
 						this.args.status  = '';
 						this.onTimeout(10, () => this.args.status = this.args.status = `Code updated at ${(new Date).toISOString()}.`);
@@ -82,6 +112,8 @@ export class Editor extends BaseView
 		}, {children: true});
 
 		this.buildPage();
+
+		this.showField('*');
 
 		this.args.selected = this.args.selected || 0;
 
@@ -153,6 +185,17 @@ export class Editor extends BaseView
 
 	buildPage()
 	{
+		const execute = new CustomEvent('execute', {cancelable:true});
+
+		if(!this.dispatchEvent(execute))
+		{
+			return false;
+		}
+
+		this.onTimeout(500, () => this.args.throttled = false);
+
+		this.args.throttled = true;
+
 		for(const i in this.args.files)
 		{
 			const file = this.args.files[i];
@@ -162,7 +205,5 @@ export class Editor extends BaseView
 				file.control.buildPage();
 			}
 		}
-
-		this.dispatchEvent(new CustomEvent('execute'));
 	}
 }

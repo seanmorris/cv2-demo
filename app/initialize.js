@@ -1,6 +1,6 @@
 import { Router   } from 'curvature/base/Router';
 import { RuleSet  }  from 'curvature/base/RuleSet';
-import { View     } from './Layout/View';
+import { View     } from './layout/View';
 
 import { Routes   } from './Routes';
 

@@ -1,5 +1,9 @@
 import { View } from 'curvature/base/View';
 
+import { CurvatureFrame } from '../../control/CurvatureFrame';
+import { Editor   } from '../../component/editor/Editor';
+import { rawquire } from 'rawquire/rawquire.macro';
+
 import { GamepadView } from './GamepadView';
 
 export class GamepadDemo extends View
@@ -13,6 +17,26 @@ export class GamepadDemo extends View
 		this.listen(window, 'gamepadconnected', event => this.padConnected(event))
 
 		this.args.pads = [];
+
+		const editor  = this.args.editor = new Editor;
+
+		const allFiles = {filename: '*', label:  '*'};
+
+		const viewSource = {
+			filename: 'View.js'
+			, label:  'matrix/View.js'
+			, value:  rawquire('./GamepadView.js')
+			, type:   'application/javascript'
+		};
+
+		const templateSource = {
+			filename: 'template.html'
+			, label:  'matrix/template.html'
+			, value:  rawquire('./gamepad.html')
+			, type:   'text/html'
+		};
+
+		editor.args.files = [allFiles, viewSource, templateSource];
 	}
 
 	onAttached()
