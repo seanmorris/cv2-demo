@@ -11,8 +11,8 @@ $foo = new BarBaz;
 
 // Horrified yet?
 
-$baz->x = 100;
-$baz->y = BarBaz::STRING_VALUE;
+$baz->x = BarBaz::STRING_VALUE;
+$baz->y = 100;
 $baz->z = ["array", "array", "array"];
 $baz->𝛼 = (object) ["value" => "something"];
 $baz->Ω = $baz;
