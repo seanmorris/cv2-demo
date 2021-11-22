@@ -38,7 +38,9 @@ ${rawquire('../NOTICE')}<hr />
 ${rawquire('../LICENSE')}
 </pre>`;
 
-export const Routes = {
+export const Routes = Routes || {};
+
+Object.assign(Routes, {
 	'': () => {
 		return new HomeView;
 	}
@@ -141,4 +143,4 @@ export const Routes = {
 	}
 
 	, [false]: () => View.from(require('pages/404.html'))
-};
+});

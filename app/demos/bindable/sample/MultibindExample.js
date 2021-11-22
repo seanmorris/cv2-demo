@@ -10,6 +10,12 @@ foo.z = 0;
 
 foo.bindTo(['x', 'y', 'z'], (v,k) => console.log(k, v));
 
-foo.x = 5;
-foo.y = 6;
-foo.z = 7;
+foo.x = 1;
+foo.y = 1;
+foo.z = 1;
+
+Object.assign(foo, {x: 2, y: 2, z: 2});
+
+foo.x = 3;
+foo.y = 3;
+foo.z = 3;

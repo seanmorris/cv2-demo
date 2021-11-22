@@ -16,7 +16,7 @@ html, body {
 	margin-top: 1em;
 }
 
-p, h3 {
+p, h3, h4, h5 {
 	margin-top: 0.25em;
 	margin-bottom: 0.25em;
 }

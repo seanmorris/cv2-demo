@@ -6,6 +6,8 @@ export class GamepadView extends View
 
 	constructor(args, parent)
 	{
+		console.log(args);
+
 		super(args, parent);
 
 		this.args.lx = 0;
@@ -32,19 +34,21 @@ export class GamepadView extends View
 		this.args.b16 = 0;
 	}
 
-	onLoop(pad)
+	onLoop()
 	{
+		const pad = this.args.pad;
+
 		const minDead = 0.20;
 
-		this.args.lx = Number(pad.axes[0]);
-		this.args.ly = Number(pad.axes[1]);
-		this.args.rx = Number(pad.axes[2]);
-		this.args.ry = Number(pad.axes[3]);
+		this.args.lx = Number(pad.axes[0].magnitude);
+		this.args.ly = Number(pad.axes[1].magnitude);
+		this.args.rx = Number(pad.axes[2].magnitude);
+		this.args.ry = Number(pad.axes[3].magnitude);
 
-		this.args.lxAdjust = (Math.abs(pad.axes[0]) > minDead ? pad.axes[0] : 0).toFixed(2);
-		this.args.lyAdjust = (Math.abs(pad.axes[1]) > minDead ? pad.axes[1] : 0).toFixed(2);
-		this.args.rxAdjust = (Math.abs(pad.axes[2]) > minDead ? pad.axes[2] : 0).toFixed(2);
-		this.args.ryAdjust = (Math.abs(pad.axes[3]) > minDead ? pad.axes[3] : 0).toFixed(2);
+		this.args.lxAdjust = (Math.abs(pad.axes[0].magnitude) > minDead ? pad.axes[0].magnitude : 0).toFixed(2);
+		this.args.lyAdjust = (Math.abs(pad.axes[1].magnitude) > minDead ? pad.axes[1].magnitude : 0).toFixed(2);
+		this.args.rxAdjust = (Math.abs(pad.axes[2].magnitude) > minDead ? pad.axes[2].magnitude : 0).toFixed(2);
+		this.args.ryAdjust = (Math.abs(pad.axes[3].magnitude) > minDead ? pad.axes[3].magnitude : 0).toFixed(2);
 
 		const lMag = Math.sqrt(this.args.lxAdjust**2 + this.args.lyAdjust**2);
 
@@ -62,29 +66,16 @@ export class GamepadView extends View
 			this.args.ryAdjust /= rMag;
 		}
 
-		for(let ii = 0; ii < pad.buttons.length; ii++)
+		for(const ii in pad.buttons)
 		{
 			const button = pad.buttons[ii];
 
-			this.args['b' + ii] = button.value;
-		}
-
-		if(this.willRumble)
-		{
-			// pad.vibrationActuator.pulse();
-
-			console.log(pad.vibrationActuator.playEffect("dual-rumble", {
-				duration: 1000,
-				strongMagnitude: 1.0,
-				weakMagnitude: 1.0
-			}));
-
-			this.willRumble = false;
+			this.args['b' + ii] = button.pressure;
 		}
 	}
 
 	rumble()
 	{
-		this.willRumble = true;
+		this.args.pad.rumble();
 	}
 }

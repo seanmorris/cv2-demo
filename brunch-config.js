@@ -1,3 +1,5 @@
+const { exec } = require('child_process');
+
 exports.files = {
 
 	javascripts: {
@@ -46,3 +48,20 @@ exports.npm = {
 		]
 	}
 };
+
+// exports.hooks = {
+// 	preCompile: () => {
+// 		console.log('About to compile...');
+// 		exec(
+// 			`cd ../curvature-2 && npm link && cd ../cv2-playground && npm link curvature`
+// 			// + ` && cd ./cv2-hyperscroll && npm link && cd ../ && npm link cv2-hyperscroll`
+// 			, (err, stdout, stderr)=>{
+// 				console.log(err);
+// 				console.log(stdout);
+// 				console.log(stderr);
+
+// 				return Promise.resolve();
+// 			}
+// 		)
+// 	}
+// };

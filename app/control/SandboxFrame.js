@@ -57,35 +57,40 @@ export class SandboxFrame extends View
 			cspTag.attr({content});
 		});
 
-		const frameTag = new Tag(`<iframe sandbox = "allow-scripts" />`);
-		const frameDoc = this.tags.sandbox.node.contentDocument;
-		frameDoc.head.append(cspTag.node);
-		frameDoc.body.append(frameTag.node);
+		this.onTimeout(500, () => {
 
-		frameTag.style({
-			position: 'absolute'
-			, width:  '100%'
-			, height: '100%'
-			, top:    0
-			, left:   0
-			, border: 0
+			const frameTag = new Tag(`<iframe sandbox = "allow-scripts" />`);
+			const frameDoc = this.tags.sandbox.node.contentDocument;
+
+			frameDoc.head.append(cspTag.node);
+			frameDoc.body.append(frameTag.node);
+
+			frameTag.style({
+				position: 'absolute'
+				, width:  '100%'
+				, height: '100%'
+				, top:    0
+				, left:   0
+				, border: 0
+			});
+
+			this.tags.sandbox.style({
+				position: 'absolute'
+				, width:  '100%'
+				, height: '100%'
+				, top:    0
+				, left:   0
+				, border: 0
+			});
+
+			this.frameTag = frameTag;
+			this.cspTag   = cspTag;
+
+			this.listen(frameTag, 'load', event => this.onFrameLoaded(event));
+
+			this.debind = this.args.bindTo('source', v => frameTag.attr({'srcdoc': v}));
 		});
 
-		this.tags.sandbox.style({
-			position: 'absolute'
-			, width:  '100%'
-			, height: '100%'
-			, top:    0
-			, left:   0
-			, border: 0
-		});
-
-		this.frameTag = frameTag;
-		this.cspTag   = cspTag;
-
-		this.listen(frameTag, 'load', event => this.onFrameLoaded(event));
-
-		this.debind = this.args.bindTo('source', v => frameTag.attr({'srcdoc': v}));
 	}
 
 	onFrameLoaded(event)

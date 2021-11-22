@@ -1,4 +1,6 @@
+import { Bag } from 'curvature/base/Bag';
 import { View } from 'curvature/base/View';
+import { Gamepad } from 'curvature/input/Gamepad'
 
 import { CurvatureFrame } from '../../control/CurvatureFrame';
 import { Editor   } from '../../component/editor/Editor';
@@ -14,29 +16,51 @@ export class GamepadDemo extends View
 	{
 		super(args, parent);
 
-		this.listen(window, 'gamepadconnected', event => this.padConnected(event))
-
 		this.args.pads = [];
 
 		const editor  = this.args.editor = new Editor;
 
 		const allFiles = {filename: '*', label:  '*'};
 
+		const mainSource = {
+			filename: 'GamepadDemo.js'
+			, label:  'gamepad/GamepadDemo.js'
+			, value:  rawquire('./GamepadDemo.js')
+			, type:   'application/javascript'
+		};
+
+		const mainTemplateSource = {
+			filename: 'template.html'
+			, label:  'gamepad/template.html'
+			, value:  rawquire('./template.html')
+			, type:   'text/html'
+		};
+
 		const viewSource = {
 			filename: 'View.js'
-			, label:  'matrix/View.js'
+			, label:  'gamepad/View.js'
 			, value:  rawquire('./GamepadView.js')
 			, type:   'application/javascript'
 		};
 
 		const templateSource = {
 			filename: 'template.html'
-			, label:  'matrix/template.html'
+			, label:  'gamepad/template.html'
 			, value:  rawquire('./gamepad.html')
 			, type:   'text/html'
 		};
 
-		editor.args.files = [allFiles, viewSource, templateSource];
+		editor.args.files = [allFiles, mainSource, mainTemplateSource, viewSource, templateSource];
+
+		this.pads = new Bag;
+
+		this.args.pads = this.pads.map(pad => new GamepadView({pad}, this));
+
+		const deadZone = 0.00;
+
+		[...Array(4)].forEach((_,index) => Gamepad.getPad({index, deadZone}).then(
+			pad => this.pads.add(pad)
+		));
 	}
 
 	onAttached()
@@ -46,66 +70,17 @@ export class GamepadDemo extends View
 		requestAnimationFrame(l);
 	}
 
-	padConnected(event)
-	{
-		const pad  = event.gamepad;
-
-		const view = new GamepadView({pad}, this);
-
-		this.args.pads[ pad.index ] = view;
-	}
-
 	loop()
 	{
-		const pads = navigator.getGamepads();
-		const del  = [];
-
-		for(let i = 0; i < pads.length; i++)
+		for(const pad of this.pads.list)
 		{
-			if(!this.args.pads[i])
-			{
-				this.args.pads.splice(i);
-				continue;
-			}
-
-			if(!pads[i])
-			{
-				del.push(i);
-				continue;
-			}
-
-			const padView = this.args.pads[i];
-
-			padView.onLoop(pads[i]);
+			pad.readInput();
 		}
 
-		for(let i in del.reverse())
+		for(const padView of this.args.pads.list)
 		{
-			// delete this.args.pads[ del[i] ];
+			padView.onLoop();
 		}
-
-		// {
-		// 	const pad = pads[i];
-
-		// 	if(!pad)
-		// 	{
-		// 		continue;
-		// 	}
-
-		// 	this.args.lx = pad.axes[0];
-		// 	this.args.ly = pad.axes[1];
-		// 	this.args.rx = pad.axes[2];
-		// 	this.args.ry = pad.axes[3];
-
-		// 	for(let ii = 0; ii < pad.buttons.length; ii++)
-		// 	{
-		// 		const button = pad.buttons[ii];
-
-		// 		this.args['b' + ii] = button.value > this.args['b' + ii]
-		// 			? button.value
-		// 			: this.args['b' + ii];
-		// 	}
-		// }
 	}
 }
 
