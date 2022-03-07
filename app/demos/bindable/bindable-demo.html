@@ -12,10 +12,9 @@
 
 <span class = "hide">[[bindingSandbox]]</span>
 
-<h3>debinding</h3>
+<h3>cancelling binding</h3>
 
 <p>[object].bindTo() will return a callback. When this function is called, the binding will be removed:</p>
-
 
 [[debindingEditor]]
 
@@ -46,6 +45,10 @@ The callback will be invoked with the following parameters when there are update
 </pre>
 
 [[parambindingEditor]]
+
+<h3>propagation</h3>
+
+<p>If, for example <code>ObjectA</code> is made bindable, and has a child property set to a reference to <code>ObjectB</code>, then that property will return <code>ObjectB</code>'s bindable wrapper when that property is accessed. This will not affect any existing references to <code>ObjectB</code>, however. A reference to the same wrapper can later be obtained by passing <code>ObjectB</code> to <code>Bindable.make()</code>.</p>
 
 <h3>bindTo options</h3>
 
@@ -91,7 +94,7 @@ The callback will be invoked with the following parameters when there are update
 
 <h3>lifecycle</h3>
 
-<p>The callback will be invoked once when the initial binding happens, and then again whenever the property or properties in question are <b>changed</b>. Setting the property to the same value multiple times will <b>not</b> invoke the callback more than once.</p>
+<p>The callback will be invoked once when the initial binding happens, and then again whenever the property or properties in question are <b>changed</b>. Setting the property to the same value multiple times will <b>not</b> invoke the callback more than once.This allows for circular binding to sync values between objects to not descend into infinite regress.</p>
 
 <p>Unless one of the options: <code>delay</code>, <code>wait</code>, <code>throttle</code>, <code>idle</code>, or <code>frame</code> are supplied, the callback will execute <b>before</b> the property is set on the target object.
 

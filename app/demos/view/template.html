@@ -54,8 +54,147 @@
 
 <h2>Lifecycle</h2>
 
-<h4>Construct</h3>
+<h4>construct</h3>
+<p>Like all objects, Views start out life by calling their <code>constructor</code> method.</p>
+
 <h4>Render</h3>
+<p>The first time <code>.render()</code> is called on the view, its <code>render</code> event will fire. This will happen before any of its nodes have been generated.</p>
+
+<h4>Render<u>ed</u></h3>
+<p>Once rendering is complete, the view's <code>render<u>ed</u></code> event will fire.</p>
+
 <h4>Attach</h3>
-<h4>Detach</h3>
-<h4>Remove</h3>
+<p>When the view is being attached to a document, <b>or a parent view that is not yet attached to the DOM</b>, the view's <code>attach</code> event will fire.</p>
+
+<h4>Attach<u>ed</u></h3>
+<p>When the view is being attached to the DOM, either directly or when its parent is being attached to the DOM, the view's <code>attached</code> event will fire. This will happen after the nodes have been attached.</p>
+
+<h4>remove</h3>
+<p>When the view is being dicarded and is being removed, its <code>remove</code> event will fire. This event can be cancelled.</p>
+
+<h4>remov<u>ed</u></h3>
+<p>When the view is done being removed, the <code>removed</code> event will fire.</p>
+
+<h3>methods</h3>
+
+<h4><code>static</code> .from(htmlString, initArgs = {})</h4>
+
+<code>const hello = View.from('&lt;p&gt;Hello, world!&lt;/p&gt;');</code>
+
+<p>This will generate a new view with its template derived from the provided string.</p>
+
+<h4>.render(element)</h4>
+
+<code>hello.render(document.body);</code>
+
+<p>This will render the view into the provided HTML element.</p>
+
+<h4>.listen(eventName, callback, options = {})</h4>
+
+<p>also <code>.listen(<b>eventTarget</b>, eventName, callback, options = {})</code>
+
+<p>This will listen for the given event for the lifetime of the view and automatically be removed just before the view's <code>removed</code> event is fired.</p>
+
+<h4>.onFrame(callback)</h4>
+
+<p>This will call the callback on each frame with <code>requestAnimationFrame</code> during the lifetime of the view and automatically be removed just before the view's <code>removed</code> event is fired.</p>
+
+<p>This function returns a callback that will cancel the above behavior when called.</p>
+
+<h4>.onNextFrame(callback)</h4>
+
+<p>This will call <code>callback</code> on the next frame with <code>requestAnimationFrame</code> so long as the view has not been removed by this time.</p>
+
+<h4>.onTimeout(time, callback)</h4>
+
+<p>This will call <code>callback</code> after <code>time</code> milliseconds so long as the view has not been removed by this time.</p>
+
+<p>This can be affected by the view's <code>paused</code> state.
+
+<h4>.onInterval(callback)</h4>
+
+<p>This will call <code>callback</code> <u>every</u> <code>time</code> milliseconds and will be automatically cancelled when the view is removed.</p>
+
+<p>This can be affected by the view's <code>paused</code> state.
+
+<h4>.onIdle(callback)</h4>
+
+<p>This will call <code>callback</code> when the machine has some idle CPU with <code>requestIdleCallback</code> so long as the view has not been removed by this time.</p>
+
+<h4>.pause(paused)</h4>
+
+<p>This will <code>pause</code> or <code>unpause</code> a view. When in a <code>paused</code> state, timeouts and intervals will be deferred until after the view is <code>unpaused</code>. For example, if a timeout is set for 500ms in the future, and 250ms have already passed when it is paused, another 250ms will elapse after the view is unpased before the callback is executed.</p>
+
+<h4>.remove(now = false)</h4>
+
+<p>Removes the view from the DOM, executes cleanup logic and fires the <code>remove</code> and <code>removed</code> events.
+
+<p>If <code>now</code> is false, then the view will be removed when <code>requestAnimationFrame</code> fires. If it is true, then the view will be removed immediately.</p>
+
+<h3><code>[cv-*]</code> tags</h3>
+
+<p><i>Note: although <code>span</code> tags are used in the examples, almost any tags can be used in this way.</i></p>
+
+<h4>&lt;span cv-bind = "<i>arg</i>"&gt; & Interpolation</h4>
+
+<p>An element with a <code>cv-bind</code> attribute will automatically have its contents replaced with the value of the key provided, taken from <code>.args</code> on the same view.</p>
+
+<p>Double [[ square brackets ]]  may also surround a word, and that will be used as a key to generate a new string with the <code>arg</code> interpolated in its place.</p>
+
+<h4>&lt;span cv-each = "<i>list:item[:key]</i>"&gt;</h4>
+
+<p>An element with this attribute will loop over its value from <code>.args</code>, provide each of its elements in the value provided for <code>item</code>, and optionally provide its <code>key</code>. The HTML inside this element will be repeated for each element in the list, and the same replacements will be applied to each segment as a separate "sub" view.</p>
+
+<h4>&lt;span cv-on = "<i>eventType:method[:options]</i>"&gt;</h4>
+
+<p>This will bind a listener for the given <code>eventType</code> to the element. The listener will call the given <code>method</code> on the view. <code>options</code> may be provided as a string of character, the meaning of each is as follows:</p>
+
+<dl>
+	<dt>o (once)</dt>
+	<dd>fire the listener only once, then remove it.</dd>
+
+	<dt>c (capture)</dt>
+	<dd>Fire the listener during the capture phase, rather than the bubble phase.</dd>
+
+	<dt>p (passive)</dt>
+	<dd>Fire the listener passively, i.e. it will not be able to cancel the event. Useful for scroll listeners.</dd>
+</dl>
+
+<h4>&lt;span cv-if = "<i>arg</i>"&gt;</h4>
+
+<p>Remove the contents of this tag from the DOM if the value of the key provided in <code>.args</code> is <code>false</code>-y. May also take the following forms:</p>
+
+<dl>
+	<dt>&lt;span cv-if = "!arg" &gt;</dt>
+	<dd>Show the contents ONLY if the value is <code>false</code>-y. Essentially inverts normal behavior.</dd>
+
+	<dt>&lt;span cv-if = "?arg" &gt;</dt>
+	<dd>Show the contents if the value is not <code>undefined</code> or <code>null</code>, even if otherwise <code>false</code>-y. Useful for things like empty strings.</dd>
+
+	<dt>&lt;span cv-if = "!?arg" &gt;</dt>
+	<dd>Show the contents only if the value does not exist.</dd>
+</dl>
+
+<h4>&lt;span cv-attr = "<i>arg:attribute[;arg:attr...]</i>"&gt;</h4>
+
+<p>Set attributes based on keys in <code>.args</code>. Attributes will be removed if the value is <code>undefined</code>. Useful for things like &lt;img src&gt; to prevent errant requests of replacement tokens.</p>
+
+<h4>&lt;span cv-expand = "<i>arg</i>"&gt;</h4>
+
+<p>Similar to <code>cv-attr</code> but takes values from a single object value on <code>.args</code>.</p>
+
+<h4>&lt;span cv-ref = "<i>refName</i>"&gt;</h4>
+
+<p>Provides a named reference to the element under the provided name under <code>.tags</code> on the view. This will not be available until after the <code>rendered</code> event fires.</p>
+
+<h4>&lt;span cv-template = "<i>name</i>"&gt; & &lt;span cv-slot = "<i>name</i>"&gt;</h4>
+
+<p>Re-use the HTML from <code>cv-template</code> in multiple places with <code>cv-slot</code>. Useful for creating multiple <code>cv-each</code> based lists with the same template.</p>
+
+<h4>&lt;span cv-with = "<i>arg</i>"&gt;</h4>
+
+<p>Expand values in object found under provided key in <code>args</code> to top level values in a new view, with its template based on the current contents of the tagged element.</p>
+
+<h4>&lt;span cv-view = "<i>type</i>"&gt;</h4>
+
+<p>Create a new subview and render it in-place with the contents of the current element used as its template.</p>

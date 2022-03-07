@@ -1,0 +1,131 @@
+<h2>ajax</h2>
+
+<p>The example below uses the <b><code>Elicit</code></b> class, curvature's wrapper for <code>fetch</code>. The object itself implements both the <code>Promise</code> and <code>EventTarget</code> interfaces, so you can listen for more than just whether or not the request has completed. Listen for <code>progress</code>-type events to get the current amount downloaded. The connection may be cancelled by the client, and in the event of a failure, the request can be retried by calling <code>.preventDefault()</code> on the error event.</p>
+
+[[editor]]
+
+
+<h3>parameters</h3>
+
+<code>new Elicit(url, options = {timeout, defer})</code>
+
+<h4>url</h4>
+<p>The url to request.</p>
+
+<h4>options</h4>
+<p>An object containing the following options:</p>
+
+<dl>
+	<dt>timeout</dt>
+	<dd>Max time in milliseconds to wait for first byte.</dd>
+	<dd>Default: <code>4500</code></dd>
+
+	<dt>defer</dt>
+	<dd>If <code>true</code>, Do not initiate request immediately, instead wait for <code>.open()</code> to be called explicitly.</dd>
+	<dd>Default: <code>false</code></dd>
+
+	<dt>retries</dt>
+	<dd>Max retries to attempt before failing. <b>Note:</b> Retries will only be attempted if the associated <code>error</code> event is cancelled with <code>.preventDefault()</code>.</dd>
+	<dd>Default: 5</dd>
+</dl>
+
+<h3>events</h3>
+
+<p>Subscribe to <code>Elicit</code> like any other event target with <code>elicit.addEventlistener()</code>.</p>
+
+<h4>open</h4>
+<p>Fires when the request is initiated.</p>
+
+<h4>firstByte</h4>
+<p>Fires when the first byte is received.</p>
+
+<h4>progress</h4>
+<p>Fires whenever data is received.</p>
+
+<h4>close</h4>
+<p>Fires when the connection closes.</p>
+
+<h4>complete</h4>
+<p>Fires when the request completes successfully.</p>
+
+<h4>error</h4>
+<p>Fires when there is an error. Does not guarantee failure on its own. Calling <code>.preventDefault</code> on the event will enable a retry to be attempted.</p>
+
+<h4>fail</h4>
+<p>Fires when the request fails.</p>
+
+<h4>cancel</h4>
+<p>Fires BEFORE the request is cancelled locally and MAY be prevented. See the <code>.cancel()</code> method below.</p>
+
+<h4>cancelled</h4>
+<p>Fires AFTER the request is cancelled locally and MAY NOT be prevented. See the <code>.cancel()</code> method below.</p>
+
+<h4>retry</h4>
+<p>Fires when the request is retried.</p>
+
+
+<h3>methods</h3>
+
+<h4>.open()</h4>
+<p>Initiates the request if <code>defer</code> is <code>true</code>.</p>
+
+<h4>.headers()</h4>
+<p>Returns the response headers after the request is complete.</p>
+
+<h4>.cancel()</h4>
+<p>Cancels the request. If a listener calls <code>.preventDefault()</code> on the <code>cancel()</code> event, the cancellation will not be processed and the request will continue as normal.</p>
+
+<h4>.json()</h4>
+<p>Returns a promise, which completes when the download is finished. It expects valid JSON, which it will parse and return from the promise.</p>
+
+<h4>.text()</h4>
+<p>Similar to <code>.json()</code>, but works with any textual data and performs no parsing.</p>
+
+<h4>.css()</h4>
+<p>Similar to <code>.json()</code>, but returns a <code>CSSStyleSheet</code> object.</p>
+
+<h4>.blob()</h4>
+<p>Returns a promise, which completes when the download is finished. It then returns a Blob object containing the downloaded data.</p>
+
+<h4>.buffer()</h4>
+<p>Similar to <code>.blob()</code>, but returns an <code>ArrayBuffer</code> instead.</p>
+
+<h4>.bytes()</h4>
+<p>Similar to <code>.blob()</code>, but returns a <code>Uint8Array</code> instead.</p>
+
+<h4>.objectUrl()</h4>
+<p>Similar to <code>.blob()</code>, but skips straight to producing an <code>Object Url</code>.</p>
+
+
+<h3>properties</h3>
+
+<code>if(elicit.done)...</code>
+
+<h4>.done</h4>
+
+<p>Float between 0 and 1 representing the fraction of data downloaded successfully.</p>
+
+<h4>.type</h4>
+
+<p>The mime type of the response.</p>
+
+<h4>.totalTime</h4>
+
+<p>Total time elapsed since the request was initiated, until current moment or request completed.</p>
+
+<h4>.waitTime</h4>
+
+<p>Time elapsed between request initiated and first byte received.</p>
+
+<h4>.loadTime</h4>
+
+<p>Time since first byte received, until current moment or request completed.</p>
+
+<h4>.speed</h4>
+<p>Average download speed of latest chunk.</p>
+
+<h4>.received</h4>
+<p>Total bytes received.</p>
+
+<h4>.length</h4>
+<p>Total bytes expected.</p>

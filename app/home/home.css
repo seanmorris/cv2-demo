@@ -1,0 +1,9 @@
+@media screen and (max-width: 1080px) {
+	.content > .row {
+		flex-wrap: wrap;
+	}
+
+	.content > .row > * {
+		margin-bottom: 1rem;
+	}
+}

@@ -5,7 +5,7 @@ import { Keyboard } from 'curvature/input/Keyboard';
 import { Sequence } from 'curvature/input/Sequence';
 import { Keyboard as KeyboardView } from './Keyboard'
 
-import { SequenceView } from './SequenceView';
+import { SequenceView } from '../../control/SequenceView';
 import { CursorKeys } from './CursorKeys'
 import { Numpad } from './Numpad'
 

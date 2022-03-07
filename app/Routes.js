@@ -3,6 +3,7 @@ import { View } from 'curvature/base/View';
 import { View as HomeView     } from 'home/View';
 
 import { View as ArrayView    } from 'demos/array/View';
+import { AjaxView             } from 'demos/ajax/AjaxView';
 import { BindableDemoView     } from 'demos/bindable/BindableDemoView';
 import { View as ChainView    } from 'demos/chain/View';
 import { View as ConfigView   } from 'demos/config/View';
@@ -22,10 +23,13 @@ import { View as SvgView      } from 'demos/svg/View';
 import { View as ThemeView    } from 'demos/theme/View';
 import { View as ViewsView    } from 'demos/view/View';
 
+import { PeerDemo             } from 'demos/peer/PeerDemo';
+
 import { View as GridResizer  } from 'experiments/GridResizer/View';
 import { View as HtmlEditor   } from 'experiments/HtmlEditor/View';
 import { View as InfiniteView } from 'experiments/InfiniteScroll/View';
 import { View as PhpView      } from 'experiments/Php/View';
+
 
 import { Matrix } from 'matrix-api/Matrix';
 
@@ -40,10 +44,12 @@ ${rawquire('../LICENSE')}
 
 export const Routes = Routes || {};
 
+
+const InternalError = Router.InternalError;
+const NotFoundError = Router.NotFoundError;
+
 Object.assign(Routes, {
-	'': () => {
-		return new HomeView;
-	}
+	'': HomeView
 
 	, 'accept-sso': () => {
 
@@ -53,94 +59,38 @@ Object.assign(Routes, {
 
 	}
 
-	, 'about-sean': () => View.from(require('pages/about.html'))
-
+	, github:  () => View.from(require('pages/github.html'))
 	, license: () => View.from(license)
 
-	, github: () => View.from(require('pages/github.html'))
+	, ajax:      () => new AjaxView
+	, views:     () => new ViewsView
+	, bindables: () => new BindableDemoView
+	, forms:     () => new FormsView
+	, 'matrix-api': () => new MatrixView
+	, mixin:     () => new MixinView
+	, config:    () => new ConfigView
+	, routes:    () => new RouteView
+	, cookies:   () => new CookieView
+	, rules:     () => new RulesView
+	, themes:    () => new ThemeView
+	, scalars:   () => new ScalarView
+	, svg:       () => new SvgView
+	, chains:    () => new ChainView
+	, arrays:    () => new ArrayView
+	, objects:   () => new ObjectView
+	, models:    () => new ModelsView
+	, gamepad:   () => new GamepadDemo
+	, mouse:     () => new MouseDemo
+	, keyboard:  () => new KeyboardView
+	, php:       () => new PhpView
+	, peer:      () => new PeerDemo
 
-	, 'style-guide': View.from(require('pages/style-guide.html'))
+	, 'infinite-scroll': () => { setTimeout(() => Router.go('/scrollers'), 10); }
 
-	, views: () => {
-		return new ViewsView;
-	}
+	, 'scrollers':    () => new InfiniteView
+	, 'html-editor':  () => new HtmlEditor
+	, 'grid-resizer': () => new GridResizer
 
-	, bindables: BindableDemoView
-
-	, forms: () => {
-		return new FormsView;
-	}
-
-	, 'matrix-api': () => {
-		return new MatrixView;
-	}
-
-	, mixin: () => {
-		return new MixinView;
-	}
-
-	, config: () => {
-		return new ConfigView;
-	}
-
-	, routes: () => new RouteView
-
-	, cookies: () => {
-		return new CookieView;
-	}
-
-	, rules: () => {
-		return new RulesView;
-	}
-
-	, themes: () => {
-		return new ThemeView;
-	}
-
-	, scalars: () => {
-		return new ScalarView;
-	}
-
-	, svg: () => {
-		return new SvgView;
-	}
-
-	, chains: () => {
-		return new ChainView;
-	}
-
-	, arrays: () => {
-		return new ArrayView;
-	}
-
-	, objects: () => {
-		return new ObjectView;
-	}
-
-	, models: () => {
-		return new ModelsView;
-	}
-
-	, gamepad: () => new GamepadDemo
-	, mouse:   () => new MouseDemo
-
-	, keyboard: () => new KeyboardView
-
-	, 'php': () => {
-		return new PhpView;
-	}
-
-	, 'infinite-scroll': () => {
-		return new InfiniteView;
-	}
-
-	, 'html-editor': () => {
-		return new HtmlEditor;
-	}
-
-	, 'grid-resizer': () => {
-		return new GridResizer;
-	}
-
-	, [false]: () => View.from(require('pages/404.html'))
+	, [InternalError]: ({[InternalError]:error}) => View.from(`<small>Error Caught</small><pre>${error.stack ?? error}</pre>`)
+	, [NotFoundError]: () => View.from(require('pages/404.html'))
 });

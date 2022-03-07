@@ -3,7 +3,7 @@ import { View as BaseView } from 'curvature/base/View';
 
 import { rawquire } from 'rawquire/rawquire.macro';
 
-const cv2Playground = JSON.parse(rawquire('../../package-lock.json'));
+const curvature = JSON.parse(rawquire('../../node_modules/curvature/package.json'));
 
 export class View extends BaseView
 {
@@ -11,7 +11,7 @@ export class View extends BaseView
 	{
 		super();
 
-		this.args.version = cv2Playground.dependencies.curvature.version;
+		this.args.version = curvature.version;
 
 		this.template = require('./template');
 	}

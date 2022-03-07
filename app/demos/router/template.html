@@ -18,31 +18,23 @@
 
 <h3>wildcard replacements</h3>
 
-<p>Segments of the URL may be substitured by replacement tokens. The actual values from the URL will be passed into the routing function as arguments.</p>
+<code>bar/%tokenname</code>
 
-<p>They may be anonymous:</p> <code>foo/%</code>
-
-<p>or named:</p> <code>bar/%tokenname</code>
-
-<p>If the <b>anonymous</b> form is used, they will be provided as positional arguments.</p>
-
-<p>If the tokens are <b>named</b> they will be wrapped into an object that will be passed to the routing function as the first parameter, with positional args following.</p>
+<p>Segments of the URL may be substitured by replacement tokens. The actual values from the URL will be passed into the routing function as arguments. They will be wrapped into an object that will be passed to the routing function as the first parameter.</p>
 
 <h4>optional replacement tokens</h4>
 
-<p>Append a <code>?</code> to the end of your token name to mark it as optional. If this is used, it must be at the end of a URL.</p>
+<p>Append a <code>?</code> to the end of your token name to mark it as optional.</p>
+
+<p><b><i>If this is used, it must be at the end of a URL.</i></b></p>
 
 <code>foo/%tokenname?</code>
 
 <h4>variadic routes</h4>
 
-<p>Append a <code>*</code> as the last section of your URL to consume all segments as variadic parameters to the routing fucntion. If this is used,  it must be at the end of a URL.</p>
+<p>Append a <code>*</code> as the last section of your URL to consume all segments as variadic parameters to the routing fucntion.</p>
 
-<code>bar/*</code>
-
-<p>This would still require at least one segment to appear after <code>foo/</code>. Use <code>*?</code> to mark this as optional</p>
-
-<code>baz/*?</code>
+<p><b><i>If this is used, it must be at the end of a URL.</i></b></p>
 
 <h4>try it!</h4>
 

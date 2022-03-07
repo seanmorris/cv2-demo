@@ -1,0 +1,17 @@
+<section cv-if = "!connected" class = "contents">
+	Input the request from your friend to get started:
+
+	<textarea cv-bind = "input"></textarea>
+
+	<button cv-on = "click:answer">answer</button>
+
+	Send this token to your friend to accept the connection:
+
+	<textarea cv-bind = "hostOutput" readonly></textarea>
+</section>
+
+<section cv-if = "connected">
+	<div cv-each = "messages:message"><p>[[message]]</p></div>
+	<input cv-bind = "input">
+	<button cv-on = "click:send">send</button>
+</section>

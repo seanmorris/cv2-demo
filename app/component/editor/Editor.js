@@ -96,7 +96,7 @@ export class Editor extends BaseView
 						this.dispatchEvent(event);
 						this.args.changed = true;
 						this.args.status  = '';
-						this.onTimeout(10, () => this.args.status = this.args.status = `Code updated at ${(new Date).toISOString()}.`);
+						this.onTimeout(100, () => this.args.status = this.args.status = `Code updated at ${(new Date).toISOString()}.`);
 					});
 				}
 
@@ -192,7 +192,7 @@ export class Editor extends BaseView
 			return false;
 		}
 
-		this.onTimeout(500, () => this.args.throttled = false);
+		this.onTimeout(50, () => this.args.throttled = false);
 
 		this.args.throttled = true;
 

@@ -1,0 +1,34 @@
+.column.cell .row.cell {
+	/*align-items: stretch;*/
+}
+
+.column.cell .row.cell .cell {
+	border: 1px solid black;
+}
+
+.column.cell.matching h4 {
+	display: flex;
+}
+
+.column.cell.matching h4::before {
+	content: ' ';
+	display: inline-block;
+	background-image: url(/check.svg);
+	background-size: contain;
+	background-position: center;
+	width: 1em;
+	height: 1em;
+	margin-right: 0.25em;
+}
+
+.column.cell.matching .row.cell .cell.got {
+	background-color: #beffbd;
+}
+
+.column.cell.partial .row.cell .cell.got {
+	background-color: #9ebdff;
+}
+
+.column.cell.no-match .row.cell .cell.got {
+	background-color: #bebebe;
+}

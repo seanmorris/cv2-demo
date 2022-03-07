@@ -180,7 +180,12 @@
 	position: relative;
 	border: 1px solid black;
 	min-height: 12em;
+	height: 20em;
 	width: 100%;
 	overflow: hidden;
 	resize: vertical;
+}
+
+dl > dt:not(:first-child):not(:last-child) {
+	margin-top: 1rem;
 }

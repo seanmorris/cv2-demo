@@ -35,6 +35,6 @@ export class ExampleView extends View
 
 	logEvent(event)
 	{
-		this.args.eventLog.push(`Main view ${ event.type} fired.`);
+		this.args.eventLog.push(`Main view ${event.type} fired.`);
 	}
 }

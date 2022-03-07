@@ -1,11 +1,15 @@
 <h2>gamepad</h2>
 
-<span class = "contents" cv-each = "pads:pad:p">
-	<p>[[pad]]</p>
-</span>
-
 <span class = "contents" cv-if = "!pads">
 	<p>Press any gamepad button to trigger detection.</p>
 </span>
 
-[[editor]]
+<span class = "contents" cv-each = "pads:pad:p">
+	<p>[[pad]]</p>
+</span>
+
+[[gamepadEditor]]
+
+<div class = "row"> [[konami1]] [[sonic]]</div>
+
+[[sequenceEditor]]

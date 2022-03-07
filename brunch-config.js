@@ -4,9 +4,9 @@ exports.files = {
 
 	javascripts: {
 		joinTo: {
-			'app.js': /(app\/*|package.json)/
-			, 'curvature.js': /node_modules\/curvature\/.+/
-			, 'vendor.js': /node_modules\/((?!curvature).)+\/.+?/
+			'app.js': /(app\/)/
+			, 'curvature.js': /node_modules\/curvature\//
+			, 'vendor.js': /node_modules\/((?!curvature).)+\//
 		}
 	},
 
@@ -54,7 +54,7 @@ exports.npm = {
 // 		console.log('About to compile...');
 // 		exec(
 // 			`cd ../curvature-2 && npm link && cd ../cv2-playground && npm link curvature`
-// 			// + ` && cd ./cv2-hyperscroll && npm link && cd ../ && npm link cv2-hyperscroll`
+// 			+ ` && cd ../cv2-hyperscroll && npm link && cd ../cv2-playground && npm link cv2-hyperscroll`
 // 			, (err, stdout, stderr)=>{
 // 				console.log(err);
 // 				console.log(stdout);

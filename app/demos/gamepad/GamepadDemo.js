@@ -7,6 +7,9 @@ import { Editor   } from '../../component/editor/Editor';
 import { rawquire } from 'rawquire/rawquire.macro';
 
 import { GamepadView } from './GamepadView';
+import { Sequence } from 'curvature/input/Sequence';
+
+import { SequenceView } from '../../control/SequenceView';
 
 export class GamepadDemo extends View
 {
@@ -18,7 +21,8 @@ export class GamepadDemo extends View
 
 		this.args.pads = [];
 
-		const editor  = this.args.editor = new Editor;
+		const gamepadEditor  = this.args.gamepadEditor  = new Editor;
+		const sequenceEditor = this.args.sequenceEditor = new Editor;
 
 		const allFiles = {filename: '*', label:  '*'};
 
@@ -36,21 +40,36 @@ export class GamepadDemo extends View
 			, type:   'text/html'
 		};
 
-		const viewSource = {
-			filename: 'View.js'
-			, label:  'gamepad/View.js'
+		const gamepadView = {
+			filename: 'GamePadView.js'
+			, label:  'gamepad/GamePadView.js'
 			, value:  rawquire('./GamepadView.js')
 			, type:   'application/javascript'
 		};
 
-		const templateSource = {
-			filename: 'template.html'
-			, label:  'gamepad/template.html'
+		const gamepadTemplate = {
+			filename: 'gamepad.html'
+			, label:  'gamepad/gamepad.html'
 			, value:  rawquire('./gamepad.html')
 			, type:   'text/html'
 		};
 
-		editor.args.files = [allFiles, mainSource, mainTemplateSource, viewSource, templateSource];
+		const sequenceView = {
+			filename: 'SequenceView.js'
+			, label:  '../../control/SequenceView.js'
+			, value:  rawquire('../../control/SequenceView.js')
+			, type:   'application/javascript'
+		};
+
+		const sequenceTemplate = {
+			filename: 'sequence.html'
+			, label:  '../../control/sequence.html'
+			, value:  rawquire('../../control/sequence.html')
+			, type:   'text/html'
+		};
+
+		gamepadEditor.args.files  = [allFiles, mainSource, mainTemplateSource, gamepadView, gamepadTemplate];
+		sequenceEditor.args.files = [allFiles, sequenceView, sequenceTemplate];
 
 		this.pads = new Bag;
 
@@ -61,6 +80,94 @@ export class GamepadDemo extends View
 		[...Array(4)].forEach((_,index) => Gamepad.getPad({index, deadZone}).then(
 			pad => this.pads.add(pad)
 		));
+
+		const konami = [
+			'Button12'
+			, 'Button12'
+			, 'Button13'
+			, 'Button13'
+			, 'Button14'
+			, 'Button15'
+			, 'Button14'
+			, 'Button15'
+			, 'Button1'
+			, 'Button0'
+			, 'Button9'
+		];
+
+		const konamiSeq = new Sequence({ keys: konami, timing: 750 });
+
+		this.args.konami1 = new SequenceView({
+			sequence: konamiSeq
+			, title:  'Konami Code'
+		});
+
+		const sonic = [
+			'Button12'
+			, 'Button12'
+			, 'Button13'
+			, 'Button13'
+			, 'Button12'
+			, 'Button12'
+			, 'Button12'
+			, 'Button12'
+		];
+
+		const sonicSeq = new Sequence({ keys: sonic, timing: 750 });
+
+		this.args.sonic  = new SequenceView({
+			sequence: sonicSeq
+			, title:  'Sonic 3 Level Select'
+		});
+
+		this.onFrame(()=>{
+
+			for(const pad of this.pads.items())
+			{
+				pad.update();
+
+				for(const b in pad.buttons)
+				{
+					if(pad.buttons[b].active && pad.buttons[b].time === 1)
+					{
+						sonicSeq.check(`Button${b}`);
+						konamiSeq.check(`Button${b}`);
+					}
+				}
+			}
+
+		});
+
+		konamiSeq.addEventListener('complete', event => {
+			if(this.matchTimer)
+			{
+				clearTimeout(this.matchTimer);
+			}
+
+			this.args.match = 'matching';
+		});
+
+		konamiSeq.addEventListener('advance', event => {
+			if(this.matchTimer)
+			{
+				clearTimeout(this.matchTimer);
+			}
+			this.args.matches = event.detail.matched;
+			this.args.match = 'partial';
+			this.matchTimer = this.onTimeout(
+				konamiSeq.timing
+				, () => this.args.match = ''
+			)
+		});
+
+		konamiSeq.addEventListener('cancel', event => {
+			if(this.matchTimer)
+			{
+				clearTimeout(this.matchTimer);
+			}
+			this.args.matches = event.detail.matched;
+			this.args.match = 'no-match';
+		});
 	}
 
 	onAttached()

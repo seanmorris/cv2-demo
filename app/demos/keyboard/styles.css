@@ -1,7 +1,13 @@
 .row.keyboard {
 	justify-content: flex-start;
 	align-items: flex-end;
-	flex-wrap: wrap;
+}
+
+@media screen and (max-width: 1080px) {
+	.row.keyboard {
+		flex-wrap: wrap;
+		flex-direction: row !important;
+	}
 }
 
 .row.keyboard > * {

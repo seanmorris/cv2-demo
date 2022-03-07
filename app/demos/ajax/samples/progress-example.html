@@ -1,0 +1,22 @@
+<p>Getting a random image from <a target = "_blank" href = "https://random.imagecdn.app">https://random.imagecdn.app</a>...</p>
+
+<div cv-if = "!loading">
+	<button cv-on = "click:loadImage">[[download]]</button>
+</div>
+
+<p>Progress: [[percent]]%</p>
+
+<pre class = "error" cv-bind = "error"></pre>
+
+<div cv-if = "imgsrc">
+	<p>Click the image to expand.</p>
+	<a target = "_blank" href = "[[imgsrc]]">
+		<img width = "400" cv-attr = "src:imgsrc">
+	</a>
+</div>
+
+<div cv-each = "chunks:chunk:c" style = "min-width: 10em;">
+	<pre>[[chunk]]</pre>
+</div>
+
+<style>pre.error:first-line{font-weight: bold;}</style>
