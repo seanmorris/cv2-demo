@@ -2,11 +2,15 @@ import { View as BaseView } from 'curvature/base/View';
 
 import { CurvatureFrame } from '../../control/CurvatureFrame';
 import { Editor   } from '../../component/editor/Editor';
+
 import { rawquire } from 'rawquire/rawquire.macro';
 
 import { MatrixDatabase } from './MatrixDatabase';
 import { MatrixEvent } from './MatrixEvent';
 import { Matrix } from 'matrix-api/Matrix';
+
+const curvature = JSON.parse(rawquire('../../../node_modules/curvature/package.json'));
+const matrixApi = JSON.parse(rawquire('../../../node_modules/matrix-api/package.json'));
 
 export class View extends BaseView
 {
@@ -17,6 +21,9 @@ export class View extends BaseView
 		super(args,parent);
 
 		this.args.loggedIn = false;
+
+		this.args.cvVersion = curvature.version;
+		this.args.maVersion = matrixApi.version;
 
 		const editor  = this.args.editor = new Editor;
 
