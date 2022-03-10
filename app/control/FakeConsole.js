@@ -29,6 +29,11 @@ export class FakeConsole extends View
 
 			const frame = ()=>{
 
+				if(!this.tags.scroller)
+				{
+					return;
+				}
+
 				this.tags.scroller.scrollTop = start + (ease.current() * diff);
 
 				if(!ease.done)
@@ -39,7 +44,7 @@ export class FakeConsole extends View
 
 			frame();
 
-		}, {wait: 0});
+		}, {wait: 0, removeWith: this});
 	}
 
 	// onAttached()

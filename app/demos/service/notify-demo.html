@@ -1,0 +1,70 @@
+<h2>notifications</h2>
+
+<p>Any service worker in this system is capable of serving notifications to the user.</p>
+
+<p><code>Service.notify</code> will return a promise that will resolve when the user interacts with the notification, or the notification expires. The promise will resolve to the results of the user interaction, and optionally which action was selected, if any are provided.</p>
+
+<p>Code running in the context of a page can <code>add()</code> an object that implements <code>handleBroadcast</code> to the <code>Service.pageHandler</code> set to handle broadcast notification interaction results.</p>
+
+<h3>live demo</h3>
+
+<section class = "notify-demo">
+	<label><span>title:</span> <input type = "text" cv-bind = "notifyTitle" ></label>
+	<label><span>body:</span> <input type = "text" cv-bind = "notifyBody"></label>
+	<label><span>icon:</span> <input type = "text" cv-bind = "notifyIcon"></label>
+	<label><span>tag:</span> <input type = "text" cv-bind = "notifyTag"></label>
+
+	<label><input cv-bind = "notifyRequireInteract" type = "checkbox" value = "1"> interaction required</label>
+
+	<small>If true, the notification will not disappear on its own.  If the notification expires on its own, the result will contain a <code>close</code> timestamp rather than a rather than a <code>click</code> timestamp.</small>
+
+	<label><input cv-bind = "notifyBroadcast" type = "checkbox" value = "1"> broadcast result</label>
+
+	<small>If true, the results will be broadcast to all tabs in any, or all tabs of this site. You can see this if you open a new tab and navigate to this page.</small>
+
+	<button cv-on = "click:notify">notify</button>
+
+	<div class = "console-frame">
+		[[fakeConsole]]
+	</div>
+</section>
+
+<h3>serving notifcations</h3>
+
+<h4>Service.notify(title, options, broadcast = false)</h4>
+
+<p>Serve a notification to the user.</p>
+
+<h5>parameters</h5>
+
+<dl>
+	<dt>title</dt>
+	<dd>the title text of the notification.</dd>
+
+	<dt>options - an object with the following keys</dt>
+	<dd><dl>
+		<dt>body</dt>
+		<dd>the body text of the notification.</dd>
+		<dt>icon</dt>
+		<dd>the icon to show with the notification.</dd>
+		<dt>data</dt>
+		<dd>a small packet of data to return with the interaction results of the notification.</dd>
+		<dt>actions</dt>
+		<dd>an array of objects describing the buttons to show on the notification.</dd>
+		<dd><code>[ {title:"", action: ""}, ... }</code> (most browsers limited to 2 actions)</dd>
+		<dt>tag</dt>
+		<dd>the unique "tag" of the notification.</dd>
+		<dt>timestamp</dt>
+		<dd>the generation time of the notification, used when a notification may override another with the same tag.</dd>
+		<dt>requireInteraction</dt>
+		<dd>whether or not the notification will expire on its own.</dd>
+	</dl></dd>
+
+	<dt>broadcast</dt>
+	<dd>broadcast the interaction results to all tabs.</dd>
+	<dd><b>(default: false)</b></dd>
+</dl>
+
+<h3>source code</h3>
+
+[[editor]]

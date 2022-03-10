@@ -19,6 +19,8 @@ import { View as ObjectView   } from 'demos/object/View';
 import { View as RouteView    } from 'demos/router/View';
 import { View as RulesView    } from 'demos/rules/View';
 import { View as ScalarView   } from 'demos/scalar/View';
+import { NotifyDemo           } from 'demos/service/NotifyDemo';
+import { LocalHttpDemo        } from 'demos/service/LocalHttpDemo';
 import { View as SvgView      } from 'demos/svg/View';
 import { View as ThemeView    } from 'demos/theme/View';
 import { View as ViewsView    } from 'demos/view/View';
@@ -44,7 +46,6 @@ ${rawquire('../LICENSE')}
 
 export const Routes = Routes || {};
 
-
 const InternalError = Router.InternalError;
 const NotFoundError = Router.NotFoundError;
 
@@ -52,6 +53,8 @@ Object.assign(Routes, {
 	'': HomeView
 
 	, 'accept-sso': () => {
+
+		document.write();
 
 		const matrix = new Matrix;
 
@@ -68,6 +71,8 @@ Object.assign(Routes, {
 	, forms:     () => new FormsView
 	, 'matrix-api': () => new MatrixView
 	, mixin:     () => new MixinView
+	, notifications: () => new NotifyDemo
+	, 'local-http':  () => new LocalHttpDemo
 	, config:    () => new ConfigView
 	, routes:    () => new RouteView
 	, cookies:   () => new CookieView

@@ -13,7 +13,6 @@ export class Records extends RecordSet
 					<i>#[[k]]</i>
 					<div class = "input">
 						<input placeholder = "type here" cv-bind = "val">
-						<div>[[val]]</div>
 					</div>
 				</span>
 				<span cv-if = "!ready">

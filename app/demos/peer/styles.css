@@ -2,3 +2,16 @@
 	min-width: 20em;
 	min-height: 6em;
 }
+
+.peer-demo .close-button::after {
+	position: absolute;
+	width: 1rem;
+	height: 1rem;
+	right: 1rem;
+	content: '✖';
+}
+
+.peer-demo p {
+	margin-top: 0.25rem;
+	margin-bottom: 0.25rem;
+}

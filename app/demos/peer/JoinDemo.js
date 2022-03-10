@@ -75,9 +75,19 @@ export class JoinDemo extends View
 			this.args.input     = '';
 		});
 
-		client.addEventListener('close', event => this.args.connected = false);
+		client.addEventListener('close', event => {
+			this.dispatchEvent(new CustomEvent('closed'));
+			this.args.connected = false
+		});
+
 		client.addEventListener('message', event => this.args.messages.push('> ' + event.detail));
 
 		return client;
+	}
+
+	close()
+	{
+		this.client.close();
+		this.dispatchEvent(new CustomEvent('closed'));
 	}
 }

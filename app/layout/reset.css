@@ -17,8 +17,8 @@ html, body {
 }
 
 p, h3, h4, h5 {
-	margin-top: 0.25em;
-	margin-bottom: 0.25em;
+	margin-top: 1rem;
+	margin-bottom: 1rem;
 }
 
 .content > pre,

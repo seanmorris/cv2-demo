@@ -6,3 +6,73 @@ article.matrix-api pre {
 	white-space: pre-wrap;
 	word-break: break-all;
 }
+
+.matrix-chat {
+	border: 1px solid black;
+	display: flex;
+	flex-direction: column;
+	min-height: 20em;
+}
+
+.matrix-chat-body {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+}
+
+.matrix-chat-body .centered {
+	display: flex;
+	flex-direction: column;
+}
+
+.matrix-chat .matrix-chat-title {
+	font-size: 0.85rem;
+	font-weight: bold;
+	padding:  0.3rem 0.5rem;
+	background-color: black;
+	color: white;
+}
+
+.matrix-chat-body .matrix-user-list {
+	flex: 1;
+}
+
+.matrix-chat .matrix-login {
+	flex: 1;
+}
+
+.matrix-chat-messages {
+	display: flex;
+	flex-direction: column;
+	padding: 0.5rem;
+	flex: 1;
+}
+
+.matrix-chat[data-logged-in=false] .matrix-chat-messages {
+	display: none;
+}
+
+.matrix-chat-body i,
+.matrix-chat-messages > .contents > span {
+	margin: 0.15rem 0.5rem;
+}
+
+.matrix-chat .send-bar {
+	border-top: 1px solid black;
+	display: flex;
+	width: 100%;
+}
+
+.matrix-chat .send-bar button {
+	user-select: none;
+}
+
+.matrix-chat[data-logged-in=false] .send-bar {
+	pointer-events: none;
+	opacity: 0.5;
+}
+
+.matrix-chat .send-bar input {
+	flex: 1;
+	border: none;
+}

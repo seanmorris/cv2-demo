@@ -1,0 +1,11 @@
+<h2>local http</h2>
+
+<p>When the service worker is running, it will serve the following endpoint locally</p>
+
+<p><a href = "/worker-echo?input=Hello, world!" target = "_blank">/worker-echo?input=Hello, world!</a>
+
+<p><a href = "/worker-echo?input=foobarbaz" target = "_blank">/worker-echo?input=foobarbaz</a>
+
+<p>Although this site is hosted statically, the content will be generated dynamically. This is especially apparent if you view the source of the page. The service worker is generating the content based on a route. A <code>ServiceHandler</code> object can provide routes, and be <code>add</code>ed to the <code>Service.serviceHandlers</code> set. Routing is handled in the same way, and by the same code as the normal page router.</p>
+
+[[editor]]

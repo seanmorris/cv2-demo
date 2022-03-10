@@ -90,7 +90,7 @@
 				<div class = "database-editor-right">
 					<form cv-on = "submit:queryDatabase(event)">
 						<label>index <select cv-bind = "queryIndex" cv-each = "queryIndexes:index:i">
-							<option value="[[index]]">[[index]]</option>
+							<option value = "[[index]]">[[index]]</option>
 						</select></label>
 						<label>
 							<span>
@@ -106,7 +106,7 @@
 								</span>
 							</span>
 						</label>
-						<label>limit <input type = "number" cv-bind = "queryLimit" /></label>
+						<label>limit <input type = "number" cv-bind = "queryLimit" min = "0" /></label>
 						<input type = "hidden" readonly="readonly" cv-bind = "queryStore" />
 						<label class = "buttons">
 							<div>

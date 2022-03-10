@@ -11,6 +11,7 @@
 </section>
 
 <section cv-if = "connected">
+	<div cv-on = "click:close" class = "close-button"></div>
 	<div cv-each = "messages:message"><p>[[message]]</p></div>
 	<input cv-bind = "input">
 	<button cv-on = "click:send">send</button>

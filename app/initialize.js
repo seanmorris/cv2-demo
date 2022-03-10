@@ -1,12 +1,19 @@
+import { Service  } from 'curvature/service/Service';
 import { Router   } from 'curvature/base/Router';
-import { RuleSet  }  from 'curvature/base/RuleSet';
-import { View     } from './layout/View';
 
+import { View     } from './layout/View';
 import { Routes   } from './Routes';
+
+Service.register('/notify-service.js');
+
+Service.pageHandlers.add({
+	handleBroadcast: event => {
+		console.log(event.data.result);
+	}
+});
 
 document.addEventListener('DOMContentLoaded', () => {
 	const view = new View;
-	RuleSet.add('body', view);
-	RuleSet.apply();
 	Router.listen(view, Routes);
+	view.render(document.body);
 });

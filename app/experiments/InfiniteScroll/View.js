@@ -48,7 +48,7 @@ export class View extends BaseView
 		this.template = require('./template');
 
 		this.args.rows      = 0;
-		this.args.rowHeight = 33;
+		this.args.rowHeight = 16;
 
 		const gridScroller = new GridScroller;
 
@@ -57,19 +57,11 @@ export class View extends BaseView
 		this.args.bindTo('changedScroll', v => gridScroller.args.changedScroll = v);
 		this.args.bindTo('rowHeight', v => gridScroller.args.rowHeight = v);
 
-		const recordSet = new SliderRecords();
-
-		gridScroller.args.content = recordSet;
-
-		this.args.bindTo('rows', v => recordSet.changed(v));
-
 		this.args.simpleRows = 1000;
 
-		this.args.arrayScroller  = new HyperScroller({rowHeight: 33});
-		this.args.stringScroller = new HyperScroller({rowHeight: 33});
-		this.args.viewScroller   = new HyperScroller({rowHeight: 33});
-
-		// console.log(LoneScrollbar);
+		this.args.arrayScroller  = new HyperScroller({rowHeight: 17});
+		this.args.stringScroller = new HyperScroller({rowHeight: 17});
+		this.args.viewScroller   = new HyperScroller({rowHeight: 17});
 
 		this.args.infiniteVertScroller  = new LoneScrollbar({size: 1000, value: 500});
 
@@ -77,11 +69,25 @@ export class View extends BaseView
 		this.args.horizScroller = new LoneScrollbar({horizontal: true});
 	}
 
-	onRendered()
+	onAttached()
 	{
 		this.args.viewScroller.args.content   = new ViewRecords;
+		this.args.viewScroller.updateViewport();
+
 		this.args.stringScroller.args.content = new StringRecords;
+		this.args.stringScroller.updateViewport();
+
 		this.args.arrayScroller.args.content  = Array(this.args.simpleRows).fill(1).map((v,k)=>this.thousands(k));
+		this.args.arrayScroller.updateViewport();
+
+		const recordSet = new SliderRecords();
+		this.args.gridScroller.args.content = recordSet;
+
+		this.args.bindTo('rows', v => {
+			recordSet.changed(v)
+			this.args.gridScroller.updateViewport();
+		});
+
 		this.args.rows = 1_000_000;
 	}
 

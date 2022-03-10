@@ -6,9 +6,9 @@ export class SliderRecords extends RecordSet
 	{
 		length = Number(length);
 
-		this.length = length + (this.header() ? 1 : 0);
-
 		this.content && this.content.splice(length);
+
+		this.length = length + (this.header() ? 1 : 0);
 	}
 
 	header()

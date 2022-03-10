@@ -31,6 +31,9 @@ export class View extends BaseView
 
 		this.args.content = [...Array(100)].map((v,k)=>k+1);
 
+		this.args.queryValue = null;
+		this.args.queryMaxValue = null;
+
 		this.args.resultScroller = new ModelScroller({rowHeight: 33});
 
 		this.args.rangeValue = 'value';
@@ -80,7 +83,7 @@ export class View extends BaseView
 
 			this.args.created = 0;
 
-			Promise.all(Array(5).fill().map((x,y)=>{
+			Promise.all(Array(1000).fill().map((x,y)=>{
 
 				const id = 1+y;
 				const qq = Object.assign({}, query, {range: id});
@@ -227,11 +230,8 @@ export class View extends BaseView
 		{
 			delete query.range;
 		}
-		else if(!isNaN(query.range)
-			&& query.range.length
-			&& query.range == Number(query.range)
-			&& query.range.length === String(Number(query.range)).length
-		){
+		else if(this.isNumeric(query.range))
+		{
 			query.range = Number(query.range);
 		}
 
@@ -245,24 +245,26 @@ export class View extends BaseView
 			);
 		}
 
-		const scroller  = this.args.resultScroller;
-		scroller.args.content.splice(0);
+		const scroller = this.args.resultScroller;
+
+		// scroller.args.content = [];
+
+		// scroller.updateViewport();
 
 		this.db.then(db => db.select(query).each(
 			record => content.push(record)
 		))
-		.then(({index})  => {
+		.then(({index}) => {
 			this.args.total = index;
 
 			scroller.args.content = content;
+			scroller.updateViewport();
 		});
 	}
 
 	useDb(selected, event)
 	{
 		this.args.total = null;
-
-		this.args.resultScroller.args.content = [];
 
 		for(const storeName in this.tags.dbSelectors)
 		{
@@ -357,6 +359,7 @@ export class View extends BaseView
 	isNumeric(input)
 	{
 		if(!isNaN(input)
+			&& input !== null
 			&& input.length
 			&& input == Number(input)
 			&& input.length === String(Number(input)).length

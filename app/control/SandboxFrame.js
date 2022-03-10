@@ -33,7 +33,7 @@ export class SandboxFrame extends View
 		this.cspTag   = false;
 	}
 
-	onAttached(event)
+	onRendered(event)
 	{
 		if(this.hasAttached)
 		{
@@ -44,6 +44,11 @@ export class SandboxFrame extends View
 
 		this.listen(window, 'message', event => this.onMessage(event));
 
+		this.tags.sandbox.addEventListener('load', event => this.handleSandboxLoaded(event));
+	}
+
+	handleSandboxLoaded(event)
+	{
 		this.cspTag   && this.cspTag.remove();
 		this.frameTag && this.frameTag.remove();
 		this.debind   && this.debind();
@@ -63,7 +68,6 @@ export class SandboxFrame extends View
 
 		frameDoc.head.append(cspTag.node);
 		frameDoc.body.append(frameTag.node);
-
 		frameTag.style({
 			position: 'absolute'
 			, width:  '100%'
@@ -87,11 +91,11 @@ export class SandboxFrame extends View
 
 		this.listen(frameTag, 'load', event => this.onFrameLoaded(event));
 
-		this.debind = this.args.bindTo('source', v => frameTag.attr({'srcdoc': v}));
-		this.onTimeout(0, () => {
-
+		this.debind = this.args.bindTo('source', v => {
+			this.onTimeout(0, () => {
+				frameTag.attr({'srcdoc': v})
+			});
 		});
-
 	}
 
 	onFrameLoaded(event)

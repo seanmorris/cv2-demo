@@ -1,16 +1,38 @@
 <article class = "matrix-api">
 	<h2>matrix api</h2>
 
-	<span cv-if = "!loggedIn">
-		<p>Not logged in.</p>
-		<button cv-on = "click:login">login</button>
-	</span>
+	<p><code>Matrix</code> is a decentralized, federated, end-to-end, encrypted event log masquerading as a chat platform.</p>
 
-	<span cv-if = "loggedIn">
-		<p><b>Logged in.</b></p>
-	</span>
+	<div class = "matrix-chat" data-logged-in = "[[loggedIn]]">
+		<div class = "matrix-chat-title">
+			Matrix Chat
+		</div>
+		<div class = "matrix-chat-body frame">
 
-	<p>⚠️ This demo is under construction. ⚠️</p>
+			<div cv-if = "!loggedIn" class = "contents">
+				<div class = "centered wide matrix-login">
+					<p>Not logged in.</p>
+					<button cv-on = "click:login">login</button>
+				</div>
+			</div>
+
+				<!-- <div class = "matrix-user-list">users</div> -->
+			<div cv-if = "loggedIn" class = "matrix-chat-messages">
+				<i>You are now chatting in <b>curvature demo chat</b> on <b>matrix.org</b>.</i>
+				<i>Please respect your peers, and the server.</i>
+				<div cv-each = "messages:message:m" class = "contents">
+					<span><b>&lt;[[message.sender]]&gt;</b>: [[message.content.body]]</span>
+				</div>
+			</div>
+
+			<div class = "send-bar">
+				<input cv-on = "keyup:send" cv-bind = "input">
+				<button cv-on = "click:send">send</button>
+			</div>
+
+		</div>
+	</div>
+
 
 	<p>Install matrix-api with the npm package manager.</p>
 

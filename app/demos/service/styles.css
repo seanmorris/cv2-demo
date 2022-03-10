@@ -1,0 +1,35 @@
+.notify-demo {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.notify-demo label {
+	display: flex;
+	align-items: center;
+	width: 100%;
+}
+
+.notify-demo button,
+.notify-demo label:not(:first-child) {
+	margin-top: 1rem;
+}
+
+.notify-demo label span {
+	display: inline-block;
+	min-width: 4rem;
+}
+
+.notify-demo label input[type=text] {
+	flex: 1;
+}
+
+.notify-demo .console-frame {
+	position: relative;
+	margin-top: 1rem;
+	min-height: 20em;
+}
+
+.notify-demo .fake-console-items {
+	white-space: pre;
+}

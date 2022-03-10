@@ -63,12 +63,14 @@ export class RouterExampleLayout extends View
 				border-bottom:1px solid black;
 				align-items: center;
 			}
+			.status:empty { display: none; }
 			.status {
 				position:absolute;
 				bottom:0;
 				left:0;
 				color:white;
-				background:black
+				background:black;
+				padding: 0.15rem;
 			}
 		</style>`;
 

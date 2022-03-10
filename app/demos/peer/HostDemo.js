@@ -74,10 +74,18 @@ export class HostDemo extends View
 			this.args.input     = '';
 		});
 
-		server.addEventListener('close', event => this.args.connected = false);
+		server.addEventListener('close', event => {
+			this.dispatchEvent(new CustomEvent('closed'));
+			this.args.connected = false
+		});
 		server.addEventListener('message', event => this.args.messages.push('> ' +event.detail));
 
 		return server;
 	}
 
+	close()
+	{
+		this.server.close();
+		this.dispatchEvent(new CustomEvent('closed'));
+	}
 }

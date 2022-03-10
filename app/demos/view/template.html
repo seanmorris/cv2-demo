@@ -1,8 +1,8 @@
 <h2>views</h2>
 
-<p>A View object represents a chunk of HTML paired with a bit of logic. Views are event targets.</p>
+<p>A View object represents a chunk of HTML paired with a bit of logic. It allows you to easily stitch data into HTML or SVG, and re-use it in an object oriented manner.</p>
 
-<p>Views allow you to stitch data into HTML or SVG.</p>
+<p>Views are event targets.</p>
 
 [[basicViewEditor]]
 
@@ -57,16 +57,16 @@
 <h4>construct</h3>
 <p>Like all objects, Views start out life by calling their <code>constructor</code> method.</p>
 
-<h4>Render</h3>
+<h4>render</h3>
 <p>The first time <code>.render()</code> is called on the view, its <code>render</code> event will fire. This will happen before any of its nodes have been generated.</p>
 
-<h4>Render<u>ed</u></h3>
+<h4>render<u>ed</u></h3>
 <p>Once rendering is complete, the view's <code>render<u>ed</u></code> event will fire.</p>
 
-<h4>Attach</h3>
+<h4>attach</h3>
 <p>When the view is being attached to a document, <b>or a parent view that is not yet attached to the DOM</b>, the view's <code>attach</code> event will fire.</p>
 
-<h4>Attach<u>ed</u></h3>
+<h4>attach<u>ed</u></h3>
 <p>When the view is being attached to the DOM, either directly or when its parent is being attached to the DOM, the view's <code>attached</code> event will fire. This will happen after the nodes have been attached.</p>
 
 <h4>remove</h3>
@@ -131,7 +131,7 @@
 
 <p>If <code>now</code> is false, then the view will be removed when <code>requestAnimationFrame</code> fires. If it is true, then the view will be removed immediately.</p>
 
-<h3><code>[cv-*]</code> tags</h3>
+<h3><code>[cv-*]</code> attributes</h3>
 
 <p><i>Note: although <code>span</code> tags are used in the examples, almost any tags can be used in this way.</i></p>
 
@@ -140,6 +140,14 @@
 <p>An element with a <code>cv-bind</code> attribute will automatically have its contents replaced with the value of the key provided, taken from <code>.args</code> on the same view.</p>
 
 <p>Double [[ square brackets ]]  may also surround a word, and that will be used as a key to generate a new string with the <code>arg</code> interpolated in its place.</p>
+
+<h4>&lt;a cv-link = "<i>path/url</i>"&gt;</h4>
+
+<p>Initiates routing on click when a local path is provided.</p>
+
+<p>Opens link in a new tab if the link is absolute.</p>
+
+<p>Replaces itself with a normal <code>href</code> attribute to ensure styling, status bars and other UI elements can respond normally.</p>
 
 <h4>&lt;span cv-each = "<i>list:item[:key]</i>"&gt;</h4>
 
