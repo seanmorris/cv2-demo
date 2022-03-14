@@ -56,8 +56,45 @@ export class View extends BaseView
 		this.args.editor  = editor;
 		this.args.sandbox = sandbox;
 
-		editor.addEventListener('execute', ()=>{
-			sandbox.buildPage();
+		const sandbox2 = new CurvatureFrame;
+		const editor2  = new Editor;
+
+		editor2.addEventListener('execute', ()=>{
+			sandbox2.buildPage();
 		});
+
+		editor2.args.files = [
+			{
+				filename: '*'
+				, label:  '*'
+			}
+			, {
+				filename: 'SvgExample.js'
+				, label:  'SvgExample.js'
+				, value:  rawquire('./sample/SvgExample2.js')
+				, type:   'application/javascript'
+			}
+			, {
+				filename: 'ps3-input.svg'
+				, label:  'ps3-input.svg'
+				, value:   rawquire('./sample/ps3-input.svg')
+				, type:   'application/xml'
+			}
+			, {
+				filename: 'svg-example-initialize.js'
+				, label:  'svg-example-initialize.js'
+				, value:  rawquire('./sample/svg-example-initialize.js')
+				, type:   'application/javascript'
+				, hide:   true
+			}
+			, {
+				filename: 'result'
+				, label:  'result'
+				, control: sandbox2
+			}
+		];
+
+		this.args.editor2  = editor2;
+		this.args.sandbox2 = sandbox2;
 	}
 }
