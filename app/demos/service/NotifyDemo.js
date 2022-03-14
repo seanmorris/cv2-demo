@@ -1,9 +1,9 @@
 import { View } from 'curvature/base/View';
-import { FakeConsole } from '../../control/FakeConsole';
 import { Service  } from 'curvature/service/Service';
 
 import { Editor   } from '../../component/editor/Editor';
 import { rawquire } from 'rawquire/rawquire.macro';
+import { FakeConsole } from '../../control/FakeConsole';
 
 export class NotifyDemo extends View
 {
@@ -21,27 +21,18 @@ export class NotifyDemo extends View
 		this.args.notifyRequireInteract = true;
 		this.args.notifyBroadcast       = false;
 
+		const konsole = window.console;
+
+		const demoHandler = {handleBroadcast: event => console.log(event.data)};
+
+		Service.pageHandlers.add(demoHandler);
+
+		this.onRemove(() => {
+			window.console = konsole
+			Service.pageHandlers.delete(demoHandler);
+		});
+
 		this.args.fakeConsole = new FakeConsole;
-
-		const konsole = console;
-
-		window.console = new Proxy(console, { get: (t,k) => {
-			if(typeof t[k] !== 'function')
-			{
-				return t[k];
-			}
-
-			return (...args) => {
-				const type    = k;
-				const items   = args.map(i => JSON.stringify(i, null, 4)).join(",\n");
-
-				this.args.fakeConsole.args.lines.push({type, items});
-
-				return t[k](...args);
-			};
-		}});
-
-		this.onRemove(() => window.console = konsole);
 
 		const editor = this.args.editor = new Editor;
 

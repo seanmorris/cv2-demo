@@ -6,11 +6,9 @@ import { Routes   } from './Routes';
 
 Service.register('/notify-service.js');
 
-Service.pageHandlers.add({
-	handleBroadcast: event => {
-		console.log(event.data.result);
-	}
-});
+// Service.pageHandlers.add({
+// 	handleBroadcast: event => console.log(event.data.result)
+// });
 
 document.addEventListener('DOMContentLoaded', () => {
 	const view = new View;

@@ -1,0 +1,14 @@
+<h2>interop</h2>
+
+<section class = "notify-demo">
+
+	<p>When you click "ping", this page will ping the service worker, using <code>.postMessage()</code> under the hood. The worker should respond with a pong, and if there are any other tabs open to this same page, each one of should also respond separately to the ping with a "pong". Each page will be assigned a UUID, and will refer to eachother in the log below using this as an identifier.</p>
+
+	<button cv-on = "click:send(event)">ping</button>
+
+	<p>Console:</p>
+
+	<div class = "console-frame">
+		[[fakeConsole]]
+	</div>
+</div>

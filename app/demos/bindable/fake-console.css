@@ -42,8 +42,18 @@
 	font-size: 11pt;
 	color: white;
 	text-align: left;
+	animation: console-line-added 1 1s ease-in;
 }
 
 .fake-console-line {
 	padding: 0.25em;
+}
+
+.fake-console-items {
+	white-space: pre-wrap;
+}
+
+@keyframes console-line-added {
+	  0% { background-color: #999;  }
+	100% { background-color: #333;  }
 }

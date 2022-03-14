@@ -21,6 +21,7 @@ import { View as RulesView    } from 'demos/rules/View';
 import { View as ScalarView   } from 'demos/scalar/View';
 import { NotifyDemo           } from 'demos/service/NotifyDemo';
 import { LocalHttpDemo        } from 'demos/service/LocalHttpDemo';
+import { InteropDemo          } from 'demos/service/InteropDemo';
 import { View as SvgView      } from 'demos/svg/View';
 import { View as ThemeView    } from 'demos/theme/View';
 import { View as ViewsView    } from 'demos/view/View';
@@ -73,6 +74,7 @@ Object.assign(Routes, {
 	, mixin:     () => new MixinView
 	, notifications: () => new NotifyDemo
 	, 'local-http':  () => new LocalHttpDemo
+	, interop:   () => new InteropDemo
 	, config:    () => new ConfigView
 	, routes:    () => new RouteView
 	, cookies:   () => new CookieView
