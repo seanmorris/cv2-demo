@@ -3,6 +3,7 @@ exports.paths   = { public: './docs' };
 
 exports.modules = { autoRequire: {
 	'notify-service.js': ['notify-service']
+	, 'edge-service.js': ['edge-service']
 	, 'app.js':          ['initialize']
 }};
 
@@ -12,11 +13,12 @@ exports.files   = {
 	, javascripts: {
 		entryPoints: {
 			'app/notify-service.js': 'notify-service.js'
+			, 'app/edge-service.js': 'edge-service.js'
 			, 'app/initialize.js':   'app.js'
 		}
 		, joinTo: {
-			'curvature.js': /node_modules\/curvature\//
-			, 'vendor.js':  /node_modules\/((?!curvature).)+\//
+			'curvature.js': /node_modules\/curvature/
+			, 'vendor.js':  /node_modules\/auto-reload-brunch/
 		}
 	}
 };

@@ -21,18 +21,13 @@ export class NotifyDemo extends View
 		this.args.notifyRequireInteract = true;
 		this.args.notifyBroadcast       = false;
 
-		const konsole = window.console;
+		this.args.fakeConsole = new FakeConsole;
 
-		const demoHandler = {handleBroadcast: event => console.log(event.data)};
+		const demoHandler = {handleBroadcast: event => this.handleBroadcast(event)};
 
 		Service.pageHandlers.add(demoHandler);
 
-		this.onRemove(() => {
-			window.console = konsole
-			Service.pageHandlers.delete(demoHandler);
-		});
-
-		this.args.fakeConsole = new FakeConsole;
+		this.onRemove(() => Service.pageHandlers.delete(demoHandler));
 
 		const editor = this.args.editor = new Editor;
 
@@ -67,6 +62,26 @@ export class NotifyDemo extends View
 		};
 
 		editor.args.files = [allFiles, initSource, workerSource, demoSource, demoTemplate];
+
+		const konsole = window.console;
+
+		window.console = new Proxy(console, { get: (t,k) => {
+			if(typeof t[k] !== 'function')
+			{
+				return t[k];
+			}
+
+			return (...args) => {
+				const type  = k;
+				const items = args.map(i => JSON.stringify(i, null, 4)).join(",\n");
+
+				this.args.fakeConsole.args.lines.push({type, items});
+
+				return t[k](...args);
+			};
+		}});
+
+		this.onRemove(() => window.console = konsole);
 	}
 
 	notify()
@@ -89,5 +104,15 @@ export class NotifyDemo extends View
 
 		Service.notify(title, options, this.args.notifyBroadcast)
 		.then(notify => console.log(notify));
+	}
+
+	handleBroadcast(event)
+	{
+		if(!event.data.notify)
+		{
+			return;
+		}
+
+		console.log(event.data.result);
 	}
 }

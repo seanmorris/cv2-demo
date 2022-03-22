@@ -256,7 +256,7 @@ button {
 input[type=submit]:active,
 button:active {
 	box-shadow: 0 0 0.35rem rgba(0, 0, 0, 0.35);
-	transform: translateY(0.15rem);
+	transform: translateY(1px);
 }
 
 input[type=submit].tight,

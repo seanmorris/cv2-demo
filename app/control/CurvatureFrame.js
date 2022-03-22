@@ -16,7 +16,6 @@ export class CurvatureFrame extends SandboxFrame
 			'<'+'html><'+'head>'
 				+ '<'+`script >const exports = {};<`+'/script>'
 				+ '<'+'script src="https://unpkg.com/@babel/standalone@7.12.6/babel.js"><'+'/script>'
-				+ '<'+`script src="${location.origin}/vendor.js"><`+'/script>'
 				+ '<'+`script src="${location.origin}/curvature.js"><`+'/script>'
 
 				+ this.editor.args.files

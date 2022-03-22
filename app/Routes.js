@@ -25,6 +25,8 @@ import { InteropDemo          } from 'demos/service/InteropDemo';
 import { View as SvgView      } from 'demos/svg/View';
 import { View as ThemeView    } from 'demos/theme/View';
 import { View as ViewsView    } from 'demos/view/View';
+import { BagDemo              } from 'demos/bag/BagDemo';
+import { EventSourceDemo      } from 'demos/event-source/EventSourceDemo';
 
 import { PeerDemo             } from 'demos/peer/PeerDemo';
 
@@ -89,6 +91,7 @@ Object.assign(Routes, {
 	, gamepad:   () => new GamepadDemo
 	, mouse:     () => new MouseDemo
 	, keyboard:  () => new KeyboardView
+	, bags:      () => new BagDemo
 	, php:       () => new PhpView
 	, peer:      () => new PeerDemo
 
@@ -97,6 +100,7 @@ Object.assign(Routes, {
 	, 'scrollers':    () => new InfiniteView
 	, 'html-editor':  () => new HtmlEditor
 	, 'grid-resizer': () => new GridResizer
+	, 'event-source': () => new EventSourceDemo
 
 	, [InternalError]: ({[InternalError]:error}) => View.from(`<small>Error Caught</small><pre>${error.stack ?? error}</pre>`)
 	, [NotFoundError]: () => View.from(require('pages/404.html'))

@@ -81,6 +81,7 @@ export class View extends BaseView
 		this.args.arrayScroller.updateViewport();
 
 		const recordSet = new SliderRecords();
+
 		this.args.gridScroller.args.content = recordSet;
 
 		this.args.bindTo('rows', v => {

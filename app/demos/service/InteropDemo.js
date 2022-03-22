@@ -17,6 +17,13 @@ export class InteropDemo extends View
 
 		this.args.fakeConsole = new FakeConsole;
 
+		const demoHandler = {
+			handleBroadcast: event => this.handleBroadcast(event)
+			, handleMessage: event => this.handleMessage(event)
+		};
+
+		Service.pageHandlers.add(demoHandler);
+
 		const konsole = window.console;
 
 		window.console = new Proxy(console, { get: (t,k) => {
@@ -35,17 +42,7 @@ export class InteropDemo extends View
 			};
 		}});
 
-		const demoHandler = {
-			handleBroadcast: event => this.handleBroadcast(event)
-			, handleMessage: event => this.handleMessage(event)
-		};
-
-		Service.pageHandlers.add(demoHandler);
-
-		this.onRemove(() => {
-			window.console = konsole
-			Service.pageHandlers.delete(demoHandler);
-		});
+		this.onRemove(() => Service.pageHandlers.delete(demoHandler));
 
 		Service.request({echo: 'Connected', broadcast: true});
 
@@ -80,6 +77,11 @@ export class InteropDemo extends View
 		if(event.data.echo)
 		{
 			console.log(`Got '${event.data.echo}' from ${event.data.source}.`);
+			return;
+		}
+
+		if(event.data.command !== 'ping')
+		{
 			return;
 		}
 

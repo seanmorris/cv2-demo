@@ -19,6 +19,11 @@ export class FakeConsole extends View
 
 		this.args.lines.bindTo(()=>{
 
+			if(!this.tags.scroller)
+			{
+				return;
+			}
+
 			const start = this.tags.scroller.scrollTop;
 			const end   = this.tags.scroller.scrollHeight;
 			const diff  = end - start;

@@ -35,7 +35,7 @@ export class SvgExample extends View
 
 	mousemove(event)
 	{
-		if(Date.now() - this.throttle > 50)
+		if(Date.now() - this.throttle < 50)
 		{
 			return;
 		}
@@ -44,7 +44,7 @@ export class SvgExample extends View
 
 		let x = event.movementX, y = event.movementY;
 
-		this.args.x = Math.min(1, Math.max(Math.abs(this.args.x), Math.abs(x / 15))) * Math.sign(x);
-		this.args.y = Math.min(1, Math.max(Math.abs(this.args.y), Math.abs(y / 15))) * Math.sign(y);
+		this.args.x = Math.min( 1, Math.abs(x) ) * Math.sign(x);
+		this.args.y = Math.min( 1, Math.abs(y) ) * Math.sign(y);
 	}
 }

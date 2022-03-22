@@ -1,0 +1,31 @@
+.event-table {
+	min-height: 15rem;
+	position: relative;
+}
+
+.event-table .table-row {
+	width: 100%;
+}
+
+[data-tag] + .table-row {
+	z-index: 1;
+	position: sticky !important;
+	transform: none !important;
+	top: 0;
+}
+
+.event-table .table-row > div {
+	background-color: white;
+	border: 1px solid #BBB;
+	line-height: 24px;
+	padding: 2px;
+	margin: 1px;
+	font-size: 14px;
+}
+
+.event-table .table-row > div {
+	min-width: 6rem;
+}
+
+.event-table .table-row > div:last-child {
+}
