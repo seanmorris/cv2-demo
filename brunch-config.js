@@ -2,9 +2,9 @@ exports.watcher = { awaitWriteFinish: true };
 exports.paths   = { public: './docs' };
 
 exports.modules = { autoRequire: {
-	'notify-service.js': ['notify-service']
-	, 'edge-service.js': ['edge-service']
-	, 'app.js':          ['initialize']
+	'../.cloudflare/workers/event-source/index.js': ['edge-service']
+	, 'notify-service.js': ['notify-service']
+	, 'app.js':            ['initialize']
 }};
 
 exports.files   = {
@@ -12,9 +12,9 @@ exports.files   = {
 	, templates:   { joinTo: 'templates.js' }
 	, javascripts: {
 		entryPoints: {
-			'app/notify-service.js': 'notify-service.js'
-			, 'app/edge-service.js': '../.cloudflare/workers/event-source/index.js'
-			, 'app/initialize.js':   'app.js'
+			'app/edge-service.js':     '../.cloudflare/workers/event-source/index.js'
+			, 'app/notify-service.js': 'notify-service.js'
+			, 'app/initialize.js':     'app.js'
 		}
 		, joinTo: {
 			'curvature.js': /node_modules\/curvature/
