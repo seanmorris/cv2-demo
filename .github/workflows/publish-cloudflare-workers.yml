@@ -49,9 +49,10 @@ jobs:
         run: >
           set -eux;
           find -mindepth 1 -type d | while read DIR; do {
-            terraform init;
-            terraform plan;
-            terraform apply --auto-approve;
+            cd $DIR \
+            && terraform init \
+            && terraform plan \
+            && terraform apply --auto-approve;
           }; done;
         env:
           TF_VAR_CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
