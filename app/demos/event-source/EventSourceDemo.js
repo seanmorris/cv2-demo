@@ -15,7 +15,7 @@ export class EventSourceDemo extends View
 	onAttached()
 	{
 		this.args.localEvents = new EventScroller({
-			changedScroll: 1
+			changedScroll: 2
 			, rowHeight: 30
 			, header: true
 		});
@@ -48,7 +48,7 @@ export class EventSourceDemo extends View
 		this.onRemove(() => this.localSource.close());
 
 		this.args.cloudEvents = new EventScroller({
-			changedScroll: 1
+			changedScroll: 2
 			, rowHeight: 30
 			, header: true
 		});
