@@ -48,7 +48,7 @@ jobs:
         working-directory: .cloudflare/workers/event-source
         run: >
           set -eux;
-          terraform init
+          terraform init;
           terraform plan;
           terraform apply --auto-approve
         env:
