@@ -13,7 +13,7 @@ exports.files   = {
 	, javascripts: {
 		entryPoints: {
 			'app/notify-service.js': 'notify-service.js'
-			, 'app/edge-service.js': 'edge-service.js'
+			, 'app/edge-service.js': '../.cloudflare/workers/event-source/index.js'
 			, 'app/initialize.js':   'app.js'
 		}
 		, joinTo: {

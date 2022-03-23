@@ -4,7 +4,7 @@ import { Router  } from 'curvature/base/Router';
 CloudService.routeHandlers.add({
 	ping: () => 'pong!'
 	, 'worker-echo': (...args) => JSON.stringify(Router.query.input)
-	, 'event-source': (...args) => {
+	, 'streaming-events': (...args) => {
 
 		const headers = new Headers;
 

@@ -1,4 +1,4 @@
-name: Publish Event Source Worker
+name: Publish Cloudflare Workers
 
 on:
   push:
@@ -6,8 +6,8 @@ on:
       - '**'
 
     paths:
-      - .cloudflare/workers/event-source/**
-      - .github/workflows/publish-event-source.yml
+      - .cloudflare/workers/**
+      - .github/workflows/publish-cloudflare-workers.yml
 
 jobs:
   publish-workers:
@@ -45,16 +45,16 @@ jobs:
           CF_API_TOKEN:  ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
       - name: Deploy
-        working-directory: .cloudflare/workers/event-source
+        working-directory: .cloudflare/workers
         run: >
           set -eux;
-          terraform init;
-          terraform plan;
-          terraform apply --auto-approve;
+          find -mindepth 1 -type d | while read DIR; do {
+            terraform init;
+            terraform plan;
+            terraform apply --auto-approve;
+          }; done;
         env:
           TF_VAR_CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           TF_VAR_CLOUDFLARE_API_TOKEN:  ${{ secrets.CLOUDFLARE_API_TOKEN }}
           TF_VAR_CLOUDFLARE_HOSTNAME:   ${{ secrets.CLOUDFLARE_HOSTNAME }}
           TF_VAR_CLOUDFLARE_ZONE_ID:    ${{ secrets.CLOUDFLARE_ZONE_ID }}
-          TF_VAR_GHAPI_CLIENT_SECRET:   ${{ secrets.GHAPI_CLIENT_SECRET }}
-          TF_VAR_GHAPI_CLIENT_ID:       ${{ secrets.GHAPI_CLIENT_ID }}
