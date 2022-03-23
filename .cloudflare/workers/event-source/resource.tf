@@ -26,6 +26,6 @@ resource "cloudflare_worker_script" "auth_script" {
 
 resource "cloudflare_worker_route" "event_source" {
 	zone_id     = "${var.CLOUDFLARE_ZONE_ID}"
-	pattern     = "${var.CLOUDFLARE_HOSTNAME}/event-source/*"
+	pattern     = "https://${var.CLOUDFLARE_HOSTNAME}/streaming-events"
 	script_name = cloudflare_worker_script.auth_script.name
 }
