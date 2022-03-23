@@ -38,7 +38,7 @@ jobs:
       - name: Delete Existing Worker
         run: >
           set -eux;
-          curl -X DELETE https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/$SCRIPT_NAME -H "Authorization: Bearer $CF_API_TOKEN"
+          curl -X DELETE https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/$SCRIPT_NAME -H "Authorization: Bearer $CF_API_TOKEN";
         env:
           SCRIPT_NAME:   curvature-demo-event-source
           CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

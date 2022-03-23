@@ -6,11 +6,9 @@ import { Uuid } from 'curvature/base/Uuid';
 
 Service.routeHandlers.add({
 
-	'worker-echo': (args) => 'ECHO: ' + JSON.stringify(Router.query.input)
+	'omnifeed': (args) => {
 
-	, 'local-events': (...args) => {
-
-		const type = 'ServerEvent';
+		const type = 'OmniRecord';
 
 		let i = 0, current = 0, maxId = 100, done = false;
 
@@ -28,16 +26,14 @@ Service.routeHandlers.add({
 				done, value: new Promise(accept=>{
 					const id = ++current;
 					if (current > maxId) {done = true}
-					setTimeout(() => accept({id, type, data: new Uuid}), ++i * 100)
+
+					const packet = 'data:application/json,'
+						+ JSON.stringify({time:Date.now(), frame: new Uuid});
+
+					setTimeout(() => accept({id, type, data:packet}), ++i * 100)
 				})
 			}}};
 		}});
 	}
 
 });
-
-Service.serviceHandlers.add({
-	ping: () => 'pong!'
-});
-
-

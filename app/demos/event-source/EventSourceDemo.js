@@ -53,7 +53,7 @@ export class EventSourceDemo extends View
 			, header: true
 		});
 
-		this.cloudSource = new EventSource('https://curvature-edge-test.seanmorr.is/event-source');
+		this.cloudSource = new EventSource('https://curvature.seanmorr.is/streaming-events');
 
 		this.args.cloudEvents.args.content = [
 			{type:'type', id:'id', data:'payload'}
