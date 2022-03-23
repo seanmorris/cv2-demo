@@ -45,7 +45,7 @@ jobs:
           CF_API_TOKEN:  ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
       - name: Deploy
-        working-directory: .cloudflare/workers/event-source
+        working-directory: .cloudflare/workers
         run: >
           set -eux;
           find -mindepth 1 -type d | while read DIR; do { cd $DIR && {
